@@ -215,7 +215,7 @@ export default {
       rest
         .axios({
           method: "post",
-          url: "/dabid/live/session/1/1",
+          url: "/dabid/session/1/1",
         })
         .then((res) => {
           // console.log("켜짐");
@@ -236,7 +236,7 @@ export default {
       rest
       .axios({
         method: "post",
-        url: "/dabid/live/session/1/2",
+        url: "/dabid/session/1/2",
       })
         .then((res) => {
           console.log(res);

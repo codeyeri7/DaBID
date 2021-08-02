@@ -11,6 +11,7 @@ import com.ssafy.api.response.UserLoginPostRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 
+import com.ssafy.common.util.JwtTokenUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Map;
@@ -88,9 +90,23 @@ public class AuthController {
 
 			// Use or store profile information
 			// ...
-			System.out.printf("email: %s", email);
-			System.out.printf("name: %s", name);
-			System.out.printf("familyName: %s", familyName);
+			System.out.printf("email: %s", new String(email.getBytes(StandardCharsets.UTF_8)));
+			System.out.printf("name: %s", new String(name.getBytes(StandardCharsets.UTF_8)));
+			System.out.printf("familyName: %s", new String(familyName.getBytes(StandardCharsets.UTF_8)));
+
+
+			System.out.printf("email: %s", new String(email.getBytes(StandardCharsets.UTF_8)));
+			System.out.printf("name: %s", new String(name.getBytes(StandardCharsets.UTF_8)));
+			System.out.printf("familyName: %s", new String(familyName.getBytes(StandardCharsets.UTF_8)));
+
+
+			System.out.printf("email: %s", new String(email.getBytes(), "utf-8"));
+			System.out.printf("name: %s", new String(name.getBytes(), "utf-8"));
+			System.out.printf("familyName: %s", new String(familyName.getBytes(), "utf-8"));
+
+			// email이랑 JwtToken 보내기
+			String fullName = familyName + name;
+//			return ResponseEntity.ok(UserLoginPostRes.of(fullName, JwtTokenUtil.getToken(fullName)));
 
 		} else {
 			System.out.println("Invalid ID token.");

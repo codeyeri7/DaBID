@@ -54,7 +54,7 @@ public class AuthController {
 			@ApiResponse(code = 400, message = "로그인 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public void login(
+	public ResponseEntity<?> login(
 			@RequestBody @ApiParam(value="구글 로그인 id_token", required = true) Map<String, String> map)
 			throws GeneralSecurityException, IOException {
 
@@ -105,16 +105,15 @@ public class AuthController {
 			System.out.printf("familyName: %s", new String(familyName.getBytes(), "utf-8"));
 
 			// email이랑 JwtToken 보내기
-			String fullName = familyName + name;
-//			return ResponseEntity.ok(UserLoginPostRes.of(fullName, JwtTokenUtil.getToken(fullName)));
+			return ResponseEntity.ok(UserLoginPostRes.of(name, JwtTokenUtil.getToken(name)));
 
 		} else {
 			System.out.println("Invalid ID token.");
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password"));
 		}
 //		// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
 //		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
 //		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
 	}
 
 //	/**

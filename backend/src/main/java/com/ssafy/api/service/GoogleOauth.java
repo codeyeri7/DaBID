@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -62,8 +64,30 @@ public class GoogleOauth {
         ResponseEntity<String> responseEntity =
                 restTemplate.postForEntity(GOOGLE_SNS_TOKEN_BASE_URL, params, String.class);
 
+
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            return responseEntity.getBody();
+            Gson gson = new GsonBuilder().create();
+            Map<String, Object> map = gson.fromJson(responseEntity.getBody(), Map.class);
+
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                System.out.println(entry.getKey() + "=" + entry.getValue());
+            }
+
+            Map<String, Object> paramForEmail = new HashMap<>();
+            paramForEmail.put("access_token", map.get("access_token"));
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity("https://www.googleapis.com/oauth2/v2/userinfo",
+                            paramForEmail, String.class);
+
+            System.out.println(response.getBody());
+//            Map<String, Object> map2 = gson.fromJson(response.getBody(), Map.class);
+//            for (Map.Entry<String, Object> entry : map2.entrySet()) {
+//                System.out.println(entry.getKey() + "=" + entry.getValue());
+//            }
+
+
+//            return responseEntity.getBody();
+            return response.getBody();
         }
         return null;
     }

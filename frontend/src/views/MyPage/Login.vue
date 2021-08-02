@@ -4,9 +4,16 @@
       <v-container align-center>
         <img src="@/assets/Dabid_logo.png" width="150px" class="mb-5" style="margin-top: 100px"><br>
           <div class="card-body">
-            <h3 class="card-title">로그인을 시도해주세요</h3>
-            <h6 class="card-subtitle mb-2 text-muted">you can login within <b>5</b> seconds</h6>
-            <button @click="login()"><img src="@/assets/google_login.png" alt="google_login_img" style="width:80%"></button> 
+            <div v-if="isLogin">
+              <h3 class="card-title">이미 로그인한 사용자입니다.</h3>
+              <h6 class="card-subtitle mb-2 text-muted">you already join here!</h6>
+              <button style="width:80%; background-color:black; color:white;" @click="logout()">Logout</button> 
+            </div>
+            <div v-else>
+              <h3 class="card-title">로그인을 시도해주세요</h3>
+              <h6 class="card-subtitle mb-2 text-muted">you can login within <b>5</b> seconds</h6>
+              <button @click="login()"><img src="@/assets/google_login.png" alt="google_login_img" style="width:80%"></button> 
+            </div>
           </div>
       </v-container>
     </div>
@@ -29,9 +36,15 @@ export default {
     },
     methods: {
       async logOut(){
+        // google 로그아웃 
         const result = await this.$gAuth.signOut()
-        this.isLogin = false
         console.log('result', result)
+        console.log('logout성공이닷')
+        // localstorage 처리 
+        this.isLogin = false
+        localStorage.removeItem('jwt')
+        localStorage.removeItem('user_name')
+        this.$router.push({ name: 'Login' })
       },
       async login() {
         const googleUser = await this.$gAuth.signIn()
@@ -56,10 +69,15 @@ export default {
             }
           })
         .then((res) => {
-          console.log(res)
+          console.log('post에서 온 응답', res)
+          // localStorage.setItem('jwt', res.data.token)
+          // localStorage.setItem('used_name', res.data.user_name)
+          console.log(localStorage)
+          this.isLogin = true 
         })
         .catch((err) => {
-          console.log(err)
+          console.log('오류가 나버렸네..', err)
+          alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
         })
       }
     },

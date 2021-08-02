@@ -64,6 +64,7 @@ WebRTC 기술을 활용한 화상라이브로 사용자가 직접 경매를 진�
 - __지원 환경__ : chorme
 - __빌드 도구__ : gradle
 - __DB__ : MariaDB
+- __Server__ : AWS
 
 
 <br>

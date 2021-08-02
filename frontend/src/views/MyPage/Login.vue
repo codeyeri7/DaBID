@@ -33,8 +33,21 @@ export default {
     },
     created() {
       window.onSignIn = this.onSignIn;
+      if (localStorage.getItem('jwt')) {
+        this.$router.push({name: 'ProductInfo'})
+      } else {
+        this.$router.push({name: 'Main'})
+      }
+
     },
     methods: {
+        setToken: function () {
+        const token = localStorage.getItem('jwt')
+        const config = {
+          Authorization: `JWT ${token}`
+        }
+        return config
+      },
       async logOut(){
         // google 로그아웃 
         const result = await this.$gAuth.signOut()
@@ -43,8 +56,8 @@ export default {
         // localstorage 처리 
         this.isLogin = false
         localStorage.removeItem('jwt')
-        localStorage.removeItem('user_name')
-        this.$router.push({ name: 'Login' })
+        localStorage.removeItem('userName')
+        // this.$router.push({ name: 'Login' })
       },
       async login() {
         const googleUser = await this.$gAuth.signIn()
@@ -69,9 +82,9 @@ export default {
             }
           })
         .then((res) => {
-          console.log('post에서 온 응답', res)
-          // localStorage.setItem('jwt', res.data.token)
-          // localStorage.setItem('used_name', res.data.user_name)
+          console.log('server에서 온 응답', res.data)
+          localStorage.setItem('jwt', res.data.accessToken)
+          localStorage.setItem('userName', res.data.userName)
           console.log(localStorage)
           this.isLogin = true 
         })
@@ -79,7 +92,7 @@ export default {
           console.log('오류가 나버렸네..', err)
           alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
         })
-      }
+      },
     },
   }
 

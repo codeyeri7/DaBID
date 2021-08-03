@@ -13,6 +13,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 
 import com.ssafy.common.util.JwtTokenUtil;
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 
@@ -84,11 +85,10 @@ public class AuthController {
 			String authUserId = authService.getUserIdByUserEmail(email);
 			if (authUserId == null) {
 				// 신규 회원이라면 User, Auth 테이블에 insert
-				authService.createUser(email);	// Auth 테이블에 insert
-				// createUser를 통해 생성된 key
-				authUserId = authService.getUserIdByUserEmail(email);
+				User user = userService.createUser(name);
+				authService.createUser(user.getUserId(), email);	// Auth 테이블에 insert
 
-				userService.createUser(authUserId, name);
+
 
 			}
 			// Session 테이블에 insert -> 지금은 패스
@@ -105,7 +105,8 @@ public class AuthController {
 
 		} else {
 			// Invalid ID token
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid ID token"));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid ID token"));
+//			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid ID token"));
 		}
 	}
 

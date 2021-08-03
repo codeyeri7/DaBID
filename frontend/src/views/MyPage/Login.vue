@@ -60,12 +60,25 @@ export default {
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
-        rest 
-          .axios({
-            method: "post",
-            url: "/auth/login",
-            data: {
-              id_token: this.id_token
+        rest .axios({
+        method: "post",
+        url: "/auth/login",
+        data: {
+          id_token: this.id_token
+        }
+      })
+      // 응답 온거 vuex에 저장
+      .then((res) => {
+        console.log('server에서 온 응답', res.data)
+        this.isLogin = true 
+        // vuex로 보내기 
+        this.$store.dispatch("login", {
+          jwt: res.data.accessToken,
+          userName: res.data.userName,
+        })
+        .then(response => {
+          if (response.status == 200) {
+            this.$router.push({name: 'MyPage'})
             }
           })
           // 응답 온거 vuex에 저장

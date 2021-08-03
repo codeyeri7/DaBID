@@ -8,6 +8,7 @@ import com.google.api.client.http.HttpTransport;
 
 import com.google.api.client.json.JsonFactory;
 import com.ssafy.api.response.UserLoginPostRes;
+import com.ssafy.api.service.AuthService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 
@@ -21,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Map;
@@ -38,6 +38,8 @@ import java.util.Map;
 public class AuthController {
 	@Autowired
 	UserService userService;
+	@Autowired
+	AuthService authService;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -62,13 +64,8 @@ public class AuthController {
 		HttpTransport transport = Utils.getDefaultTransport();
 		JsonFactory jsonFactory = Utils.getDefaultJsonFactory();
 		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-				// Specify the CLIENT_ID of the app that accesses the backend:
 				.setAudience(Collections.singletonList(CLIENT_ID))
-				// Or, if multiple clients access the backend:
-				//.setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
 				.build();
-
-		// (Receive idTokenString by HTTPS POST)
 
 		GoogleIdToken idToken = verifier.verify(idTokenString);
 		if (idToken != null) {
@@ -79,41 +76,37 @@ public class AuthController {
 			String userId = payload.getSubject();
 			System.out.println("User ID: " + userId);
 
-			// Get profile information from payload
+			// 유저 프로필 정보
 			String email = payload.getEmail();
-			boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
 			String name = (String) payload.get("name");
-			String pictureUrl = (String) payload.get("picture");
-			String locale = (String) payload.get("locale");
-			String familyName = (String) payload.get("family_name");
-			String givenName = (String) payload.get("given_name");
 
-			// Use or store profile information
-			// ...
-			System.out.printf("email: %s", new String(email.getBytes(StandardCharsets.UTF_8)));
-			System.out.printf("name: %s", new String(name.getBytes(StandardCharsets.UTF_8)));
-			System.out.printf("familyName: %s", new String(familyName.getBytes(StandardCharsets.UTF_8)));
+			// email로 이미 있는 유저인지 체크
+			String authUserId = authService.getUserIdByUserEmail(email);
+			if (authUserId == null) {
+				// 신규 회원이라면 User, Auth 테이블에 insert
+				authService.createUser(email);	// Auth 테이블에 insert
+				// createUser를 통해 생성된 key
+				authUserId = authService.getUserIdByUserEmail(email);
 
+				userService.createUser(authUserId, name);
 
-			System.out.printf("email: %s", new String(email.getBytes(StandardCharsets.UTF_8)));
-			System.out.printf("name: %s", new String(name.getBytes(StandardCharsets.UTF_8)));
-			System.out.printf("familyName: %s", new String(familyName.getBytes(StandardCharsets.UTF_8)));
+			}
+			// Session 테이블에 insert -> 지금은 패스
 
 
-			System.out.printf("email: %s", new String(email.getBytes(), "utf-8"));
-			System.out.printf("name: %s", new String(name.getBytes(), "utf-8"));
-			System.out.printf("familyName: %s", new String(familyName.getBytes(), "utf-8"));
+//			boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+//			String pictureUrl = (String) payload.get("picture");
+//			String locale = (String) payload.get("locale");
+//			String familyName = (String) payload.get("family_name");
+//			String givenName = (String) payload.get("given_name");
 
-			// email이랑 JwtToken 보내기
+			// 유저 fullname과 JwtToken 반환
 			return ResponseEntity.ok(UserLoginPostRes.of(name, JwtTokenUtil.getToken(name)));
 
 		} else {
-			System.out.println("Invalid ID token.");
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password"));
+			// Invalid ID token
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid ID token"));
 		}
-//		// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-//		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-//		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 	}
 
 //	/**

@@ -1,7 +1,9 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.db.entity.Auth;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,15 +26,10 @@ public class UserServiceImpl implements UserService {
 	PasswordEncoder passwordEncoder;
 	
 	@Override
-	public User createUser(UserRegisterPostReq userRegisterInfo) {
+	public User createUser(String userId, String userName) {
 		User user = new User();
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-//		user.setDepartment(userRegisterInfo.getDepartment());
-//		user.setName(userRegisterInfo.getName());
-//		user.setPosition(userRegisterInfo.getPosition());
-//		user.setUserId(userRegisterInfo.getUserId());
-//
-//		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
+		user.setUserId(userId);
+		user.setUserName(userName);
 
 		return userRepository.save(user);
 	}
@@ -70,4 +67,5 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserId(userId).orElse(null);
 		return user;
 	}
+
 }

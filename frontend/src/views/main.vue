@@ -189,10 +189,10 @@ export default {
         },
       ],
       sessionData: {
-        liveTitle: '',
-        token: '',
-        userName:'',
-        userId: ''
+        liveTitle: "",
+        token: "",
+        userName: "",
+        userId: "",
       },
 
       // carousel image
@@ -218,14 +218,14 @@ export default {
           url: "/dabid/session/3/test123",
         })
         .then((res) => {
-          // console.log("켜짐");
-          // console.log(res.data)
-          console.log('Publisher입니다.')
-          this.sessionData.liveTitle = res.data.liveTitle
-          this.sessionData.token = res.data.token
-          this.sessionData.userName = res.data.userName
-          this.sessionData.userId = res.data.userId
-          console.log('session'+  this.sessionData);
+          console.log("켜짐");
+          console.log(res.data);
+          console.log("Publisher입니다.");
+          this.sessionData.liveTitle = res.data.liveTitle;
+          this.sessionData.token = res.data.token;
+          this.sessionData.userName = res.data.userName;
+          this.sessionData.userId = res.data.userId;
+          console.log("session" + this.sessionData);
           this.$router.push({ name: "Session" });
         })
         .catch((err) => {
@@ -240,7 +240,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          console.log('Subscriber입니다.')
+          console.log("Subscriber입니다.");
           this.$router.push({ name: "Session" });
         })
         .catch((err) => {
@@ -252,22 +252,22 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/live/",
+          url: "/dabid/",
         })
-        .then((res)=> {
+        .then((res) => {
           // card에 어떻게 저장되는지 모르겠음 console 찍어봐야 함
-          this.card = res.data
-          console.log(res.data)
+          this.card = res.data;
+          console.log(res.data);
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
           // console.log('nono')
-        })
-    }
+        });
+    },
   },
   // 페이지 열리자마자 live 정보들 가져오기
-  created: function() {
-    // this.getLive()
+  created: function () {
+    this.getLive();
   },
 };
 </script>

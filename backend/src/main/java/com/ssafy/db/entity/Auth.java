@@ -16,14 +16,16 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class Auth {
-    @Id
-    @Column(name="user_id")
-    private String userId;      // 회원 고유 아이디
-    private  String userEmail;   // 구글 이메일
+//    @Id
+//    @Column(name="user_id")
+//    private String userId;      // 회원 고유 아이디
+    private String userEmail;   // 구글 이메일
 
-    @MapsId
+    @EmbeddedId
+    private AuthId authId;
+
+    @MapsId("userId")   // AuthId userId 매핑
     @OneToOne
     @JoinColumn(name = "user_id")
-    private  User user;
-
+    private User user;
 }

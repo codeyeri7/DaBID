@@ -60,7 +60,7 @@ export default {
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
-        rest .axios({
+        rest.axios({
         method: "post",
         url: "/auth/login",
         data: {
@@ -80,16 +80,18 @@ export default {
           if (response.status == 200) {
             this.$router.push({name: 'MyPage'})
             }
-          })
-            .catch((err) => {
-              console.log('오류가 나버렸네..', err)
-              alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
-            })
-            return true
-        }) 
+        })
         .catch((err) => {
-          console.log('오류발견', err)
-        })      
+          console.log('오류가 나버렸네..', err)
+          alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
+        })
+        return true
+      })
+      .catch(err => {
+        console.log("왜 요청을 못 보낼까용?")
+        console.log(err);
+      })
+      
       },
     }
   }

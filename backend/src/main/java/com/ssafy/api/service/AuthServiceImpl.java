@@ -13,10 +13,9 @@ public class AuthServiceImpl implements AuthService {
     AuthRepository authRepository;
 
     @Override
-    public Auth createUser(User user, String userId, String userEmail) {
+    public Auth createUser(User user, String userEmail) {
         Auth auth = new Auth();
         auth.setUser(user);
-        auth.setUserId(userId);
         auth.setUserEmail(userEmail);
         return authRepository.save(auth);
     }
@@ -26,6 +25,6 @@ public class AuthServiceImpl implements AuthService {
         // email로 auth table 조회
         Auth auth = authRepository.findByUserEmail(userEmail).orElse(null);
         if (auth == null) return null;	// null이면 null
-        else return auth.getUserId();	// null이 아니면 userId 반환
+        else return auth.getUser().getUserId();	// null이 아니면 userId 반환
     }
 }

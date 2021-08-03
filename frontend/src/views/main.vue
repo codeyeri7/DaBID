@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 import rest from "../js/httpCommon.js"
 
 export default {
@@ -208,9 +208,6 @@ export default {
         },
       ],
     };
-  },
-  computed: {
-    ...mapGetters(['isAuthenticated'])
   },
   methods: {
     // live 열기

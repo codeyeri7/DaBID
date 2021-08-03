@@ -49,11 +49,8 @@ export default {
       async login() {
         const googleUser = await this.$gAuth.signIn()
         console.log('googleUser', googleUser)
-        // console.log('ID: '+ googleUser.getId())
-        // console.log('Base Profile: '+ googleUser.getBasicProfile())
-        // console.log('Auth Response: '+ googleUser.getAuthResponse())
         this.isLogin = this.$gAuth.isAuthorized
-        // 서버에 토큰 보내기 
+        // id_token에 저장하고 서버에 보내기 
         this.id_token = googleUser.getAuthResponse().id_token;
         console.log('보내는 id token', this.id_token)
         this.sendToken()
@@ -71,28 +68,17 @@ export default {
       .then((res) => {
         console.log('server에서 온 응답', res.data)
         this.isLogin = true 
-        // vuex로 보내기 
-        this.$store.dispatch("login", {
-          jwt: res.data.accessToken,
-          userName: res.data.userName,
-        })
-        .then(response => {
-          if (response.status == 200) {
-            this.$router.push({name: 'MyPage'})
-            }
-          })
-            .catch((err) => {
-              console.log('오류가 나버렸네..', err)
-              alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
-            })
-            return true
-        }) 
-        .catch((err) => {
-          console.log('오류발견', err)
-        })      
-      },
-    }
+        localStorage.setItem('userName', res.data.userName)
+        localStorage.setItem('jwt', res.data.id_token)
+        console.log(localStorage)
+        this.$router.push({ name: 'main' })
+      }) 
+      .catch((err) => {
+        console.log('오류발견', err)
+      })      
+    },
   }
+}
 </script>
 
 <style scoped>

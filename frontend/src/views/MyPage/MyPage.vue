@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Dabidlogo from '@/assets/Dabid_logo_80.png'
 
 export default {
@@ -33,23 +32,32 @@ export default {
       Dabidlogo : Dabidlogo,
       }
   },
-  computed: {
-	...mapGetters(['isAuthenticated']),
-  },
   methods: {
-	redirect() {
-		console.log('isAuthenticated :' + this.isAuthenticated)
-		if (!this.isAuthenticated) {
-			this.$router.push({namee: 'Login'})
-		}
-	},
-	logout() {
-		this.$store
-          .dispatch("logout", {})
-          .then(() => this.redirect())
-          .catch(({ message }) => alert(message))
-	},
+    setToken: function() {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `JWT ${jwtToken}`
+      }
+      return config
+    },
+    async logout() {
+    // google 로그아웃 
+      const result = await this.$gAuth.signOut()
+      console.log('result', result)
+      console.log('logout성공이닷')
+      // localstorage 처리 
+      this.isLogin = false
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('userName')
+    }
   },
+  mounted: async function () {
+    if (localStorage.getItem('jwt')) {
+      console.log(localStorage)
+    } else {
+      this.$router.push({ name: 'Login' })
+    }
+  }
 }
 </script>
 

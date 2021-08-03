@@ -3,23 +3,11 @@ import VueRouter from 'vue-router'
 import Main from '../views/main.vue'
 import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
-import ProductInfo from '../views/Live/ProductInfo.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
 import Session from '../views/Live/Session.vue'
 import Seller from '../views/Live/Seller.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 
-// import store from '../store'
-
-// const beforeAuth = isAuth => (from, to, next) => {
-//   const isAuthenticated = store.getters["isAuthenticated"]
-//   if ((isAuthenticated && isAuth) || (!isAuthenticated && !isAuth)) {
-//     return next()
-//   } else {
-//     // 홈 화면으로 이동
-//     next("/")
-//   }
-// }
 
 Vue.use(VueRouter)
 
@@ -38,11 +26,6 @@ const routes = [
     path: '/MyPage',
     name: 'MyPage',
     component: MyPage
-  },
-  {
-    path: '/ProductInfo',
-    name: 'ProductInfo',
-    component: ProductInfo
   },
   {
     path: '/LiveInfo',

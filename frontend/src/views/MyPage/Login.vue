@@ -88,8 +88,10 @@ export default {
               alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
             })
             return true
-        })
-      
+        }) 
+        .catch((err) => {
+          console.log('오류발견', err)
+        })      
       },
     }
   }

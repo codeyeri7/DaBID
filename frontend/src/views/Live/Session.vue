@@ -1,47 +1,70 @@
 <template>
-  <div id="live">
-				<div id="live-header">
-					<h1 th:text="${liveTitle}" id="live-title"></h1>
-					<form action="/leave-live" method="post">
-						<input type="hidden" name="live-name" th:value="${liveTitle}">
-						<input type="hidden" name="token" th:value="${token}">
-						<button id="buttonLeavelive" class="btn btn-large btn-danger" type="submit" onclick="leavelive()">
-							Leave live</button>
+  <div id="main-container" class="container">
+		<div id="logged">
+			<div id="session">
+				<!-- <div id="liveTitle">
+					<h1 th:text="${liveTitle}" id="liveTitle"></h1>
+					<form action="/leave-session" method="post">
+						<input type="hidden" name="liveTitle" th:value="${liveTitle}"></input>
+						<input type="hidden" name="token" th:value="${token}"></input>
+						<button id="buttonLeaveSession" class="btn btn-large btn-danger" type="submit" onclick="leaveSession()">
+							Leave session</button>
 					</form>
-				</div>
-				<div class="container">
-					
 				</div>
 				<div id="main-video" class="col-md-6">
 					<p class="userName"></p>
 					<p class="userId"></p>
 					<video autoplay="autoplay" playsinline="true"></video>
 				</div>
-				<div id="video-container" class="col-md-6"></div>
+				<div id="video-container" class="col-md-6"></div> -->
+        <div id="session-header">
+          <h1 id="liveTitle">{{ liveTitle }}</h1>
+          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+        </div>
+        <div id="main-video" class="col-md-6">
+          <user-video :stream-manager="mainStreamManager"/>
+        </div>
+        <div id="video-container" class="col-md-6">
+          <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+        </div>
 			</div>
+		</div>
+	</div>
 </template>
 
 <script>
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import $ from 'jquery';
-// import UserVideo from './components/UserVideo';
+import UserVideo from '../../components/UserVideo.vue';
+
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export default {
   name: 'Session',
+  components: {
+		UserVideo,
+	},
   data() {
     return {
       liveTitle: this.$route.params.liveTitle,
       token: this.$route.params.token,
       userName: this.$route.params.userName,
       userId: this.$route.params.userId,
+
+      OV: undefined,
+      session: undefined,
+      mainStreamManager: undefined,
+			publisher: undefined,
+			subscribers: [],
+
+      myUserId: 'Participant' + Math.floor(Math.random() * 100),
     }
   },
   methods: {
     goSession () {
-      console.log("HIHI", this.liveTitle)
       // console.warn('Request of TOKEN gone WELL (TOKEN:' + token + ')');
 
       // --- 1) Get an OpenVidu object ---
@@ -51,6 +74,7 @@ export default {
       // --- 2) Init a session ---
 
       this.session = this.OV.initSession();
+      console.log('돼용', this.session)
 
       // --- 3) Specify the actions when events take place in the session ---
 
@@ -69,16 +93,36 @@ export default {
         });
       });
 
-      // On every Stream destroyed...
-      this.session.on('streamDestroyed', (event) => {
-        // Delete the HTML element with the user's name and nickname
-        this.removeUserData(event.stream.connection);
-      });
+      // // On every Stream destroyed...
+      // this.session.on('streamDestroyed', (event) => {
+      //   // Delete the HTML element with the user's name and nickname
+      //   this.removeUserData(event.stream.connection);
+      // });
 
-      // On every asynchronous exception...
-      this.session.on('exception', (exception) => {
-        console.warn(exception);
-      });
+      // // On every asynchronous exception...
+      // this.session.on('exception', (exception) => {
+      //   console.warn(exception);
+      // });
+
+      // // On every new Stream received...
+			// this.session.on('streamCreated', ({ stream }) => {
+      //   console.log('되니?')
+			// 	const subscriber = this.session.subscribe(stream);
+			// 	this.subscribers.push(subscriber);
+			// });
+      // console.log('subcribers', this.subscribers)
+			// // On every Stream destroyed...
+			// this.session.on('streamDestroyed', ({ stream }) => {
+			// 	const index = this.subscribers.indexOf(stream.streamManager, 0);
+			// 	if (index >= 0) {
+			// 		this.subscribers.splice(index, 1);
+			// 	}
+			// });
+
+			// On every asynchronous exception...
+			this.session.on('exception', ({ exception }) => {
+				console.warn(exception);
+			});
 
       // --- 4) Connect to the session passing the retrieved token and some more data from
       //        the client (in this case a JSON with the nickname chosen by the user) ---
@@ -88,7 +132,7 @@ export default {
 
           // --- 5) Set page layout for active call ---
 
-          $('#session-title').text(this.liveTitle);
+          $('#liveTitle').text(this.liveTitle);
           $('#join').hide();
           $('#session').show();
 
@@ -101,7 +145,7 @@ export default {
 
             // --- 6) Get your own camera stream ---
 
-            var publisher = this.OV.initPublisher('video-container', {
+            var publisher = this.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
@@ -111,6 +155,9 @@ export default {
               insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
               mirror: false       	// Whether to mirror your local video or not
             });
+
+            this.mainStreamManager = publisher;
+						this.publisher = publisher;
 
             // --- 7) Specify the actions when events take place in our publisher ---
 
@@ -129,7 +176,7 @@ export default {
 
             // --- 8) Publish your stream ---
 
-            this.session.publish(publisher);
+            this.session.publish(this.publisher);
 
           } else {
             console.warn('You don\'t have permissions to publish');
@@ -162,7 +209,7 @@ export default {
       var dataNode = document.createElement('div');
       dataNode.className = "data-node";
       dataNode.id = "data-" + nodeId;
-      dataNode.innerHTML = '<p class="nickName">' + clientData + '</p><p class="userName">' + serverData + '</p>';
+      dataNode.innerHTML = '<p class="userName">' + clientData + '</p><p class="userId">' + serverData + '</p>';
       videoElement.parentNode.insertBefore(dataNode, videoElement.nextSibling);
       this.addClickListener(videoElement, clientData, serverData);
     },
@@ -205,7 +252,7 @@ export default {
       $('#main-video video').css("background", "url('images/subscriber-msg.jpg') round");
     },
     isPublisher() {
-      return this.userId.includes('publisher');
+      return this.userId.includes('test123');
     }      
   },
   // Session.vue 열리자마자 goSession 실행

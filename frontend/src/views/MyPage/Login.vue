@@ -81,21 +81,6 @@ export default {
             this.$router.push({name: 'MyPage'})
             }
           })
-          // 응답 온거 vuex에 저장
-        .then((res) => {
-          console.log('server에서 온 응답', res.data)
-          this.isLogin = true 
-          // vuex로 보내기 
-          this.$store 
-            .dispatch("login", {
-              jwt: res.data.accessToken,
-              userName: res.data.userName,
-            })
-            .then(response => {
-              if (response.status == 200) {
-                this.$router.push({name: 'MyPage'})
-                }
-            })
             .catch((err) => {
               console.log('오류가 나버렸네..', err)
               alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')

@@ -86,7 +86,7 @@ public class AuthController {
 			if (authUserId == null) {
 				// 신규 회원이라면 User, Auth 테이블에 insert
 				User user = userService.createUser(name);
-				authService.createUser(user.getUserId(), email);	// Auth 테이블에 insert
+				authService.createUser(user, user.getUserId(), email);	// Auth 테이블에 insert
 
 
 

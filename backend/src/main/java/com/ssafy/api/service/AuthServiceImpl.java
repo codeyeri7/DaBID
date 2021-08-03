@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.db.entity.Auth;
+import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,9 @@ public class AuthServiceImpl implements AuthService {
     AuthRepository authRepository;
 
     @Override
-    public Auth createUser(String userId, String userEmail) {
+    public Auth createUser(User user, String userId, String userEmail) {
         Auth auth = new Auth();
+        auth.setUser(user);
         auth.setUserId(userId);
         auth.setUserEmail(userEmail);
         return authRepository.save(auth);

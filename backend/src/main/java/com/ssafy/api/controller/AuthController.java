@@ -58,10 +58,10 @@ public class AuthController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<?> login(
-			@RequestParam @ApiParam(value="구글 로그인 id_token", required = true) String idTokenString)
+			@RequestBody @ApiParam(value="구글 로그인 id_token", required = true) Map<String ,String> map)
 			throws GeneralSecurityException, IOException {
 
-//		String idTokenString = map.get("id_token");
+		String idTokenString = map.get("id_token");
 		HttpTransport transport = Utils.getDefaultTransport();
 		JsonFactory jsonFactory = Utils.getDefaultJsonFactory();
 		GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)

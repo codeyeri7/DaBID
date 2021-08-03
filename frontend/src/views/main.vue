@@ -226,7 +226,7 @@ export default {
           this.sessionData.userName = res.data.userName;
           this.sessionData.userId = res.data.userId;
           console.log("session" + this.sessionData);
-          this.$router.push({ name: "Session" });
+          this.$router.push({ name: "Session", params: {liveTitle: this.sessionData.liveTitle, token: this.sessionData.token, userName: this.sessionData.userName, userId: this.sessionData.userId}});
         })
         .catch((err) => {
           console.log(err);

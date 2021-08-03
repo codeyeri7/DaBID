@@ -33,14 +33,15 @@ export default {
   name: 'Session',
   data() {
     return {
-    liveTitle: this.sessionData.liveTitle,
-    token: this.sessionData.token,
-    userName: this.sessionData.userName,
-    userId: this.sessionData.userId
+      liveTitle: this.$route.params.liveTitle,
+      token: this.$route.params.token,
+      userName: this.$route.params.userName,
+      userId: this.$route.params.userId,
     }
   },
   methods: {
     goSession () {
+      console.log("HIHI", this.liveTitle)
       // console.warn('Request of TOKEN gone WELL (TOKEN:' + token + ')');
 
       // --- 1) Get an OpenVidu object ---
@@ -87,7 +88,7 @@ export default {
 
           // --- 5) Set page layout for active call ---
 
-          $('#session-title').text(this.sessionName);
+          $('#session-title').text(this.liveTitle);
           $('#join').hide();
           $('#session').show();
 
@@ -149,9 +150,9 @@ export default {
       var clientData;
       var serverData;
       var nodeId;
-      if (connection.nickName) { // Appending local video data
-        clientData = connection.nickName;
-        serverData = connection.userName;
+      if (connection.userName) { // Appending local video data
+        clientData = connection.userName;
+        serverData = connection.userId;
         nodeId = 'main-videodata';
       } else {
         clientData = JSON.parse(connection.data.split('%/%')[0]).clientData;
@@ -196,8 +197,8 @@ export default {
     },
     initMainVideo(videoElement, userData) {
       $('#main-video video').get(0).srcObject = videoElement.srcObject;
-      $('#main-video p.nickName').html(userData.nickName);
       $('#main-video p.userName').html(userData.userName);
+      $('#main-video p.userId').html(userData.userId);
       $('#main-video video').prop('muted', true);
     },
     initMainVideoThumbnail() {

@@ -145,7 +145,7 @@ export default {
           title: "방송중",
           livetitle: "제목",
           text: "30만원",
-          src: "@/assets/live.png",
+          src: "",
           flex: 6,
         },
         {
@@ -198,13 +198,13 @@ export default {
       // carousel image
       items: [
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+          // src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+          // src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         },
         {
-          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+          // src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         },
       ],
     };
@@ -234,10 +234,10 @@ export default {
     },
     goLive2: function () {
       rest
-        .axios({
-          method: "post",
-          url: "/dabid/session/1/2",
-        })
+      .axios({
+        method: "post",
+        url: "/dabid/session/3/test123",
+      })
         .then((res) => {
           console.log(res);
           console.log("Subscriber입니다.");

@@ -12,8 +12,9 @@ public class AuthServiceImpl implements AuthService {
     AuthRepository authRepository;
 
     @Override
-    public Auth createUser(String userEmail) {
+    public Auth createUser(String userId, String userEmail) {
         Auth auth = new Auth();
+        auth.setUserId(userId);
         auth.setUserEmail(userEmail);
         return authRepository.save(auth);
     }

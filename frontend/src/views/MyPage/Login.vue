@@ -60,35 +60,37 @@ export default {
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
-        rest 
-          .axios({
-            method: "post",
-            url: "/auth/login",
-            data: {
-              id_token: this.id_token
-            }
-          })
-          // 응답 온거 vuex에 저장
-        .then((res) => {
-          console.log('server에서 온 응답', res.data)
-          this.isLogin = true 
-          // vuex로 보내기 
-          this.$store 
-            .dispatch("login", {
-              jwt: res.data.accessToken,
-              userName: res.data.userName,
-            })
-            .then(response => {
-              if (response.status == 200) {
-                this.$router.push({name: 'MyPage'})
-                }
-            })
-            .catch((err) => {
-              console.log('오류가 나버렸네..', err)
-              alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
-            })
-            return true
+        rest .axios({
+        method: "post",
+        url: "/auth/login",
+        data: {
+          id_token: this.id_token
+        }
+      })
+      // 응답 온거 vuex에 저장
+      .then((res) => {
+        console.log('server에서 온 응답', res.data)
+        this.isLogin = true 
+        // vuex로 보내기 
+        this.$store.dispatch("login", {
+          jwt: res.data.accessToken,
+          userName: res.data.userName,
         })
+        .then(response => {
+          if (response.status == 200) {
+            this.$router.push({name: 'MyPage'})
+            }
+        })
+        .catch((err) => {
+          console.log('오류가 나버렸네..', err)
+          alert('잘못된 정보입니다.' + '로그인을 다시 시도해주세요')
+        })
+        return true
+      })
+      .catch(err => {
+        console.log("왜 요청을 못 보낼까용?")
+        console.log(err);
+      })
       
       },
     }

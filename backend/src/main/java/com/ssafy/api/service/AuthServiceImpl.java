@@ -15,8 +15,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Auth createUser(User user, String userEmail) {
         Auth auth = new Auth();
+        auth.setUserId(user.getUserId());
         auth.setUser(user);
         auth.setUserEmail(userEmail);
+        user.setAuth(auth);
         return authRepository.save(auth);
     }
 

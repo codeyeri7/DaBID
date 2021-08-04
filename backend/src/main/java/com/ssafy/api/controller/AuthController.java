@@ -59,6 +59,7 @@ public class AuthController {
 	})
 	public ResponseEntity<?> login(
 			@RequestBody @ApiParam(value="구글 로그인 id_token", required = true) Map <String,String> map)
+
 			throws GeneralSecurityException, IOException {
 
 		String idTokenString = map.get("id_token");

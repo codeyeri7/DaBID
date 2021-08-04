@@ -16,9 +16,12 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    User user;
+    @Column(length = 13)
+    private User user;
 
+    @Column(length = 13)
     String reviewWriter;
+    @Column(length = 100)
     String reviewContent;
     Timestamp reviewDate;
 }

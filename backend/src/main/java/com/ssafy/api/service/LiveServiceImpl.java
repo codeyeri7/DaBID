@@ -32,11 +32,19 @@ public class LiveServiceImpl implements LiveService {
 
 	@Override
 	public void updateLive(LiveRegisterPostReq liveInfo, Live live) {
-//
+		live.setLiveTitle(liveInfo.getLiveTitle());
+		live.setLiveDesc(liveInfo.getLiveDesc());
+		live.setLiveDate(liveInfo.getLiveDate());
+		live.setPrdName(liveInfo.getPrdNo());
+		live.setPrdCategory(liveInfo.getPrdCategory());
+		live.setPrdNo(liveInfo.getPrdNo());
+		live.setPrdPhoto(liveInfo.getPrdPhoto());
+		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
 	}
 
 	@Override
-	public void deleteLive(int prdId) {
+	public void deleteLive(int prdId)
+	{
 		liveRepository.delete(getLiveByPrdId(prdId));
 	}
 

@@ -9,7 +9,8 @@
           <hr>
           <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" placeholder="xxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
           <hr>
-          <v-file-input label="상품 사진" filled prepend-icon="mdi-camera"></v-file-input>
+          <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera"></v-file-input>
+          <v-btn @click="upload" color=primary flat>업로드</v-btn>
           <hr>
           <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Item" required></v-select>
           <hr>
@@ -55,7 +56,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import rest from "../../js/httpCommon.js"
+import AWS from 'aws-sdk'
+// import axios from 'axios'
 export default {
   name: 'LiveInfo',
   data: vm => ({
@@ -71,6 +74,7 @@ export default {
       ],
       productPhoto: [],
       select: null,
+      selectedIndex: '',
       items: [
         '의류',
         '가방',
@@ -83,6 +87,10 @@ export default {
       date: new Date().toISOString().substr(0, 10),
       dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
       menu1: false,
+      // image 
+      albumBucketName:'dabid-img',
+      bucketRegion:'ap-northeast-2',
+      IdentityPoolId: 'ap-northeast-2:2446626d-3eb7-4489-adcb-dd0ea57521cd'
   }),
   computed: {
       computedDateFormatted () {
@@ -95,25 +103,31 @@ export default {
     },
   },
   methods: {
+    selected() {
+      this.selectedIndex = this.items.indexOf(this.select)
+    },
     createLive() {
       const live = {
         productName: this.productName,
         productNumber: this.productNumber,
         productPhoto: this.productPhoto,
-        items: this.items,
+        selectIdx: this.items.indexOf(this.select),
         title: this.title,
         startPrice: this.startPrice,
         liveInfo: this.liveInfo,
-        liveTime: this.liveTime,
+        date: this.date,
       }
       if (live.title) {
-        axios({
+        rest.axios({
           method: 'post',
-          url: 'http://localhost:8080/david/live/',
-          body: this.live,
+          url: '/dabid/live/',
+          data: {
+            live: live
+          },
         })
           .then((res) => {
             console.log(res)
+            console.log(live)
             this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {
@@ -133,7 +147,40 @@ export default {
       const [month, day, year] = date.split('/')
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
-}
+    handleFileUpload() {
+      console.log(this.productPhoto, '파일이 잘 업로드 되었습니다.')
+    },
+    upload() {
+      AWS.config.update({
+        region: this.bucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: this.IdentityPoolId,
+          // accessKeyId: "AKIAXPHRRUK3P5LDGSOK",
+          // secretAccessKey: "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",
+        })
+      })
+
+      const s3 = new AWS.S3({
+        apiVersion: '2012-10-17',
+        params: {
+          Bucket: this.albumBucketName
+        }
+      })
+      let photoKey = this.productPhoto.name
+      s3.upload({
+        Key: photoKey,
+        Body: this.productPhoto,
+        ACL: 'public-read'
+      }, (err, data) => {
+        if (err) {
+          console.log(err)
+          return alert('There was an error uploading your photo: ', err.message);
+        }
+        alert('Successfully uploaded photo.');
+        console.log(data)
+      });
+    }
+  },
 }
 </script>
 

@@ -20,7 +20,7 @@ module.exports = {
         hot: true
     },
     css: {
-        requireModuleExtension: false
+        requireModuleExtension: true
     },
     transpileDependencies: [
         'vuetify',

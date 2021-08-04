@@ -5,8 +5,8 @@
         <div id="liveTitle">
 					<h1 th:text="${liveTitle}" id="liveTitle"></h1>
 					<form action="/leave-session" method="post">
-						<input type="hidden" name="liveTitle" th:value="${liveTitle}"></input>
-						<input type="hidden" name="token" th:value="${token}"></input>
+						<input type="hidden" name="liveTitle" th:value="${liveTitle}">
+						<input type="hidden" name="token" th:value="${token}">
 						<button id="buttonLeaveSession" class="btn btn-large btn-danger" type="submit" onclick="leaveSession()">
 							Leave session</button>
 					</form>

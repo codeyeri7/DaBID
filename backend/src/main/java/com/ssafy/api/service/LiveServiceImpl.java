@@ -36,7 +36,8 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public void deleteLive(int prdId) {
+	public void deleteLive(int prdId)
+	{
 		liveRepository.delete(getLiveByPrdId(prdId));
 	}
 

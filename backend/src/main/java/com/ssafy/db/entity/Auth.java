@@ -26,7 +26,7 @@ public class Auth {
     private String userEmail;   // 구글 이메일
 
     @MapsId()
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id")
     private User user;
 }

@@ -1,7 +1,10 @@
 package com.ssafy.db.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -16,10 +19,11 @@ public class Auth {
     @Id
     @Column(name="user_id")
     private String userId;      // 회원 고유 아이디
-    private  String userEmail;   // 구글 이메일
 
-    @MapsId
-    @OneToOne
+    private String userEmail;   // 구글 이메일
+
+    @MapsId("userId")   // AuthId userId 매핑
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private  User user;
+    private User user;
 }

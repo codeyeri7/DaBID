@@ -33,10 +33,10 @@ public class Live { //라이브테이블
     String prdPhoto;    // 상품사진
     int prdPriceStart;  // 경매 시작 가격
 
-    @Column(name="prd_seller_id",insertable=false, updatable=false)
-    String prdSellerId;
-    @Column(name="prd_category",insertable=false, updatable=false)
-    int prdCategory;
+//    @Column(name="prd_seller_id",insertable=false, updatable=false)
+//    String prdSellerId;
+//    @Column(name="prd_category",insertable=false, updatable=false)
+//    int prdCategory;
 
     @OneToOne()
     @JoinColumn(name="live_status")

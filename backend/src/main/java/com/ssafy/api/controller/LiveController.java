@@ -6,6 +6,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.ProductCategory;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-
 /**
  * 라이브 관련 요청 처리를 위한 컨트롤러 정의.
  */
@@ -23,12 +23,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/dabid/live")
 public class LiveController {
-
 	@Autowired
 	UserService userService;
 	@Autowired
 	LiveService liveService;
-
 	/**
 	 * 라이브 CRUD 관련 Controller
 	 */
@@ -41,12 +39,9 @@ public class LiveController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
 			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo) {
-
-
 //		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 //		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(registerInfo.getUserId());
-
 		try {
 			liveService.createLive(user, registerInfo);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
@@ -55,7 +50,6 @@ public class LiveController {
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 생성에 실패했습니다."));
 	}
-
 	@PutMapping("/{prdId}")
 	@ApiOperation(value = "라이브 수정",
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 수정한다.")
@@ -73,7 +67,6 @@ public class LiveController {
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
 	}
-
 	@DeleteMapping("/{prdId}")
 	@ApiOperation(value = "라이브 삭제", notes = "상품 고유 아이디를 받아 등록된 라이브를 삭제한다.")
 	public ResponseEntity<? extends BaseResponseBody> deleteLive(
@@ -83,13 +76,10 @@ public class LiveController {
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
-
 	@GetMapping
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
 	public ResponseEntity<?> selectAllLives() {
 		List<Live> liveList = liveService.getAllLives();
 		return ResponseEntity.status(200).body(liveList);
-
 	}
-
 }

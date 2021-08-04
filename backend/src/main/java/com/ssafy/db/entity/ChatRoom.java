@@ -17,9 +17,9 @@ import java.util.List;
 public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int chatroomId;
+    private int chatRoomId;
 
-    @Column(name="prd_id")
+    @Column(name="prd_id",insertable=false, updatable=false)
     private int prdId;
 
     @OneToMany(mappedBy = "chatRoom", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)

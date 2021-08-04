@@ -15,7 +15,7 @@ public class Result {
     private int prdId;
     private int resPriceEnd;    // 경매 마감 가격
 
-    @Column(name="res_buyer_id", columnDefinition ="char", length=14)
+    @Column(name="res_buyer_id", columnDefinition ="char", length=14,insertable=false, updatable=false)
     private String resBuyerId;
 
     @MapsId //식별관계 + 키 설정

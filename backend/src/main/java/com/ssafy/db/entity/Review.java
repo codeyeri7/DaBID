@@ -16,10 +16,9 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    @Column(length = 13)
     private User user;
 
-    @Column(length = 13)
+    @Column(length = 14)
     String reviewWriter;
     @Column(length = 100)
     String reviewContent;

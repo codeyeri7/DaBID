@@ -28,6 +28,8 @@ public class LiveServiceImpl implements LiveService {
 		live.setPrdNo(liveInfo.getPrdNo());				// 상품 일련 번호
 
 		live.setPrdPriceStart(live.getPrdPriceStart());	// 경매 시작 가격
+
+		liveRepository.save(live);
 	}
 
 	@Override
@@ -40,6 +42,8 @@ public class LiveServiceImpl implements LiveService {
 		live.setPrdNo(liveInfo.getPrdNo());
 		live.setPrdPhoto(liveInfo.getPrdPhoto());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
+
+		liveRepository.save(live);
 	}
 
 	@Override

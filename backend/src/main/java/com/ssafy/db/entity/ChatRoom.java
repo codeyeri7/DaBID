@@ -2,6 +2,8 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class ChatRoom {
     @Column(name="prd_id",insertable=false, updatable=false)
     private int prdId;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Chat> chatlist = new ArrayList<>();
     //many를 담아주는 객체라서 List
 

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,14 +19,14 @@ import javax.persistence.*;
 @Setter
 public class Auth {
     @Id
-    @Column(name="user_id")
+    @Column(name="user_id", length=14)
     private String userId;      // 회원 고유 아이디
 
-    @Column(name="user_email", columnDefinition ="varchar", length=40)
+    @Column(name="user_email", length=40)
     private String userEmail;   // 구글 이메일
 
-    @MapsId("userId")   // AuthId userId 매핑
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @MapsId()
+    @OneToOne()
+    @JoinColumn(name="user_id")
     private User user;
 }

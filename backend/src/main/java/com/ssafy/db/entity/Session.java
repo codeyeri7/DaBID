@@ -16,7 +16,7 @@ public class Session {
     int sessionId;
     @Column(length = 45)
     String sessionToken;
-    char userId;
+    String userId;
     Date sessionDate;
     @Column(length = 45)
     String sessionStatus;

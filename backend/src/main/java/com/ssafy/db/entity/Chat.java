@@ -2,6 +2,8 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -22,7 +24,6 @@ public class Chat {
     @Column(length = 200)
     private String chatContent;
 
-    @Column(columnDefinition ="char", length=14)
     private String chatFrom;
 
     @Column(name = "chat_room_id",insertable=false, updatable=false)

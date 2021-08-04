@@ -3,6 +3,8 @@ package com.ssafy.db.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -36,18 +38,18 @@ public class Live { //라이브테이블
     @Column(name="prd_category",insertable=false, updatable=false)
     int prdCategory;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne()
     @JoinColumn(name="live_status")
     private LiveStatus liveStatus;
 
-    @OneToOne(mappedBy = "live", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "live")
     private Result result;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne()
     @JoinColumn(name="prd_category")
     private ProductCategory productCategory;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne()
     @JoinColumn(name = "prd_seller_id") // 외래키
     private User user;
 }

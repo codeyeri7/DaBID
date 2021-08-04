@@ -15,6 +15,6 @@ public class ProductCategory { //상품카테고리
     @Column(length = 20)
     String prdCategoryName; //상품 카테고리 이름
 
-    @OneToOne(mappedBy = "productCategory", cascade = CascadeType.PERSIST) //Live테이블과 1:1관계
+    @OneToOne(mappedBy = "productCategory") //Live테이블과 1:1관계
     private Live live;
 }

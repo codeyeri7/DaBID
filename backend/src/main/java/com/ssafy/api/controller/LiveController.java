@@ -3,12 +3,16 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.LiveRegisterPostReq;
 import com.ssafy.api.service.LiveService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -36,9 +40,15 @@ public class LiveController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
-			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo) {
+			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo,
+			@ApiIgnore Authentication authentication) {
+
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
+
 		try {
-			liveService.createLive(registerInfo);
+			liveService.createLive(user.getUserId(), registerInfo);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}catch (Exception e){
 			e.printStackTrace();

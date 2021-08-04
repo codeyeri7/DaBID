@@ -23,6 +23,9 @@ public class Live { //라이브테이블
     String prdPhoto;    // 상품사진
     int prdPriceStart;  // 경매 시작 가격
 
+    String prdSellerId;
+    int prdCategory;
+
     @OneToOne
     @JoinColumn(name="live_status")
     private LiveStatus liveStatus;
@@ -36,5 +39,5 @@ public class Live { //라이브테이블
 
     @ManyToOne
     @JoinColumn(name = "prd_seller_id") // 외래키
-    private User prdSellerId;
+    private User user;
 }

@@ -36,6 +36,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> logs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "prdSellerId")
+    @OneToMany(mappedBy = "user")
     private List<Live> liveList = new ArrayList<>();
 }

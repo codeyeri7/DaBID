@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 
@@ -16,14 +17,14 @@ import java.sql.Timestamp;
 public class LiveRegisterPostReq {
 //	@ApiModelProperty(name="상품 고유 아이디")
 //	int prdId;
-	@ApiModelProperty(name="판매자 고유아이디")
-	String userId;
+//	@ApiModelProperty(name="판매자 고유아이디")
+//	String userId;
 	@ApiModelProperty(name="라이브 제목")
 	String liveTitle;
 	@ApiModelProperty(name="라이브 상세정보")
 	String liveDesc;
-	@ApiModelProperty(name="라이브 상태", example = "1")
-	int liveStatus;
+//	@ApiModelProperty(name="라이브 상태", example = "1")
+//	int liveStatus;
 	@ApiModelProperty(name="라이브 시작 날짜")
 	Timestamp liveDate;
 	@ApiModelProperty(name="상품명")
@@ -32,7 +33,7 @@ public class LiveRegisterPostReq {
 	int prdCategory;
 	@ApiModelProperty(name="상품 일련 번호")
 	String prdNo;
-	@ApiModelProperty(name="상품 사진")
+	@ApiModelProperty(name="상품 사진 S3 url")
 	String prdPhoto;
 	@ApiModelProperty(name="경매 시작 가격")
 	int prdPriceStart;

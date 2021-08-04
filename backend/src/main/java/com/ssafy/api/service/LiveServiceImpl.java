@@ -17,8 +17,17 @@ public class LiveServiceImpl implements LiveService {
 	LiveRepository liveRepository;
 
 	@Override
-	public void createLive(LiveRegisterPostReq liveInfo) {
+	public void createLive(String userId, LiveRegisterPostReq liveInfo) {
+		Live live = new Live();
+		live.setPrdSellerId(userId);					// 판매자 고유 아이디
+		live.setLiveTitle(liveInfo.getLiveTitle());		// 라이브 제목
+		live.setLiveDesc(liveInfo.getLiveDesc());		// 라이브 상세 정보
+		live.setLiveDate(liveInfo.getLiveDate());		// 라이브 시작 날짜
+		live.setPrdName(liveInfo.getPrdName());			// 상품명
+		live.setPrdCategory(liveInfo.getPrdCategory()); // 카테고리 번호
+		live.setPrdNo(liveInfo.getPrdNo());				// 상품 일련 번호
 
+		live.setPrdPriceStart(live.getPrdPriceStart());	// 경매 시작 가격
 	}
 
 	@Override

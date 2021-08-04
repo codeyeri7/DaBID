@@ -68,8 +68,9 @@ export default {
       .then((res) => {
         console.log('server에서 온 응답', res.data)
         this.isLogin = true 
+        localStorage.setItem('userId', res.data.userId)
         localStorage.setItem('userName', res.data.userName)
-        localStorage.setItem('jwt', res.data.id_token)
+        localStorage.setItem('jwt', res.data.accessToken)
         console.log(localStorage)
         this.$router.push({ name: 'main' })
       }) 

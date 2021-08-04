@@ -23,6 +23,7 @@
 
 <script>
 import Dabidlogo from '@/assets/Dabid_logo_80.png'
+import axios from 'axios'
 
 export default {
   name: 'Mypage',
@@ -57,6 +58,18 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
     }
+  },
+  created() {
+    axios ({
+      method: "get",
+      url: "https://localhost:8080/dabid/users/me",
+    })
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err => {
+      console.log(err);
+    })
   }
 }
 </script>

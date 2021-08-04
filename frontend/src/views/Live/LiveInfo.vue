@@ -55,6 +55,7 @@
 </template>
 
 <script>
+// import rest from "../../js/httpCommon.js"
 import axios from 'axios'
 export default {
   name: 'LiveInfo',
@@ -69,7 +70,7 @@ export default {
       productNumberRules: [
         v => !!v || 'productNumber is required',
       ],
-      productPhoto: [],
+      productPhoto: '',
       select: null,
       items: [
         '의류',
@@ -97,20 +98,21 @@ export default {
   methods: {
     createLive() {
       const live = {
-        productName: this.productName,
-        productNumber: this.productNumber,
-        productPhoto: this.productPhoto,
-        items: this.items,
-        title: this.title,
-        startPrice: this.startPrice,
-        liveInfo: this.liveInfo,
-        liveTime: this.liveTime,
+        userId: localStorage.getItem("userId"),
+        prdName: this.productName,
+        prdNo: this.productNumber,
+        prdPhoto: this.productPhoto,
+        prdCategory: 0,
+        liveTitle: this.title,
+        prdPriceStart: this.startPrice,
+        liveDesc: this.liveInfo,
+        liveDate: this.date,
       }
-      if (live.title) {
+      if (live.liveTitle) {
         axios({
           method: 'post',
-          url: 'http://localhost:8080/david/live/',
-          body: this.live,
+          url: 'https://localhost:8080/dabid/live/',
+          data: live,
         })
           .then((res) => {
             console.log(res)

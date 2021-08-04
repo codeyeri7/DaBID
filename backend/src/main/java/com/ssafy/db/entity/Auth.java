@@ -17,9 +17,10 @@ import javax.persistence.*;
 @Setter
 public class Auth {
     @Id
-    @Column(name="user_id")
+    @Column(name="user_id", columnDefinition ="char", length=14)
     private String userId;      // 회원 고유 아이디
 
+    @Column(name="user_email", columnDefinition ="varchar", length=40)
     private String userEmail;   // 구글 이메일
 
     @MapsId("userId")   // AuthId userId 매핑

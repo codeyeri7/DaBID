@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 public class User {
     @Id
-    @Column(name="user_id")
+    @Column(name="user_id", columnDefinition ="char", length=14)
     @GenericGenerator(name = "UserIdGenerator", // @GeneratedValue의 generator modifier에서 사용할 이름
             strategy = "com.ssafy.db.generator.UserIdGenerator") // IdentifierGenerator 인터페이스를 구현한 클래스 이름
     @GeneratedValue(generator = "UserIdGenerator")  // @GenericGenerator의 name modifier 에 지정한 이름
@@ -32,10 +32,10 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     Result result;
-    
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Review> logs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Review> reviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Live> liveList = new ArrayList<>();
 }

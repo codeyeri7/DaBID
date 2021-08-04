@@ -24,7 +24,7 @@
 <script>
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
-import $ from 'jquery';
+// import $ from 'jquery';
 // import UserVideo from './components/UserVideo';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';

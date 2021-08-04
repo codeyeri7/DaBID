@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Dabidlogo from '@/assets/Dabid_logo_80.png'
+// import Dabidlogo from '@/assets/Dabid_logo_80.png'
 
 export default {
   name: 'Mypage',

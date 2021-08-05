@@ -1,67 +1,59 @@
 <template>
-  <v-app>
-    <!-- <div class="v-application">
-      <Navbar v-if="!isChecked"></Navbar>
-    </div> -->
-    <v-app-bar
-      app
-      flat
-      color="white"
-      dark
-      v-if="!isChecked"
-    >
-      <RouterLink :to="{ name: 'Main' }">
-        <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
-      </RouterLink>
-      <v-spacer></v-spacer>
-      <RouterLink :to="{ name: 'MyPage' }">
-        <img src="@/assets/live.png" width="60" class="pt-2">
-      </RouterLink>
-      <RouterLink :to="{ name: '' }">
-        <img src="@/assets/notification.png" width="33" class="pt-4 pb-2">
-      </RouterLink>
-      <RouterLink :to="{ name: 'Login' }">
-        <img src="@/assets/add-user.png" width="33" class="pt-4 pb-2 ml-3">
-      </RouterLink>
-    </v-app-bar>
-    
-    <!-- 메인페이지가 routerview default -->
-    <v-content>
-      <RouterView></RouterView>
-    </v-content>
-  </v-app>
+  <div id="app">
+     <div id="nav" class="sticky-top" style="background-color:white">
+      <span v-if="isLogin" class="px-3 py-1">
+        <!-- 원래 버전-->
+        <RouterLink :to="{ name: 'Main' }">
+          <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
+        </RouterLink>
+        <RouterLink :to="{ name: 'MyPage' }">
+          <img src="@/assets/live.png" width="60" class="pt-2">
+        </RouterLink>
+        <RouterLink :to="{ name: '' }">
+          <img src="@/assets/notification.png" width="33" class="pt-4 pb-2">
+        </RouterLink>
+        <RouterLink :to="{ name: 'Login' }">
+          <img src="@/assets/add-user.png" width="33" class="pt-4 pb-2 ml-3">
+        </RouterLink>
+        <router-link @click.native="logout" to="#" class="mx-3">로그아웃</router-link>
+        <!-- 원래 버전-->
+      </span>
+
+      <span v-else>
+      </span>
+    </div>
+    <RouterView @login="isLogin=true"/>
+  </div>
 </template>
 
 <script>
-// import Navbar from '@/components/Navbar.vue'
-// import { OpenVidu } from 'openvidu-browser';
 
 export default {
   name: 'App',
-  // components: {
-  //   Navbar
-  // },
-  // props: {
-  //   msg: String
-  // },
-  // created() {
-  //   window.onSignIn = this.onSignIn;
-  // },
-  // methods: {
-  //   onSignIn(googleUser){
-  //     const profile = googleUser.getBasicProfile()
-  //     console.log('ID Token: ', googleUser.getAuthResponse().id_token)
-  //     console.log('ID: '+ profile.getId())
-  //     console.log('Name: '+ profile.getName())
-  //     console.log('Image URL: '+ profile.getImageUrl())
-  //     console.log('Email: '+ profile.getEmail())
-  //   },
-  // }
-  isChecked: false,
-  created() {
-    if(document.location.pathname === '/login'){
-      this.isChecked = true;
-      console.log(this.isChecked)
+  data: function () {
+    return {
+      isLogin: false,
+      userName: null,
+    }
+  },
+   methods: {
+    logout: function () {
+      this.isLogin = false
+      localStorage.removeItem('jwt')
+      localStorage.removeItem('userName')
+      this.$router.push({ name: 'Login' })
+    },
+  },
+  async mounted() {
+    try {
+      const token = localStorage.getItem('jwt')
+      if (token) {
+        this.isLogin = true
+        this.userName = localStorage.getItem('userName')
+      }
+    }
+    catch (error) {
+      console.log(error)
     }
   }
 }

@@ -1,19 +1,19 @@
 <template>
-  <div>
+  <div class="container" id="back">
     <div>
       <v-container align-center>
-        <img src="@/assets/LOGO.jpg" width="100px" class="mb-5" style="margin-top: 180px; margin-left:120px"><br>
-        <h3 class="card-title" style="font-family: 'Lora', serif; margin-left:140px">Login</h3>
+        <img src="@/assets/LOGO.jpg" width="150px" class="mb-5" style="margin-top: 120px; margin-left:90px"><br>
           <div class="card-body">
             <div v-if="isLogin">
-              <h3 class="card-title">이미 로그인한 사용자입니다.</h3>
+              <h3 class="card-title" style="font-family: 'IBMPlexSansKR-Regular';">이미 로그인한 사용자입니다.</h3>
               <h6 class="card-subtitle mb-2 text-muted">you already join here!</h6>
               <button style="width:80%; background-color:black; color:white;" @click="logout()">Logout</button> 
             </div>
             <div v-else>
-              <hr>
+              <h5 style="margin-left:113px;margin-top:60px;font-family: 'PT Serif', serif;">Get your luxury</h5>
               <button @click="login()"><img src="@/assets/google_login.png" alt="google_login_img" style="width:80%"></button> 
             </div>
+            <h5 style="margin-top:160px;margin-left:130px;font-family: 'PT Serif', serif;">DaBID</h5>
           </div>
       </v-container>
     </div>
@@ -72,6 +72,7 @@ export default {
         localStorage.setItem('jwt', res.data.accessToken)
         console.log(localStorage)
         this.$router.push({ name: 'main' })
+        this.$router.go();
       }) 
       .catch((err) => {
         console.log('오류발견', err)
@@ -81,7 +82,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+
+#back {
+  background-image: url('background.jpg'); 
+  background-position: center;
+}
 
 </style>

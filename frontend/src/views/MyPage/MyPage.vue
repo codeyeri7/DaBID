@@ -24,7 +24,6 @@
 <script>
 export default {
   name: 'Mypage',
-  type: 'horizontalBar',
   methods: {
     setToken: function() {
       const jwtToken = localStorage.getItem('jwt')

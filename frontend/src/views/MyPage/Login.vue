@@ -2,7 +2,7 @@
   <div class="container" id="back">
     <div>
       <v-container align-center>
-        <img src="@/assets/LOGO.jpg" width="150px" class="mb-5" style="margin-top: 120px; margin-left:90px"><br>
+        <img src="@/assets/LOGO.png" width="150px" class="mb-5" style="margin-top: 120px; margin-left:90px"><br>
           <div class="card-body">
             <div v-if="isLogin">
               <h3 class="card-title" style="font-family: 'IBMPlexSansKR-Regular';">이미 로그인한 사용자입니다.</h3>

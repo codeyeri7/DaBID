@@ -1,11 +1,26 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
     <!-- carousel -->
-    
-
+    <v-carousel
+      :continuous="false"
+      :show-arrows="false"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="230"
+    >
+      <v-carousel-item>
+        <img src="@/assets/Banner3.png" width="370">
+      </v-carousel-item>
+      <v-carousel-item>
+        <img src="@/assets/Banner2.png" width="370">
+      </v-carousel-item>
+      <v-carousel-item>
+        <img src="@/assets/Banner1.png" width="370">
+      </v-carousel-item>
+    </v-carousel>
     <!-- card -->
     <div class="main-card">
-      <v-card class="mx-auto" max-width="500">
+      <v-card class="mx-auto" width="500">
         <v-container fluid>
           <div>
             <span><b>방송중인 상품</b></span>
@@ -13,7 +28,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
-              <v-card class="section1">
+              <v-card class="section1" height="300px">
                 <!-- Image -->
                 <v-img
                   :src="card.src"
@@ -21,18 +36,14 @@
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding: 40px"
+                  @click="goLive2"
                 >
                   <!-- image 안 title -->
-                  <v-card-title v-text="card.title"></v-card-title>
+                  <v-card-title class="subtitle-style" v-text="card.title"></v-card-title>
                 </v-img>
-
                 <!-- 카드 하단-->
-                <v-card-actions style="height: 70px">
-                  <!-- title -->
-                  <v-card-text v-text="card.livetitle"> </v-card-text>
-                  <!-- 정보 -->
-                  <v-card-text v-text="card.text"> </v-card-text>
-                </v-card-actions>
+                <v-card-title class="text-subtitle-1 my-1" v-text="card.livetitle"></v-card-title>
+                <v-card-subtitle class="text-subtitle-4 my-1" v-text="card.text"></v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -41,9 +52,9 @@
           <button class="btn btn-large btn-primary me-1" @click="goLive1">
             방송 켜기
           </button>
-          <button class="btn btn-large btn-primary ms-1" @click="goLive2">
+          <!-- <button class="btn btn-large btn-primary ms-1" @click="goLive2">
             방송 참여하기
-          </button>
+          </button> -->
         </div>
         <hr />
 
@@ -57,7 +68,7 @@
               <v-card class="section2">
                 <!-- Image -->
                 <v-img
-                  :src="card.src"
+                  src="@/assets/wallet.png"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
@@ -66,14 +77,9 @@
                   <!-- image 안 title -->
                   <v-card-title v-text="card.title"></v-card-title>
                 </v-img>
-
                 <!-- 카드 하단-->
-                <v-card-actions style="height: 70px">
-                  <!-- title -->
-                  <v-card-text v-text="card.livetitle"> </v-card-text>
-                  <!-- 정보 -->
-                  <v-card-text v-text="card.text"> </v-card-text>
-                </v-card-actions>
+                <v-card-title class="text-subtitle-1 my-1" v-text="card.livetitle"></v-card-title>
+                <v-card-subtitle class="text-subtitle-4 my-1" v-text="card.text"></v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -90,7 +96,7 @@
               <v-card class="section3">
                 <!-- Image -->
                 <v-img
-                  :src="card.src"
+                  src="@/assets/prada.png"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
@@ -99,14 +105,9 @@
                   <!-- image 안 title -->
                   <v-card-title v-text="card.title"></v-card-title>
                 </v-img>
-
                 <!-- 카드 하단-->
-                <v-card-actions style="height: 70px">
-                  <!-- title -->
-                  <v-card-text v-text="card.livetitle"> </v-card-text>
-                  <!-- 정보 -->
-                  <v-card-text v-text="card.text"> </v-card-text>
-                </v-card-actions>
+                <v-card-title class="text-subtitle-1 my-1" v-text="card.livetitle"></v-card-title>
+                <v-card-subtitle class="text-subtitle-4 my-1" v-text="card.text"></v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -114,9 +115,13 @@
       </v-card>
     </div>
     <!-- 상품 등록 버튼 -->
-    <div class="fixedbutton">
+    <div class="fixedbutton" style="float: right">
       <RouterLink :to="{ name: 'LiveInfo' }">
-        <v-btn class="mx-2" fab dark color="secondary">
+        <v-btn 
+          x-small 
+          class="mr-2" 
+          fab dark color="primary"
+        >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
       </RouterLink>
@@ -126,6 +131,8 @@
 
 <script>
 import rest from "../js/httpCommon.js"
+import GucciBag from '@/assets/GucciBag.png'
+import Louisvuitton from '@/assets/Louisvuitton.png'
 
 export default {
   name: "Main",
@@ -134,31 +141,31 @@ export default {
       cards: [
         {
           title: "방송중",
-          livetitle: "제목",
-          text: "30만원",
-          src: "",
+          livetitle: "구찌 ooo백",
+          text: "1,400,000",
+          src: GucciBag,
           flex: 6,
         },
         {
           title: "방송중",
-          livetitle: "제목",
-          text: "30만원",
-          src: "",
+          livetitle: "루이비통 oooo",
+          text: "2,000,000",
+          src: Louisvuitton,
           flex: 6,
         },
       ],
       cards2: [
         {
           title: "7/29목 7pm",
-          livetitle: "제목",
-          text: "30만원",
+          livetitle: "입생로랑 지갑",
+          text: "400,000",
           src: "",
           flex: 6,
         },
         {
           title: "7/30금 2pm",
-          livetitle: "제목",
-          text: "30만원",
+          livetitle: "입생로랑 지갑",
+          text: "300,000",
           src: "",
           flex: 6,
         },
@@ -166,15 +173,15 @@ export default {
       cards3: [
         {
           title: "방송 종료",
-          livetitle: "제목",
-          text: "30만원",
+          livetitle: "프라다 갤러리아 사피아노",
+          text: "2,000,000",
           src: "",
           flex: 6,
         },
         {
           title: "방송 종료",
-          livetitle: "제목",
-          text: "30만원",
+          livetitle: "프라다 갤러리아 백",
+          text: "2,200,000",
           src: "",
           flex: 6,
         },
@@ -251,7 +258,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @font-face {
   font-family: "InfinitySans-RegularA1";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/InfinitySans-RegularA1.woff")
@@ -262,7 +269,18 @@ export default {
 /* 상품 등록 버튼 고정 */
 .fixedbutton {
   position: sticky;
-  bottom: 20px;
+  bottom: 60px;
   padding-left: 250px;
+}
+.title-style label[for]{
+  height: 20px;
+  font-size: 4pt;
+}
+.subtitle-style {
+  height: 20px;
+  font-size: 3pt;
+}
+.custom-selector {
+  font-size: 3em;
 }
 </style>

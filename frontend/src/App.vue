@@ -1,35 +1,52 @@
 <template>
-  <v-app>
-    <!-- <div class="v-application">
-      <Navbar v-if="!isChecked"></Navbar>
-    </div> -->
-    <v-app-bar
-      app
-      flat
-      color="white"
-      dark
-      v-if="!isChecked"
-    >
-      <RouterLink :to="{ name: 'Main' }">
-        <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
-      </RouterLink>
-      <v-spacer></v-spacer>
-      <RouterLink :to="{ name: 'MyPage' }">
-        <img src="@/assets/live.png" width="60" class="pt-2">
-      </RouterLink>
-      <RouterLink :to="{ name: '' }">
-        <img src="@/assets/notification.png" width="33" class="pt-4 pb-2">
-      </RouterLink>
-      <RouterLink :to="{ name: 'Login' }">
-        <img src="@/assets/add-user.png" width="33" class="pt-4 pb-2 ml-3">
-      </RouterLink>
-    </v-app-bar>
-    
-    <!-- 메인페이지가 routerview default -->
-    <v-content>
-      <RouterView></RouterView>
-    </v-content>
-  </v-app>
+  <div>
+    <v-app>
+      <v-app-bar
+        app
+        flat
+        color="white"  
+        light
+      >
+        <RouterLink :to="{ name: 'Main' }">
+          <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
+        </RouterLink>
+
+        <v-spacer></v-spacer>
+        
+        <v-text-field
+          hide-details
+          prepend-icon="mdi-magnify"
+          single-line
+          placeholder="Search"
+        ></v-text-field>
+      </v-app-bar>
+      <!-- 메인페이지가 routerview default -->
+      <v-content>
+        <RouterView></RouterView>
+      </v-content>
+    </v-app>
+    <div class="row">
+      <footer
+        app
+        flat
+        color="white"  
+        light
+      >
+        <RouterLink :to="{ name: 'Main' }">
+          <img src="@/assets/Home.png" width="40" class="pt-2">
+        </RouterLink>
+        <RouterLink :to="{ name: '' }">
+          <img src="@/assets/Chat.png" width="30" class="pt-2">
+        </RouterLink>
+        <RouterLink :to="{ name: 'MyLiveList' }">
+          <img src="@/assets/live.png" width="40" class="pt-2">
+        </RouterLink>
+        <RouterLink :to="{ name: 'MyPage' }">
+          <img src="@/assets/profile.png" width="30" class="pt-2">
+        </RouterLink>
+      </footer>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -38,32 +55,19 @@
 
 export default {
   name: 'App',
-  // components: {
-  //   Navbar
+  // 나중에 데이터 다 들어오면 그 때 이거 참고해서 검색 기능 구현하기
+  // computed: {
+  //   getfilteredData() {
+  //    return this.blogs.filter(blog =>
+  //       blog.name.toLowerCase().includes(
+  //         this.search.toLowerCase()
+  //       ) ||
+  //       blog.category.toLowerCase().includes(
+  //         this.search.toLowerCase()
+  //       )
+  //     ) 
+  //   }
   // },
-  // props: {
-  //   msg: String
-  // },
-  // created() {
-  //   window.onSignIn = this.onSignIn;
-  // },
-  // methods: {
-  //   onSignIn(googleUser){
-  //     const profile = googleUser.getBasicProfile()
-  //     console.log('ID Token: ', googleUser.getAuthResponse().id_token)
-  //     console.log('ID: '+ profile.getId())
-  //     console.log('Name: '+ profile.getName())
-  //     console.log('Image URL: '+ profile.getImageUrl())
-  //     console.log('Email: '+ profile.getEmail())
-  //   },
-  // }
-  isChecked: false,
-  created() {
-    if(document.location.pathname === '/login'){
-      this.isChecked = true;
-      console.log(this.isChecked)
-    }
-  }
 }
 </script>
 
@@ -82,4 +86,11 @@ export default {
     z-index:5;
     overflow:auto;
 } */
+footer{ position:fixed; 
+  left:0px; 
+  bottom:0px; 
+  height:50px; 
+  width:100%; 
+  background:white; 
+  color: black; }
 </style>

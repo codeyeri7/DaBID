@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
@@ -30,7 +33,14 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
-	
+
+	@GetMapping("/{userId}/myLive")
+	@ApiOperation(value = "마이 라이브 조회", notes = "내가 등록한 라이브 전체 조회")
+	public ResponseEntity<?> selectMyLives(@PathVariable String userId) {
+		List<Live> myLiveList = userService.getMyLives(userId);
+		return ResponseEntity.status(200).body(myLiveList);
+	}
+
 	@PostMapping()
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.") 
     @ApiResponses({

@@ -13,6 +13,7 @@ import java.util.List;
 public class ProductCategory { //상품카테고리
     @Id
     int prdCategory; //상품 카테고리 번호
+
     @Column(length = 20)
     String prdCategoryName; //상품 카테고리 이름
 

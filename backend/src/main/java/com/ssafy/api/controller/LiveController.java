@@ -39,6 +39,7 @@ public class LiveController {
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
 			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo){
+
 //		System.out.println(authentication.toString());
 //		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 //		System.out.println(userDetails.toString());

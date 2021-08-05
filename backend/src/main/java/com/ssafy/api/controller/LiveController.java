@@ -38,12 +38,11 @@ public class LiveController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
-			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo,
-			@ApiIgnore Authentication authentication) {
-		System.out.println(authentication.toString());
-		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		System.out.println(userDetails.toString());
-		System.out.println(userDetails.getUsername());
+			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo){
+//		System.out.println(authentication.toString());
+//		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+//		System.out.println(userDetails.toString());
+//		System.out.println(userDetails.getUsername());
 //		String userId = userDetails.getUsername();
 
 
@@ -65,13 +64,13 @@ public class LiveController {
 		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
 		Live live = liveService.getLiveByPrdId(prdId);
 
-		try {
-			liveService.updateLive(registerInfo, live);
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
+//		try {
+		liveService.updateLive(registerInfo, live);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
 	}
 	@DeleteMapping("/{prdId}")
 	@ApiOperation(value = "라이브 삭제", notes = "상품 고유 아이디를 받아 등록된 라이브를 삭제한다.")
@@ -82,12 +81,14 @@ public class LiveController {
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
-//	@GetMapping("/all")
-//	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
-//	public ResponseEntity<?> selectAllLives() {
-//		List<Live> liveList = liveService.getRecentLives(0);
-//		return ResponseEntity.status(200).body(liveList);
-//	}
+
+	@GetMapping("/all")
+	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
+	public ResponseEntity<?> selectAllLives() {
+		List<Live> liveList = liveService.getRecentLives(0);
+		return ResponseEntity.status(200).body(liveList);
+	}
+
 	@GetMapping()
 	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
 	public ResponseEntity<?> selectTop2Lives() {

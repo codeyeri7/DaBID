@@ -14,5 +14,4 @@ import java.util.Optional;
 public interface LiveRepository extends JpaRepository<Live,Integer> {
     Optional<Live> findByPrdId(int prdId);
     Optional<Live> findTop2ByLiveStatusOrderByLiveDateAsc(int liveStatus);
-
 }

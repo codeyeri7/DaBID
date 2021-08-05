@@ -15,4 +15,5 @@ public interface LiveService {
     Live getLiveByPrdId(int prdId);
     void deleteLive(int prdId);
     List<Live> getRecentLives(int liveStatus);
+    List<Live> getAllLives();
 }

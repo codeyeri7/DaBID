@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
@@ -26,7 +28,9 @@ public class LiveRegisterPostReq {
 //	@ApiModelProperty(name="라이브 상태", example = "1")
 //	int liveStatus;
 	@ApiModelProperty(name="라이브 시작 날짜")
-	Timestamp liveDate;
+	String liveDate;
+	@ApiModelProperty(name="라이브 시작 시간")
+	String liveTime;
 	@ApiModelProperty(name="상품명")
 	String prdName;
 	@ApiModelProperty(name="카테고리 번호")

@@ -27,12 +27,11 @@
         <RouterView></RouterView>
       </v-content>
     </v-app>
-    <div class="row">
+    <div v-if="isLogin" class="row" style="margin-top:60px">
       <footer
         app
         flat  
         light
-        v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/Home.png" width="40" style="margin-left:50px; margin-top:7px">
@@ -86,7 +85,8 @@ export default {
 
 <style scope>
 
-footer{ position:fixed; 
+footer{ 
+  position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 

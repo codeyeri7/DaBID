@@ -172,7 +172,6 @@ export default {
           data: live,
         })
           .then((res) => {
-            console.log(res)
             this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {

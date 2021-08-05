@@ -88,7 +88,7 @@ public class AuthController {
 				// 신규 회원이라면 User, Auth 테이블에 insert
 				User user = userService.createUser(name);
 				authService.createUser(user, email);	// Auth 테이블에 insert
-
+				authUserId = user.getUserId();
 
 
 			}
@@ -102,7 +102,7 @@ public class AuthController {
 //			String givenName = (String) payload.get("given_name");
 
 			// 유저 fullname과 JwtToken 반환
-			return ResponseEntity.ok(UserLoginPostRes.of(name, JwtTokenUtil.getToken(name)));
+			return ResponseEntity.ok(UserLoginPostRes.of(authUserId, name, JwtTokenUtil.getToken(name)));
 
 		} else {
 			// Invalid ID token

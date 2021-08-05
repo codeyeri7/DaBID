@@ -22,16 +22,8 @@
 </template>
 
 <script>
-import Dabidlogo from '@/assets/Dabid_logo_80.png'
-
 export default {
   name: 'Mypage',
-  type: 'horizontalBar',
-  data() {
-      return {
-      Dabidlogo : Dabidlogo,
-      }
-  },
   methods: {
     setToken: function() {
       const jwtToken = localStorage.getItem('jwt')
@@ -57,7 +49,7 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
     }
-  }
+  },
 }
 </script>
 

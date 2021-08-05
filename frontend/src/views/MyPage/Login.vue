@@ -5,9 +5,7 @@
         <img src="@/assets/LOGO.png" width="150px" class="mb-5" style="margin-top: 120px; margin-left:90px"><br>
           <div class="card-body">
             <div v-if="isLogin">
-              <h3 class="card-title" style="font-family: 'IBMPlexSansKR-Regular';">이미 로그인한 사용자입니다.</h3>
-              <h6 class="card-subtitle mb-2 text-muted">you already join here!</h6>
-              <button style="width:80%; background-color:black; color:white;" @click="logout()">Logout</button> 
+              <img src="@/assets/loading.png" alt="loading" style="margin-left:113px;margin-top:60px;width:90px">
             </div>
             <div v-else>
               <h5 style="margin-left:113px;margin-top:60px;font-family: 'PT Serif', serif;">Get your luxury</h5>
@@ -36,16 +34,6 @@ export default {
     },
 
     methods: {
-      async logOut(){
-        // google 로그아웃 
-        const result = await this.$gAuth.signOut()
-        console.log('result', result)
-        console.log('logout성공이닷')
-        // localstorage 처리 
-        this.isLogin = false
-        localStorage.removeItem('jwt')
-        localStorage.removeItem('userName')
-      },
       async login() {
         const googleUser = await this.$gAuth.signIn()
         console.log('googleUser', googleUser)
@@ -53,6 +41,7 @@ export default {
         // id_token에 저장하고 서버에 보내기 
         this.id_token = googleUser.getAuthResponse().id_token;
         console.log('보내는 id token', this.id_token)
+        this.isLogin = true 
         this.sendToken()
       },
       // 서버에 id_token 보내기 
@@ -66,12 +55,11 @@ export default {
       })
       .then((res) => {
         console.log('server에서 온 응답', res.data)
-        this.isLogin = true 
         localStorage.setItem('userId', res.data.userId)
         localStorage.setItem('userName', res.data.userName)
         localStorage.setItem('jwt', res.data.accessToken)
         console.log(localStorage)
-        this.$router.push({ name: 'main' })
+        this.$router.push({ name: 'Main' })
         this.$router.go();
       }) 
       .catch((err) => {

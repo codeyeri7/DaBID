@@ -41,8 +41,8 @@
               <v-date-picker
                 v-model="date"
                 @input="menu2 = false"
-                min="2021-08-05"
-                max= "2021-08-12s"
+                min="2021-08-06"
+                max= "2021-08-13"
               ></v-date-picker>
             </v-menu>
 
@@ -88,7 +88,7 @@
           </v-dialog>
           </div>
             <v-btn @click="createLive" x-small color="white"  
-          style="margin-left:120px;margin-top: 30px;padding:20px; font-size:20px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
+          style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
     </v-container>

@@ -13,16 +13,17 @@
         </RouterLink>
 
         <v-spacer></v-spacer>
-        
-        <v-text-field
+        <img src="@/assets/menu.png" alt="menubar" style="width:35px">
+        <!-- 지운 검색창 --> 
+        <!-- <v-text-field
           hide-details
           prepend-icon="mdi-magnify"
           single-line
           placeholder="Search"
-        ></v-text-field>
+        ></v-text-field> -->
       </v-app-bar>
       <!-- 메인페이지가 routerview default -->
-      <v-content>
+      <v-content style="margin-bottom:30px">
         <RouterView></RouterView>
       </v-content>
     </v-app>
@@ -34,16 +35,16 @@
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/Home.png" width="40" class="pt-2">
+          <img src="@/assets/Home.png" width="40" style="margin-left:50px; margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: '' }">
-          <img src="@/assets/Chat.png" width="30" class="pt-2">
+          <img src="@/assets/Chat.png" width="30" style="margin-left:35px;margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: 'MyLiveList' }">
-          <img src="@/assets/live.png" width="40" class="pt-2">
+          <img src="@/assets/live.png" width="40" style="margin-left:35px;margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: 'MyPage' }">
-          <img src="@/assets/profile.png" width="30" class="pt-2">
+          <img src="@/assets/profile.png" width="30"  style="margin-left:35px;margin-top:7px">
         </RouterLink>
       </footer>
     </div>
@@ -90,6 +91,8 @@ footer{ position:fixed;
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:white; 
-  color: black; }
+  background:rgb(240, 223, 221); 
+  color: black;
+  border-radius: 30% 30% 0% 0%;
+  }
 </style>

@@ -36,29 +36,29 @@ export default {
     methods: {
       async login() {
         const googleUser = await this.$gAuth.signIn()
-        console.log('googleUser', googleUser)
+        // console.log('googleUser', googleUser)
         this.isLogin = this.$gAuth.isAuthorized
         // id_token에 저장하고 서버에 보내기 
         this.id_token = googleUser.getAuthResponse().id_token;
-        console.log('보내는 id token', this.id_token)
-        this.isLogin = true 
+        // console.log('보내는 id token', this.id_token)
         this.sendToken()
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
         rest.axios({
-        method: "post",
+          method: "post",
         url: "/auth/login",
         data: {
           id_token: this.id_token
         }
       })
       .then((res) => {
-        console.log('server에서 온 응답', res.data)
+        // console.log('server에서 온 응답', res.data)
         localStorage.setItem('userId', res.data.userId)
         localStorage.setItem('userName', res.data.userName)
         localStorage.setItem('jwt', res.data.accessToken)
-        console.log(localStorage)
+        // console.log(localStorage)
+        this.isLogin = true 
         this.$router.push({ name: 'Main' })
         this.$router.go();
       }) 

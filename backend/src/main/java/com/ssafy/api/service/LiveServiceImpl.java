@@ -32,7 +32,6 @@ public class LiveServiceImpl implements LiveService {
 
 //		live.setPrdSellerId(user.getUserId());			// 판매자 고유 아이디
 		live.setUser(user);
-
 		live.setLiveTitle(liveInfo.getLiveTitle());		// 라이브 제목
 		live.setLiveDesc(liveInfo.getLiveDesc());		// 라이브 상세 정보
 		live.setLiveDate(liveInfo.getLiveDate());		// 라이브 시작 날짜
@@ -48,6 +47,9 @@ public class LiveServiceImpl implements LiveService {
 		live.setPrdNo(liveInfo.getPrdNo());				// 상품 일련 번호
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());	// 경매 시작 가격
 
+		List<Live> liveList = user.getLiveList();
+		liveList.add(live);
+		user.setLiveList(liveList);
 		liveRepository.save(live);
 	}
 
@@ -78,7 +80,17 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public List<Live> getAllLives() {
-		return liveRepository.findAll();
+	public List<Live> getRecentLives(int liveStatus) {
+		System.out.println("서비스 들어옴" + liveStatus);
+		List<Live> list = (List<Live>) liveRepository.findTop2ByLiveStatusOrderByLiveDateAsc(liveStatus).orElseGet(null);
+		System.out.println("서비스나간다~ : " +list.toString());
+		return list;
 	}
+
+	@Override
+	public List<Live> getAllLives(){
+		System.out.println();
+		return null;
+	}
+
 }

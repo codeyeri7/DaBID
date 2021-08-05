@@ -22,19 +22,9 @@
 </template>
 
 <script>
-
-import Dabidlogo from '@/assets/Dabid_logo_80.png'
-//import axios from 'axios'
-
-
 export default {
   name: 'Mypage',
   type: 'horizontalBar',
-  data() {
-      return {
-      Dabidlogo : Dabidlogo,
-      }
-  },
   methods: {
     setToken: function() {
       const jwtToken = localStorage.getItem('jwt')

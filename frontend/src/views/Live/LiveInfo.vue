@@ -96,6 +96,7 @@
 </template>
 
 <script>
+
 import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
 // import axios from 'axios'
@@ -113,7 +114,7 @@ export default {
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
         v => /^[0-9-]*$/ .test(v) || '일련 번호는 숫자만 입력 가능합니다.'
       ],
-      productPhoto: [],
+      productPhoto: '',
       select: null,
       selectedIndex: '',
       items: [
@@ -153,6 +154,7 @@ export default {
   methods: {
     createLive() {
       const live = {
+        userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
         prdPhoto: this.productPhoto,
@@ -163,13 +165,11 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      if (live.title) {
+      if (live.liveTitle) {
         rest.axios({
           method: 'post',
           url: '/dabid/live/',
-          data: {
-            live: live
-          },
+          data: live,
         })
           .then((res) => {
             console.log(res)

@@ -22,8 +22,6 @@
 </template>
 
 <script>
-
-
 export default {
   name: 'Mypage',
   type: 'horizontalBar',
@@ -52,7 +50,7 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
     }
-  }
+  },
 }
 </script>
 

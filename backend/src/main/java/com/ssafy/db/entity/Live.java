@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,6 +15,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Live { //라이브테이블
 
     @Id

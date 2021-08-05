@@ -248,7 +248,7 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/",
+          url: "/dabid/live",
         })
         .then((res) => {
           // card에 어떻게 저장되는지 모르겠음 console 찍어봐야 함

@@ -11,6 +11,7 @@ import com.ssafy.db.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +35,16 @@ public class LiveServiceImpl implements LiveService {
 		live.setUser(user);
 		live.setLiveTitle(liveInfo.getLiveTitle());		// 라이브 제목
 		live.setLiveDesc(liveInfo.getLiveDesc());		// 라이브 상세 정보
-		live.setLiveDate(liveInfo.getLiveDate());		// 라이브 시작 날짜
+
+		// 프론트에서 날짜, 시간 따로 String으로 받은 후 합쳐서 저장
+		// input 날짜: 2021-08-08
+		// input 시간: 12:00
+		// 2021-08-08 12:00:00
+		String liveDate = liveInfo.getLiveDate() + " " + liveInfo.getLiveTime() + ":00";
+		Timestamp timestamp = Timestamp.valueOf(liveDate);
+		live.setLiveDate(timestamp);					// 라이브 시작 날짜
 		live.setPrdName(liveInfo.getPrdName());			// 상품명
+
 //		live.setPrdCategory(liveInfo.getPrdCategory()); // 카테고리 번호
 
 		Optional<ProductCategory> productcategory = productCategoryRepository.findByPrdCategory(liveInfo.getPrdCategory());
@@ -57,7 +66,7 @@ public class LiveServiceImpl implements LiveService {
 	public void updateLive(LiveRegisterPostReq liveInfo, Live live) {
 		live.setLiveTitle(liveInfo.getLiveTitle());
 		live.setLiveDesc(liveInfo.getLiveDesc());
-		live.setLiveDate(liveInfo.getLiveDate());
+//		live.setLiveDate(liveInfo.getLiveDate());
 		live.setPrdName(liveInfo.getPrdNo());
 		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
@@ -82,7 +91,8 @@ public class LiveServiceImpl implements LiveService {
 	@Override
 	public List<Live> getRecentLives(int liveStatus) {
 		System.out.println("서비스 들어옴" + liveStatus);
-		List<Live> list = (List<Live>) liveRepository.findTop2ByLiveStatusOrderByLiveDateAsc(liveStatus).orElseGet(null);
+		LiveStatus ls = liveStatusRepository.findByLiveStatus(liveStatus).orElseGet(null);
+		List<Live> list = liveRepository.findTop2ByLiveStatusOrderByLiveDateAsc(ls).orElseGet(null);
 		System.out.println("서비스나간다~ : " +list.toString());
 		return list;
 	}

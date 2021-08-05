@@ -46,8 +46,10 @@ public class LiveController {
 //		System.out.println(userDetails.getUsername());
 //		String userId = userDetails.getUsername();
 
-
 		User user = userService.getUserByUserId(registerInfo.getUserId());
+		System.out.println(registerInfo.getLiveDate());
+		System.out.println(registerInfo.getLiveTime());
+
 		try {
 			liveService.createLive(user, registerInfo);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));

@@ -32,6 +32,7 @@ public class User {
     @OneToOne(mappedBy = "user")
     Auth auth;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     Result result;
 

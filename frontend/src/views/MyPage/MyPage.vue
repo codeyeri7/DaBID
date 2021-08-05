@@ -1,29 +1,18 @@
 <template>
-<div>
-  <div class="d-flex justify-space-around mb-6">
-    <img 
-      :src="Dabidlogo" 
-      class="mt-6 mx-6">
-    <div>
-      <p class="mt-6 my-6 font-weight-black">
-        Nick Name
-      </p>
-      <v-btn icon>
-        <v-icon>$pencil</v-icon>
-      </v-btn>
-    </div>
-  </div>
-  <div class="small">
-    <HorizontalBar :chart-data="datacollection"></HorizontalBar>
-    <button @click="fillData()">Randomize</button>
-  </div>
-  <button class="btn btn-danger" @click="logout()">Logout</button>
+<div class="container">
+  {{ userName }}
+  <button class="btn btn-danger ms-3" @click="logout()">Logout</button>
 	</div>
 </template>
 
 <script>
 export default {
   name: 'Mypage',
+  data () {
+      return {
+        userName: null,
+      }
+    },
   methods: {
     setToken: function() {
       const jwtToken = localStorage.getItem('jwt')
@@ -41,11 +30,14 @@ export default {
       this.isLogin = false
       localStorage.removeItem('jwt')
       localStorage.removeItem('userName')
+      this.$router.push({ name: 'main' })
+      this.$router.go();
     }
   },
   mounted: async function () {
     if (localStorage.getItem('jwt')) {
       console.log(localStorage)
+      this.userName = localStorage.getItem('userName')
     } else {
       this.$router.push({ name: 'Login' })
     }

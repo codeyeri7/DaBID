@@ -1,28 +1,4 @@
 <template>
-  <div id="app">
-     <div id="nav" class="sticky-top" style="background-color:white">
-      <span v-if="isLogin" class="px-3 py-1">
-        <!-- 원래 버전-->
-        <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
-        </RouterLink>
-        <RouterLink :to="{ name: 'MyPage' }">
-          <img src="@/assets/live.png" width="60" class="pt-2">
-        </RouterLink>
-        <RouterLink :to="{ name: '' }">
-          <img src="@/assets/notification.png" width="33" class="pt-4 pb-2">
-        </RouterLink>
-        <RouterLink :to="{ name: 'Login' }">
-          <img src="@/assets/add-user.png" width="33" class="pt-4 pb-2 ml-3">
-        </RouterLink>
-        <router-link @click.native="logout" to="#" class="mx-3">로그아웃</router-link>
-        <!-- 원래 버전-->
-      </span>
-
-      <span v-else>
-      </span>
-    </div>
-    <RouterView @login="isLogin=true"/>
   <div>
     <v-app>
       <v-app-bar
@@ -30,9 +6,10 @@
         flat
         color="white"  
         light
+        v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO.jpg" width="40" class="pt-2">
+          <img src="@/assets/LOGO.png" width="40" class="pt-2">
         </RouterLink>
 
         <v-spacer></v-spacer>
@@ -52,9 +29,9 @@
     <div class="row">
       <footer
         app
-        flat
-        color="white"  
+        flat  
         light
+        v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/Home.png" width="40" class="pt-2">
@@ -107,20 +84,7 @@ export default {
 </script>
 
 <style scope>
-/* header와 content 분리*/ 
-/* .wrapper {
-    width:100%;
-    position:fixed;
-    z-index:10;
-    background:inherit;
-}
 
-.bottom-wrapper {
-    width:100%;
-    padding-top:70px;
-    z-index:5;
-    overflow:auto;
-} */
 footer{ position:fixed; 
   left:0px; 
   bottom:0px; 

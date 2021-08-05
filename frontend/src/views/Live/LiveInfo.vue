@@ -10,7 +10,7 @@
             <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input>
+            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
           </div>
           <!-- <v-btn @click="upload" color=primary flat>업로드</v-btn> -->
           
@@ -174,12 +174,7 @@ export default {
           .then((res) => {
             console.log(res)
             console.log(live)
-            // 유효성 검사 성공 시
-            if (this.prdName && this.prdNo && this.proPhoto && this.prdCategory && this.liveTitle && this.prdPriceStart && this.liveDate && this.liveTime) {
-              this.$router.push({ name: 'MyLiveList' })
-            } else {
-              alert('입력하신 정보를 다시 확인해주세요')
-            }
+            // 유효성 검사 성공 
           })
           .catch((err) => {
             console.log(err)

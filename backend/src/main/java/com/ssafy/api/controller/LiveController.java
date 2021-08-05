@@ -76,10 +76,21 @@ public class LiveController {
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
-	@GetMapping
-	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
-	public ResponseEntity<?> selectAllLives() {
-		List<Live> liveList = liveService.getAllLives();
+//	@GetMapping("/all")
+//	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
+//	public ResponseEntity<?> selectAllLives() {
+//		List<Live> liveList = liveService.getRecentLives(0);
+//		return ResponseEntity.status(200).body(liveList);
+//	}
+	@GetMapping()
+	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
+	public ResponseEntity<?> selectTop2Lives() {
+		List<Live> liveList = liveService.getRecentLives(0);
+		System.out.println("첫번째다 : "+liveList.toString());
+		liveList.addAll(liveService.getRecentLives(1));
+		System.out.println("두번째다 : "+liveList.toString());
+		liveList.addAll(liveService.getRecentLives(2));
+		System.out.println("세번째다 : "+liveList.toString());
 		return ResponseEntity.status(200).body(liveList);
 	}
 }

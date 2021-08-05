@@ -14,5 +14,5 @@ public interface LiveService {
     void updateLive(LiveRegisterPostReq liveRegisterPostReq, Live live);
     Live getLiveByPrdId(int prdId);
     void deleteLive(int prdId);
-    List<Live> getAllLives();
+    List<Live> getRecentLives(int liveStatus);
 }

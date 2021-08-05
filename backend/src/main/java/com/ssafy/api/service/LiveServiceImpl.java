@@ -78,7 +78,10 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public List<Live> getAllLives() {
-		return liveRepository.findAll();
+	public List<Live> getRecentLives(int liveStatus) {
+		System.out.println("서비스 들어옴");
+		List<Live> list = (List<Live>) liveRepository.findTop2ByLiveStatusOrderByLiveDateAsc(liveStatus).orElseGet(null);
+		System.out.println("서비스나간다~ : " +list.toString());
+		return list;
 	}
 }

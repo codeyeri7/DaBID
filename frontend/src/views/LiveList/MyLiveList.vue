@@ -2,11 +2,11 @@
   <div class="container" style="background-color:red">
     <h1>My Live List</h1>
     <div class="row">
-      <div v-for="(live, idx) in lives"
+      <div v-for="(live, idx) in this.lives"
       :key="idx"
       :live="live">
-       <div class="card my-2" style="background-color:black;">
-          <div class="card-imgTitle" @click="goDetail(live.id)" v-if="live.title" title="상세정보 확인을 확인해보세요">
+       <div class="card my-2" style="background-color:white;">
+          <div class="card-imgTitle" @click="goDetail(live.id)" v-if="live.liveTitle" title="상세정보 확인을 확인해보세요">
             <img v-bind:src="live.src" class="img-fluid" alt="live_thumbnail" style="height: 400px">
             <div class="card-body pt-4">
               <h5 class="card-title"><strong> {{ live.prdName }}</strong></h5>
@@ -39,7 +39,7 @@ export default {
     getLiveList: function () {
       rest.axios({
         method: 'get',
-        url: '',
+        url: '/dabid/users/'+localStorage.getItem('userId')+'/myLive',
         headers: this.setToken()
       })
         .then((res) => {
@@ -51,13 +51,13 @@ export default {
         })
     }
   },
-  // created: function () {
-  //   if (localStorage.getItem('jwt')) {
-  //     this.getLiveList()
-  //   } else {
-  //     this.$router.push({ name: 'Login' })
-  //   }
-  // }
+  created: function () {
+    if (localStorage.getItem('jwt')) {
+      this.getLiveList()
+    } else {
+      this.$router.push({ name: 'Login' })
+    }
+  }
 }
 </script>
 

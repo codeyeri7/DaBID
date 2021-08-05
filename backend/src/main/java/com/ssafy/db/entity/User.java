@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,15 +28,18 @@ public class User {
     @ColumnDefault("0")
     int userScore;   // 평점
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     Auth auth;
 
     @OneToOne(mappedBy = "user")
     Result result;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Review> reviewList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Live> liveList = new ArrayList<>();
 }

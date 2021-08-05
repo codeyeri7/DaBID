@@ -77,6 +77,7 @@ export default {
 #back {
   background-image: url('background.jpg'); 
   background-size: cover;
+  height: 100%;
 }
 
 </style>

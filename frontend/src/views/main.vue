@@ -1,15 +1,7 @@
 <template>
-  <div style="font-family: 'InfinitySans-RegularA1'">
+  <div style="font-family: 'InfinitySans-RegularA1';">
     <!-- carousel -->
-    <div class="main-carousel">
-      <v-carousel :show-arrows="false" height="230">
-        <v-carousel-item
-          v-for="(item, i) in items"
-          :key="i"
-          :src="item.src"
-        ></v-carousel-item>
-      </v-carousel>
-    </div>
+    
 
     <!-- card -->
     <div class="main-card">
@@ -133,7 +125,6 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
 import rest from "../js/httpCommon.js"
 
 export default {
@@ -195,18 +186,6 @@ export default {
         userId: "",
       },
 
-      // carousel image
-      items: [
-        {
-          // src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
-        },
-        {
-          // src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
-        },
-        {
-          // src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
-        },
-      ],
     };
   },
   methods: {
@@ -215,7 +194,7 @@ export default {
       rest
         .axios({
           method: "post",
-          url: "/dabid/session/3/test123",
+          url: `/dabid/session/3/test123`,
         })
         .then((res) => {
           console.log("켜짐");

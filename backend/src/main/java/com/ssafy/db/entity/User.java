@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 public class User {
     @Id
-    @Column(name="user_id")
+    @Column(name="user_id", length=14)
     @GenericGenerator(name = "UserIdGenerator", // @GeneratedValue의 generator modifier에서 사용할 이름
             strategy = "com.ssafy.db.generator.UserIdGenerator") // IdentifierGenerator 인터페이스를 구현한 클래스 이름
     @GeneratedValue(generator = "UserIdGenerator")  // @GenericGenerator의 name modifier 에 지정한 이름
@@ -27,15 +28,19 @@ public class User {
     @ColumnDefault("0")
     int userScore;   // 평점
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     Auth auth;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     Result result;
-    
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Review> logs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "prdSellerId")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Review> reviewList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Live> liveList = new ArrayList<>();
 }

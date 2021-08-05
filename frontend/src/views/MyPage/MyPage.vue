@@ -49,7 +49,7 @@ export default {
     } else {
       this.$router.push({ name: 'Login' })
     }
-  }
+  },
 }
 </script>
 

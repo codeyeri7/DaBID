@@ -31,12 +31,14 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserLoginPostResponse")
 public class UserLoginPostRes {
+	String userId;
 	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
 	String accessToken;
 	String userName;
 
-	public static UserLoginPostRes of(String userName, String accessToken) {
+	public static UserLoginPostRes of(String userId, String userName, String accessToken) {
 		UserLoginPostRes res = new UserLoginPostRes();
+		res.setUserId(userId);
 		res.setUserName(userName);
 		res.setAccessToken(accessToken);
 		return res;

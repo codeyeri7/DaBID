@@ -119,14 +119,11 @@ export default {
         liveDesc: this.liveInfo,
         liveDate: this.date,
       }
-      if (live.title) {
+      if (live.liveTitle) {
         rest.axios({
           method: 'post',
           url: '/dabid/live/',
-          data: {
-            live: live
-          },
-
+          data: live,
         })
           .then((res) => {
             console.log(res)

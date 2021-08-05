@@ -38,14 +38,14 @@ public class Live { //라이브테이블
 //    @Column(name="prd_category",insertable=false, updatable=false)
 //    int prdCategory;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name="live_status")
     private LiveStatus liveStatus;
 
     @OneToOne(mappedBy = "live")
     private Result result;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name="prd_category")
     private ProductCategory productCategory;
 

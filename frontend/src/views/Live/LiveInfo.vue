@@ -112,7 +112,7 @@ export default {
       productNumber: '',
       productNumberRules: [
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
-        v => /^[0-9-]*$/ .test(v) || '일련 번호는 숫자만 입력 가능합니다.'
+        v => /^[a-zA-Z0-9-]*$/ .test(v) || '일련 번호는 영문숫자만 입력 가능합니다.'
       ],
       productPhoto: '',
       select: null,
@@ -173,8 +173,7 @@ export default {
         })
           .then((res) => {
             console.log(res)
-            console.log(live)
-            // 유효성 검사 성공 
+            this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {
             console.log(err)

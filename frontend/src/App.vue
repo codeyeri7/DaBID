@@ -23,7 +23,7 @@
         ></v-text-field> -->
       </v-app-bar>
       <!-- 메인페이지가 routerview default -->
-      <v-content style="margin-bottom:30px">
+      <v-content>
         <RouterView></RouterView>
       </v-content>
     </v-app>

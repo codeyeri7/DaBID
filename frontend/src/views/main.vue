@@ -29,7 +29,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card class="section1" height="300px">
+              <v-card class="section1">
                 <!-- Image -->
                 <v-img
                   src="@/assets/GucciBag.png"
@@ -39,27 +39,20 @@
                   style="padding: 40px"
                   @click="goLive2"
                 >
-                <!-- {{card}} -->
                   <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
         </v-container>
         <div>
-          <!-- <button class="btn btn-large btn-primary me-1" @click="goLive1">
-            방송 켜기
-          </button> -->
-          <!-- <button class="btn btn-large btn-primary ms-1" @click="goLive2">
-            방송 참여하기
-          </button> -->
         </div>
         <hr />
-
         <v-container fluid>
           <div>
             <span><b>방송 예정</b></span>
@@ -77,11 +70,12 @@
                   style="padding-left: 20px"
                 >
                    <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style">방송 예정</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -105,11 +99,12 @@
                   style="padding-left: 25px"
                 >
                    <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style">방송 종료</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -149,6 +144,11 @@ export default {
         userId: "",
       },
     };
+  },
+  filters: {
+      comma: function (value) {
+          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
   },
   methods: {
     // live 열기
@@ -234,6 +234,7 @@ export default {
 .subtitle-style {
   height: 20px;
   font-size: 3pt;
+  font-family: 'IBMPlexSansKR-Regular';
 }
 .custom-selector {
   font-size: 3em;

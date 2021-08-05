@@ -1,7 +1,24 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
     <!-- carousel -->
-    
+    <v-carousel
+      :continuous="false"
+      :cycle="cycle"
+      :show-arrows="false"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="230"
+    >
+      <v-carousel-item>
+        <img src="@/assets/Banner3.png" width="370">
+      </v-carousel-item>
+      <v-carousel-item>
+        <img src="@/assets/Banner2.png" width="370">
+      </v-carousel-item>
+      <v-carousel-item>
+        <img src="@/assets/Banner1.png" width="370">
+      </v-carousel-item>
+    </v-carousel>
 
     <!-- card -->
     <div class="main-card">

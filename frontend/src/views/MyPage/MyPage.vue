@@ -1,37 +1,51 @@
 <template>
-<div>
-  <div class="d-flex justify-space-around mb-6">
-    <img 
-      :src="Dabidlogo" 
-      class="mt-6 mx-6">
-    <div>
-      <p class="mt-6 my-6 font-weight-black">
-        Nick Name
-      </p>
-      <v-btn icon>
-        <v-icon>$pencil</v-icon>
-      </v-btn>
-    </div>
-  </div>
-  <div class="small">
-    <HorizontalBar :chart-data="datacollection"></HorizontalBar>
-    <button @click="fillData()">Randomize</button>
-  </div>
-  <button class="btn btn-danger" @click="logout()">Logout</button>
+<div class="container">
+  <button class="btn btn-danger ms-3" @click="logout()">Logout</button>
+  <v-card
+    class="mx-auto elevation-20"
+    style="max-width: 80%; margin-top:50px"
+  >
+    <v-row justify="space-between">
+      <v-col>
+        <v-card-title>
+          <div>
+            <div class="text-h5">
+              {{ userName}}
+            </div>
+          </div>
+        </v-card-title>
+      </v-col>
+    </v-row>
+    <v-divider dark></v-divider>
+    <v-card-actions class="pa-4">
+      check your points 
+      <v-spacer></v-spacer>
+      <span class="black--text text--lighten-2 text-caption mr-2">
+        ({{ rating }})
+      </span>
+      <v-rating
+        v-model="rating"
+        background-color="white"
+        color="yellow accent-4"
+        dense
+        half-increments
+        hover
+        size="15"
+      ></v-rating>
+    </v-card-actions>
+  </v-card>
 	</div>
 </template>
 
 <script>
-import Dabidlogo from '@/assets/Dabid_logo_80.png'
-
 export default {
   name: 'Mypage',
-  type: 'horizontalBar',
-  data() {
+  data () {
       return {
-      Dabidlogo : Dabidlogo,
+        userName: null,
+        rating: 2.7,
       }
-  },
+    },
   methods: {
     setToken: function() {
       const jwtToken = localStorage.getItem('jwt')
@@ -49,15 +63,18 @@ export default {
       this.isLogin = false
       localStorage.removeItem('jwt')
       localStorage.removeItem('userName')
+      this.$router.push({ name: 'main' })
+      this.$router.go();
     }
   },
   mounted: async function () {
     if (localStorage.getItem('jwt')) {
-      console.log(localStorage)
+      // console.log(localStorage)
+      this.userName = localStorage.getItem('userName')
     } else {
       this.$router.push({ name: 'Login' })
     }
-  }
+  },
 }
 </script>
 

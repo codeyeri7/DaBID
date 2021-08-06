@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserUpdatePatchReq;
 import com.ssafy.db.entity.Auth;
+import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.AuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.repository.UserRepository;
+
+import java.util.List;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -22,9 +25,15 @@ public class UserServiceImpl implements UserService {
 //	@Autowired
 ////	UserRepositorySupport userRepositorySupport;
 //
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
+//	@Autowired
+//	PasswordEncoder passwordEncoder;
+
+	@Override
+	public List<Live> getMyLives(String userId) {
+		User user = getUserByUserId(userId);
+		return user.getLiveList();
+	}
+
 	@Override
 	public User createUser(String userName) {
 		User user = new User();

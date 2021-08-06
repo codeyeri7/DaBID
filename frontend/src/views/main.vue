@@ -32,7 +32,7 @@
               <v-card class="section1">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/GucciBag.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
@@ -63,7 +63,7 @@
               <v-card class="section2">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/wallet.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
@@ -92,7 +92,7 @@
               <v-card class="section3">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/prada.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"

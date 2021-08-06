@@ -11,8 +11,11 @@
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
             <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
+            <div>
+              <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
+              <v-btn @click="upload" color=primary flat>업로드</v-btn>
+            </div>
           </div>
-          <!-- <v-btn @click="upload" color=primary flat>업로드</v-btn> -->
           
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
@@ -114,7 +117,6 @@ export default {
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
         v => /^[a-zA-Z0-9-]*$/ .test(v) || '일련 번호는 영문숫자만 입력 가능합니다.'
       ],
-      productPhoto: '',
       select: null,
       selectedIndex: '',
       items: [
@@ -147,9 +149,10 @@ export default {
       modal2: false,
       hover:false,
       // image 
-      albumBucketName:'dabid-img',
+      file: null,
+      albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
-      IdentityPoolId: 'ap-northeast-2:2446626d-3eb7-4489-adcb-dd0ea57521cd'
+      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
   }),
   methods: {
     createLive() {
@@ -157,7 +160,7 @@ export default {
         userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
-        prdPhoto: this.productPhoto,
+        prdPhoto: this.prdPhoto,
         prdCategory: this.items.indexOf(this.select),
         liveTitle: this.title,
         prdPriceStart: this.startPrice,
@@ -172,6 +175,7 @@ export default {
           data: live,
         })
           .then((res) => {
+            console.log(live.prdPhoto)
             this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {
@@ -192,15 +196,14 @@ export default {
       return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
     handleFileUpload() {
-      console.log(this.productPhoto, '파일이 잘 업로드 되었습니다.')
+      this.file = this.$refs.file.files[0]
+      console.log(this.file, '파일이 잘 업로드 되었습니다.')
     },
     upload() {
       AWS.config.update({
         region: this.bucketRegion,
         credentials: new AWS.CognitoIdentityCredentials({
           IdentityPoolId: this.IdentityPoolId,
-          // accessKeyId: "AKIAXPHRRUK3P5LDGSOK",
-          // secretAccessKey: "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",
         })
       })
 
@@ -210,18 +213,18 @@ export default {
           Bucket: this.albumBucketName
         }
       })
-      let photoKey = this.productPhoto.name
+      let photoKey = this.file.name
       s3.upload({
         Key: photoKey,
-        Body: this.productPhoto,
+        Body: this.file,
         ACL: 'public-read'
       }, (err, data) => {
         if (err) {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        alert('Successfully uploaded photo.');
-        console.log(data)
+        // alert('Successfully uploaded photo.');
+        this.prdPhoto = data.Location
       });
     }
   },

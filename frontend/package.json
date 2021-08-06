@@ -14,7 +14,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.2",
     "@vuelidate/core": "^2.0.0-alpha.22",
     "@vuelidate/validators": "^2.0.0-alpha.19",
-    "aws-sdk": "^2.961.0",
+    "aws-sdk": "^2.962.0",
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "chartjs-plugin-datalabels": "^2.0.0",

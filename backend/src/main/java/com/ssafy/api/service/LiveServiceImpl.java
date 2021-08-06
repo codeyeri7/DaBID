@@ -30,7 +30,6 @@ public class LiveServiceImpl implements LiveService {
 	@Override
 	public void createLive(User user, LiveRegisterPostReq liveInfo) {
 		Live live = new Live();
-
 //		live.setPrdSellerId(user.getUserId());			// 판매자 고유 아이디
 		live.setUser(user);
 		live.setLiveTitle(liveInfo.getLiveTitle());		// 라이브 제목

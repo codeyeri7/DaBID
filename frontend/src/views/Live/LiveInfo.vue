@@ -175,7 +175,6 @@ export default {
           data: live,
         })
           .then((res) => {
-            console.log(live.prdPhoto)
             this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {
@@ -225,6 +224,7 @@ export default {
         }
         // alert('Successfully uploaded photo.');
         this.prdPhoto = data.Location
+        console.log(this.prdPhoto)
       });
     }
   },

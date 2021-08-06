@@ -66,11 +66,22 @@ public class LiveServiceImpl implements LiveService {
 	public void updateLive(LiveRegisterPostReq liveInfo, Live live) {
 		live.setLiveTitle(liveInfo.getLiveTitle());
 		live.setLiveDesc(liveInfo.getLiveDesc());
-//		live.setLiveDate(liveInfo.getLiveDate());
-		live.setPrdName(liveInfo.getPrdNo());
+
+		String liveDate = liveInfo.getLiveDate() + " " + liveInfo.getLiveTime() + ":00";
+		System.out.println("");
+		Timestamp timestamp = Timestamp.valueOf(liveDate);
+		live.setLiveDate(timestamp);
+
+		Optional<ProductCategory> productcategory = productCategoryRepository.findByPrdCategory(liveInfo.getPrdCategory());
+		live.setProductCategory(productcategory.orElseGet(null));
+
+		live.setPrdName(liveInfo.getPrdName());
+
+		Optional<LiveStatus> livestatus = liveStatusRepository.findByLiveStatus(0);
+		live.setLiveStatus(livestatus.orElseGet(null));
+
 		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
-		live.setPrdPhoto(liveInfo.getPrdPhoto());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
 
 		liveRepository.save(live);

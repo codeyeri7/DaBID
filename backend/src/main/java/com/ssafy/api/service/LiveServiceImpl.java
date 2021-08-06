@@ -55,6 +55,7 @@ public class LiveServiceImpl implements LiveService {
 
 		live.setPrdNo(liveInfo.getPrdNo());				// 상품 일련 번호
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());	// 경매 시작 가격
+		live.setPrdPhoto(liveInfo.getPrdPhoto()); //상품사진
 
 		List<Live> liveList = user.getLiveList();
 		liveList.add(live);

@@ -12,7 +12,7 @@
               <v-card class="section1" height="300px">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/prada.png"
+                  src= "live.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
@@ -22,7 +22,10 @@
                   title="상세정보 확인을 확인해보세요"
                 >
                   <!-- image 안 title -->
-                  <v-card-title class="subtitle-style" style="margin-left:15px; color:red">❤</v-card-title>
+                  <v-card-title class="subtitle-style" style="margin-left:15px;">
+                    <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
+                  </v-card-title>
+                  
                 </v-img>
                 <!-- 카드 하단-->
                 <v-card-subtitle class="text-subtitle-4">{{ live.prdName }}</v-card-subtitle>
@@ -72,6 +75,15 @@ export default {
         })
         .catch((err) => {
           console.log(err)
+        })
+    },
+    remove: function () {
+      rest.axios({
+        method: 'delete',
+        url: '',
+      })
+        .then((res) => {
+          this.$router.go();
         })
     }
   },

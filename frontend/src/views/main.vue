@@ -117,7 +117,7 @@
         <v-btn 
           x-small 
           class="mr-2" 
-          fab dark color="primary"
+          fab dark color="gray"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>

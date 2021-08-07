@@ -91,8 +91,8 @@ footer{
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:rgb(240, 223, 221); 
-  color: black;
+  background:rgb(100, 100, 100); 
+  color: rgb(255, 255, 255);
   border-radius: 30% 30% 0% 0%;
   }
 </style>

@@ -17,13 +17,13 @@
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding: 40px"
-                  @click="goDetail(live.id)"
                   v-if="live.liveTitle" 
                   title="상세정보 확인을 확인해보세요"
                 >
                   <!-- image 안 title -->
                   <v-card-title class="subtitle-style" style="margin-left:15px;">
-                    <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
+                    <img @click="edit(live)" src="@/assets/editing.png" alt="edit live" style="width:20px;height:20px;margin-bottom:2rem;">
+                    <img @click="remove(live.prdId)" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px;">
                   </v-card-title>
                   
                 </v-img>
@@ -77,14 +77,21 @@ export default {
           console.log(err)
         })
     },
-    remove: function () {
+    remove: function (prdId) {
       rest.axios({
         method: 'delete',
-        url: '',
+        url: `/dabid/live/${prdId}`,
       })
         .then((res) => {
-          this.$router.go();
+          this.getLiveList()
+          alert('해당 게시글이 삭제되었습니다')
         })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    edit: function (live) {
+      this.$router.push({ name: 'UpdateMyLiveList', params: {live: live} });
     }
   },
   created: function () {

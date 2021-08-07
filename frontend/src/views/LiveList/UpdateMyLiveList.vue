@@ -1,19 +1,20 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
+      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Update your LIVE</h2>
       <hr id="top-hr">
       <v-row>
         <v-col>
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-bind="live" v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="prdName" required="required">{{ live.prdName }} </v-text-field>
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
             <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
               <v-btn @click="upload" color=primary flat>업로드</v-btn>
+              <h5 :v-bind="live">{{ live }}</h5>
             </div>
           </div>
           
@@ -90,7 +91,7 @@
             </v-time-picker>
           </v-dialog>
           </div>
-            <v-btn @click="createLive" x-small color="white"  
+            <v-btn @click="updateLive" x-small color="white"  
           style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
@@ -99,13 +100,12 @@
 </template>
 
 <script>
-
 import rest from "../../js/httpCommon.js"
-import AWS from 'aws-sdk'
-// import axios from 'axios'
+
 export default {
-  name: 'LiveInfo',
+  name: 'UpdateMyLiveList',
   data: vm => ({
+      live: [],
       valid: true,
       productName: '',
       nameRules: [
@@ -155,8 +155,9 @@ export default {
       IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
   }),
   methods: {
-    createLive() {
-      const live = {
+    updateLive: function() {
+      const prdId = this.live.prdId
+      const liveData = {
         userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
@@ -168,86 +169,32 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      if (live.liveTitle) {
-        rest.axios({
-          method: 'post',
-          url: '/dabid/live/',
-          data: live,
-        })
-          .then((res) => {
-            this.$router.push({ name: 'MyLiveList' })
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
-    },
-    formatDate (date) {
-        if (!date) return null
-
-        const [year, month, day] = date.split('-')
-        return `${month}/${day}/${year}`
-    },
-    parseDate (date) {
-      if (!date) return null
-    
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    },
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0]
-      console.log(this.file, '파일이 잘 업로드 되었습니다.')
-    },
-    upload() {
-      AWS.config.update({
-        region: this.bucketRegion,
-        credentials: new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: this.IdentityPoolId,
-        })
+      rest.axios({
+        method: 'put',
+        url: `/dabid/live/${prdId}`,
+        data: liveData
       })
-
-      const s3 = new AWS.S3({
-        apiVersion: '2012-10-17',
-        params: {
-          Bucket: this.albumBucketName
-        }
-      })
-      let photoKey = this.file.name
-      s3.upload({
-        Key: photoKey,
-        Body: this.file,
-        ACL: 'public-read'
-      }, (err, data) => {
-        if (err) {
+        .then((res) => {
+          // my live list로 전환 
+          this.$router.push({ name: 'MyLiveList' })
+        })
+        .catch((err) => {
           console.log(err)
-          return alert('There was an error uploading your photo: ', err.message);
-        }
-        alert('사진 업로드에 성공했습니다');
-        this.prdPhoto = data.Location
-        console.log(this.prdPhoto)
-      });
-    }
+        })
+    },
   },
+  mounted: function () {
+    if (localStorage.getItem('jwt')) {
+      // 바로 정보 가져오기 
+      this.live = this.$route.params.live
+      // console.log(this.live)
+    } else {
+      console.log('오류')
+    }
+  }
 }
 </script>
 
-<style scoped>
-@font-face {
-    font-family: 'IBMPlexSansKR-Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-#top-hr{
-  height:1px;
-  background:#bbb;
-  background-image: -webkit-linear-gradient(left, #eee, #777, #eee);
-}
-
-#check-img:hover{
-  color:red
-}
-
-
+<style>
 
 </style>

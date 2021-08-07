@@ -83,6 +83,7 @@ public class LiveServiceImpl implements LiveService {
 		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
+		live.setPrdPhoto(liveInfo.getPrdPhoto());
 
 		liveRepository.save(live);
 	}

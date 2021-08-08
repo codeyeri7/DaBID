@@ -17,13 +17,15 @@ public class LiveRes {
 	String token;
 	String userName;	// 유저 닉네임
 	String userId;		// 회원 고유 아이디
+	String role;
 	
-	public static LiveRes of(String liveTitle, String token, String userName, String userId) {
+	public static LiveRes of(String liveTitle, String token, String userName, String userId, String role) {
 		LiveRes res = new LiveRes();
 		res.setLiveTitle(liveTitle);
 		res.setToken(token);
 		res.setUserName(userName);
 		res.setUserId(userId);
+		res.setRole(role);
 		return res;
 	}
 }

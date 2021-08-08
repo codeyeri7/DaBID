@@ -19,6 +19,8 @@
       </v-carousel-item>
     </v-carousel>
 
+    <button @click="goLive1">goLive1</button>
+    <button @click="goLive2">goLive2</button>
     <!-- card -->
     <div class="main-card">
       <v-card class="mx-auto" width="500">
@@ -142,6 +144,7 @@ export default {
         token: "",
         userName: "",
         userId: "",
+        role: "",
       },
     };
   },
@@ -156,18 +159,29 @@ export default {
       rest
         .axios({
           method: "post",
-          url: `/dabid/session/3/test123`,
+          url: `/dabid/session/2/`+localStorage.getItem("userId"),
         })
         .then((res) => {
           console.log("켜짐");
           console.log(res.data);
-          console.log("Publisher입니다.");
+          console.log(res.data.role + "입니다.");
           this.sessionData.liveTitle = res.data.liveTitle;
           this.sessionData.token = res.data.token;
           this.sessionData.userName = res.data.userName;
           this.sessionData.userId = res.data.userId;
+          this.sessionData.role = res.data.role;
+          console.log("token" + res.data.token);
           console.log("session" + this.sessionData);
-          this.$router.push({ name: "Session", params: {liveTitle: this.sessionData.liveTitle, token: this.sessionData.token, userName: this.sessionData.userName, userId: this.sessionData.userId}});
+          this.$router.push({
+            name: "Session", 
+            params: {
+              liveTitle: this.sessionData.liveTitle,
+              token: this.sessionData.token,
+              userName: this.sessionData.userName,
+              userId: this.sessionData.userId,
+              role: this.sessionData.role,
+            }
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -177,12 +191,26 @@ export default {
       rest
       .axios({
         method: "post",
-        url: "/dabid/session/3/test123",
+        url: "/dabid/session/2/P1628141880829",
       })
         .then((res) => {
+          this.sessionData.liveTitle = res.data.liveTitle;
+          this.sessionData.token = res.data.token;
+          this.sessionData.userName = res.data.userName;
+          this.sessionData.userId = res.data.userId;
+          this.sessionData.role = res.data.role;
           console.log(res);
-          console.log("Subscriber입니다.");
-          this.$router.push({ name: "Session" });
+          console.log(res.data.role + "입니다.");
+          this.$router.push({ 
+            name: "Session",
+            params: {
+              liveTitle: this.sessionData.liveTitle, 
+              token: this.sessionData.token, 
+              userName: this.sessionData.userName, 
+              userId: this.sessionData.userId,
+              role: this.sessionData.role
+            }
+          });
         })
         .catch((err) => {
           console.log(err);

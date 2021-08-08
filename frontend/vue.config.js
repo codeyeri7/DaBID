@@ -4,16 +4,16 @@ module.exports = {
         proxy: {
             '/dabid': {
                 // target: 'http://localhost:8080/'
-                target: 'http://i5a506.p.ssafy.io:8080/'
+                target: 'http://localhost:8080/'
             },
             '/webjars': {
-                target: 'http://i5a506.p.ssafy.io:8443/'
+                target: 'http://localhost:8443/'
             },
             '/group-call': {
-                target: 'http://i5a506.p.ssafy.io:8443/'
+                target: 'http://localhost:8443/'
             },
             '/upload': {
-                target: 'http://i5a506.p.ssafy.io:8443/'
+                target: 'http://localhost:8443/'
             }
         },
         historyApiFallback: true,

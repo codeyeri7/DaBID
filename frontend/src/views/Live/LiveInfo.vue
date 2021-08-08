@@ -23,7 +23,8 @@
             <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
-            <v-menu
+            <v-dialog
+              ref="dialog"
               v-model="menu2"
               :close-on-content-click="false"
               transition="scale-transition"
@@ -44,13 +45,12 @@
               <v-date-picker
                 v-model="date"
                 @input="menu2 = false"
-                min="2021-08-06"
-                max= "2021-08-13"
+                :min= "today"
+                :max= "sevenday"
               ></v-date-picker>
-            </v-menu>
-
+            </v-dialog>
           <v-dialog
-            ref="dialog"
+            ref="dialog2"
             v-model="modal2"
             :return-value.sync="time"
             persistent
@@ -83,7 +83,7 @@
               <v-btn
                 text
                 color="blue"
-                @click="$refs.dialog.save(time)"
+                @click="$refs.dialog2.save(time)"
               >
                 OK
               </v-btn>
@@ -102,10 +102,15 @@
 
 import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
-// import axios from 'axios'
+import dayjs from 'dayjs'
+
 export default {
   name: 'LiveInfo',
-  data: vm => ({
+  component: {
+    dayjs
+  },
+  data() {
+    return {
       valid: true,
       productName: '',
       nameRules: [
@@ -142,10 +147,14 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
-      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      // date: dayjs().format('YYYY-MM-DD HH:mm'),
+      date: '',
+      today: dayjs().format('YYYY-MM-DD'),
+      sevenday: '',
       modal: false,
       menu2: false,
-      time: null,
+      time: '',
       modal2: false,
       hover:false,
       // image 
@@ -153,7 +162,11 @@ export default {
       albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
       IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
-  }),
+    }
+  },
+  mounted() {
+    this.calcDate()
+  },
   methods: {
     createLive() {
       const live = {
@@ -183,21 +196,29 @@ export default {
           })
       }
     },
-    formatDate (date) {
-        if (!date) return null
+    // formatDate (date) {
+    //     if (!date) return null
 
-        const [year, month, day] = date.split('-')
-        return `${month}/${day}/${year}`
-    },
-    parseDate (date) {
-      if (!date) return null
+    //     const [year, month, day] = date.split('-')
+    //     return `${month}/${day}/${year}`
+    // },
+    // parseDate (date) {
+    //   if (!date) return null
     
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    //   const [month, day, year] = date.split('/')
+    //   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    // },
+    setDate() {
+      this.date = this.date +" "+ this.time
+      this.$refs.dialog.save(this.date)
+      this.$refs.dialog2.save(this.time)
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
       console.log(this.file, '파일이 잘 업로드 되었습니다.')
+    },
+    calcDate() {
+      this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
     },
     upload() {
       AWS.config.update({

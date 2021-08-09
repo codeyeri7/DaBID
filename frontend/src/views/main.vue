@@ -159,7 +159,8 @@ export default {
       rest
         .axios({
           method: "post",
-          url: `/dabid/session/2/`+localStorage.getItem("userId"),
+          url: `/dabid/session/2/P1628131859142`,
+          // +localStorage.getItem("userId"),
         })
         .then((res) => {
           console.log("켜짐");

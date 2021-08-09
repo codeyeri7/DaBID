@@ -19,8 +19,6 @@ import java.sql.Timestamp;
 public class LiveRegisterPostReq {
 //	@ApiModelProperty(name="상품 고유 아이디")
 //	int prdId;
-	@ApiModelProperty(name="판매자 고유아이디")
-	String userId;
 	@ApiModelProperty(name="라이브 제목")
 	String liveTitle;
 	@ApiModelProperty(name="라이브 상세정보")

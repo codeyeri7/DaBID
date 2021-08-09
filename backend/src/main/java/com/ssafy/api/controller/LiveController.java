@@ -47,8 +47,6 @@ public class LiveController {
 //		String userId = userDetails.getUsername();
 
 		User user = userService.getUserByUserId(registerInfo.getUserId());
-		System.out.println(registerInfo.getLiveDate());
-		System.out.println(registerInfo.getLiveTime());
 
 		try {
 			liveService.createLive(user, registerInfo);
@@ -95,11 +93,8 @@ public class LiveController {
 	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
 	public ResponseEntity<?> selectTop2Lives() {
 		List<Live> liveList = liveService.getRecentLives(0);
-		System.out.println("첫번째다 : "+liveList.toString());
 		liveList.addAll(liveService.getRecentLives(1));
-		System.out.println("두번째다 : "+liveList.toString());
 		liveList.addAll(liveService.getRecentLives(2));
-		System.out.println("세번째다 : "+liveList.toString());
 		return ResponseEntity.status(200).body(liveList);
 	}
 }

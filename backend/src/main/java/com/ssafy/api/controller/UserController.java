@@ -34,9 +34,13 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	@GetMapping("/{userId}/myLive")
+	@GetMapping("/myLive")
 	@ApiOperation(value = "마이 라이브 조회", notes = "내가 등록한 라이브 전체 조회")
-	public ResponseEntity<?> selectMyLives(@PathVariable String userId) {
+	public ResponseEntity<?> selectMyLives(@ApiIgnore Authentication authentication) {
+
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+
 		List<Live> myLiveList = userService.getMyLives(userId);
 		return ResponseEntity.status(200).body(myLiveList);
 	}

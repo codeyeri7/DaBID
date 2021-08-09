@@ -48,12 +48,6 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="blue"
-          text
-          @click="edit()">
-          edit
-        </v-btn>
-        <v-btn
           color="red"
           text
           @click="remove()">
@@ -93,22 +87,15 @@ export default {
       }
   },
   methods: {
-    remove: function (prdId) {
+    remove: function () {
       rest.axios({
         method: 'delete',
-        url: `/dabid/live/${prdId}`,
+        url: '',
       })
         .then((res) => {
-          this.getLiveList()
           console.log(res)
-          alert('해당 게시글이 삭제되었습니다')
+          this.$router.go();
         })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    edit: function (live) {
-      this.$router.push({ name: 'UpdateMyLiveList', params: {live: live} });
     }
   },
 }

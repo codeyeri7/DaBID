@@ -3,11 +3,18 @@
     <div id="logged">
 
       <div id="session">
-        <div id="liveTitle">
-					<h1 text="${liveTitle}" id="liveTitle">{{ this.liveTitle }}</h1>
-          <!-- <v-btn id="buttonLeaveSession" class="btn btn-large btn-danger" @click="leaveSession">
-            Leave session</v-btn> -->
-          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+        <div id="liveTitle" class="row">
+          <div class="col-8">
+            <h3 text="${liveTitle}" id="liveTitle">{{ this.liveTitle }}</h3>
+          </div>
+          <div class="col-4">
+            <!-- <v-btn id="buttonLeaveSession" class="btn btn-large btn-danger" @click="leaveSession">
+              Leave session</v-btn> -->
+            <v-btn icon class="btn btn-danger" id="buttonLeaveSession" @click="leaveSession">
+              <i class="fas fa-times"></i>
+            </v-btn>
+
+          </div>
 				</div>
 				<div id="main-video" class="col-md-6">
 					<!-- <p class="userName"></p>
@@ -15,17 +22,20 @@
 					<video autoplay="autoplay" playsinline="true"></video> -->
 
           <!-- 마이크 on/off 버튼 -->
-          <v-btn v-if="this.publisher.properties.publishAudio"
-                 @click="toggleAudio">
+          <v-btn icon v-if="this.publisher.properties.publishAudio"
+                 @click="toggleAudio" class="toggleBtn">
             <i class="fas fa-microphone"></i>
           </v-btn>
-          <v-btn v-else @click="toggleAudio">
+          <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
             <i class="fas fa-microphone-slash"></i></v-btn>
 
           <!-- 카메라 on/off 버튼 -->
-          <v-btn v-if="this.publisher.properties.publishVideo"
-          @click="toggleVideo"><i class="fas fa-video"></i></v-btn>
-          <v-btn v-else @click="toggleVideo"><i class="fas fa-video-slash"></i></v-btn>
+          <v-btn icon v-if="this.publisher.properties.publishVideo"
+                  @click="toggleVideo" class="toggleBtn video">
+            <i class="fas fa-video"></i>
+          </v-btn>
+          <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
+            <i class="fas fa-video-slash"></i></v-btn>
 
           <!-- 메인 카메라 -->
           <user-video :stream-manager="mainStreamManager"></user-video>
@@ -40,6 +50,16 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .toggleBtn {
+    position: absolute;
+    z-index: 1;
+  }
+  .toggleBtn.video {
+    left: 30px;
+  }
+</style>
 
 <script>
 import axios from "axios";

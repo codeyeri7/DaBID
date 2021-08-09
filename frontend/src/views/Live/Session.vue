@@ -1,7 +1,6 @@
 <template>
   <div id="main-container" class="container">
     <div id="logged">
-
       <div id="session">
         <div id="liveTitle" class="row">
           <div class="col-8">
@@ -10,60 +9,77 @@
           <div class="col-4">
             <!-- <v-btn id="buttonLeaveSession" class="btn btn-large btn-danger" @click="leaveSession">
               Leave session</v-btn> -->
-            <v-btn icon class="btn btn-danger" id="buttonLeaveSession" @click="leaveSession">
+            <v-btn
+              icon
+              class="btn btn-danger"
+              id="buttonLeaveSession"
+              @click="leaveSession"
+            >
               <i class="fas fa-times"></i>
             </v-btn>
-
           </div>
-				</div>
-				<div id="main-video" class="col-md-6">
-					<!-- <p class="userName"></p>
+        </div>
+        <div id="main-video" class="col-md-6">
+          <!-- <p class="userName"></p>
 					<p class="userId"></p>
 					<video autoplay="autoplay" playsinline="true"></video> -->
 
           <!-- 마이크 on/off 버튼 -->
-          <v-btn icon v-if="this.publisher.properties.publishAudio"
-                 @click="toggleAudio" class="toggleBtn">
+          <v-btn
+            icon
+            v-if="this.publisher.properties.publishAudio"
+            @click="toggleAudio"
+            class="toggleBtn"
+          >
             <i class="fas fa-microphone"></i>
           </v-btn>
           <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
-            <i class="fas fa-microphone-slash"></i></v-btn>
+            <i class="fas fa-microphone-slash"></i
+          ></v-btn>
 
           <!-- 카메라 on/off 버튼 -->
-          <v-btn icon v-if="this.publisher.properties.publishVideo"
-                  @click="toggleVideo" class="toggleBtn video">
+          <v-btn
+            icon
+            v-if="this.publisher.properties.publishVideo"
+            @click="toggleVideo"
+            class="toggleBtn video"
+          >
             <i class="fas fa-video"></i>
           </v-btn>
           <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
-            <i class="fas fa-video-slash"></i></v-btn>
+            <i class="fas fa-video-slash"></i
+          ></v-btn>
 
           <!-- 메인 카메라 -->
           <user-video :stream-manager="mainStreamManager"></user-video>
-
-				</div>
-				<div id="video-container" class="col-md-6">
+        </div>
+        <div id="video-container" class="col-md-6">
           <!-- <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/> -->
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click.native="updateMainVideoStreamManager(sub)"
+          />
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <style scoped>
-  .toggleBtn {
-    position: absolute;
-    z-index: 1;
-  }
-  .toggleBtn.video {
-    left: 30px;
-  }
+.toggleBtn {
+  position: absolute;
+  z-index: 1;
+}
+.toggleBtn.video {
+  left: 30px;
+}
 </style>
 
 <script>
 import axios from "axios";
-import rest from "../../js/httpCommon.js"
+import rest from "../../js/httpCommon.js";
 import { OpenVidu } from "openvidu-browser";
 import $ from "jquery";
 import UserVideo from "./UserVideo.vue";
@@ -124,7 +140,7 @@ export default {
         // <video>가 DOM에 붙여진다면...
         subscriber.on("videoElementCreated", (event) => {
           // Add a new HTML element for the user's name and nickname over its video
-          
+
           // <p class="userName"> 유저 닉네임과
           // <p class="userId"> 유저 아이디
           this.appendUserData(event.element, subscriber.stream.connection);
@@ -133,7 +149,7 @@ export default {
 
       // On every Stream destroyed...
       // streamDestroyed: session publishing을 멈췄을 때
-      this.session.on('streamDestroyed', (event) => {
+      this.session.on("streamDestroyed", (event) => {
         // Delete the HTML element with the user's name and nickname
         this.removeUserData(event.stream.connection);
       });
@@ -158,7 +174,6 @@ export default {
           $("#join").hide();
           // 숨겨져있던 방제목과 비디오 보여주기
           $("#session").show();
-          
 
           // Here we check somehow if the user has 'PUBLISHER' role before
           // trying to publish its stream. Even if someone modified the client's code and
@@ -206,13 +221,13 @@ export default {
               };
               this.initMainVideo(event.element, userData);
               this.appendUserData(event.element, userData);
-              $(event.element).prop("muted", true); // Mute local video
+              $(event.element).prop("muted", false); // Mute local video
             });
 
             // --- 8) Publish your stream ---
             // 설정 끝났고 드디어 publish!
             this.session.publish(this.publisher);
-            console.log("설정 끝났고 드디어 publish!")
+            console.log("설정 끝났고 드디어 publish!");
           } else {
             console.warn("You don't have permissions to publish");
             this.initMainVideoThumbnail(); // Show SUBSCRIBER message in main video
@@ -227,43 +242,43 @@ export default {
             error.message
           );
         });
-      window.addEventListener('beforeunload', this.leaveSession);
+      window.addEventListener("beforeunload", this.leaveSession);
     },
     // leaveSession() {
     //   // --- 9) Leave the session by calling 'disconnect' method over the Session object ---
     //   this.session.disconnect();
     // },
 
-    leaveSession () {
+    leaveSession() {
       console.log("leaveSession()");
-			// --- Leave the session by calling 'disconnect' method over the Session object ---
-			if (this.session) this.session.disconnect();
+      // --- Leave the session by calling 'disconnect' method over the Session object ---
+      if (this.session) this.session.disconnect();
 
-			this.session = undefined;
-			this.mainStreamManager = undefined;
-			this.publisher = undefined;
-			this.subscribers = [];
-			this.OV = undefined;
+      this.session = undefined;
+      this.mainStreamManager = undefined;
+      this.publisher = undefined;
+      this.subscribers = [];
+      this.OV = undefined;
 
-			window.removeEventListener('beforeunload', this.leaveSession);
+      window.removeEventListener("beforeunload", this.leaveSession);
 
       //  action="/dabid/leave-session" method="post"
-      rest.axios({
-        method: "post",
-        url: 'dabid/leave-session',
-        data: {
-          token: this.token,
-          liveTitle: this.liveTitle
-        }
-      })
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.error(err);
-      })
-		},
-
+      rest
+        .axios({
+          method: "post",
+          url: "dabid/leave-session",
+          data: {
+            token: this.token,
+            liveTitle: this.liveTitle,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
 
     appendUserData(videoElement, connection) {
       var clientData;
@@ -329,7 +344,7 @@ export default {
       $("#main-video video").get(0).srcObject = videoElement.srcObject;
       $("#main-video p.userName").html(userData.userName);
       // $("#main-video p.userId").html(userData.userId);
-      $("#main-video video").prop("muted", true);
+      $("#main-video video").prop("muted", false);
     },
     initMainVideoThumbnail() {
       $("#main-video video").css(
@@ -338,7 +353,7 @@ export default {
       );
     },
     isPublisher() {
-      console.log("Session.vue: Publisher 확인")
+      console.log("Session.vue: Publisher 확인");
       // return this.userId.includes("P");
       return this.role.includes("PUBLISHER");
     },
@@ -346,26 +361,32 @@ export default {
       if (this.canLeaveSite) return;
 
       event.preventDefault();
-      event.returnValue = '';
+      event.returnValue = "";
     },
     toggleAudio() {
-      this.publisher.properties.publishAudio = !this.publisher.properties.publishAudio;
+      this.publisher.properties.publishAudio =
+        !this.publisher.properties.publishAudio;
+      this.publisher.publishAudio(this.publisher.properties.publishAudio);
     },
     toggleVideo() {
-      this.publisher.properties.publishVideo = !this.publisher.properties.publishVideo;
+      //   this.publisher.stream.disposeWebRtcPeer();
+      //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
+      this.publisher.properties.publishVideo =
+        !this.publisher.properties.publishVideo;
+      this.publisher.publishVideo(this.publisher.properties.publishVideo);
     },
   },
   // Session.vue 열리자마자 goSession 실행
   created: function () {
-    console.log("Session.vue created()")
-    console.log("liveTitle: "+this.liveTitle);
+    console.log("Session.vue created()");
+    console.log("liveTitle: " + this.liveTitle);
     this.goSession();
   },
   mounted() {
-    window.addEventListener('beforeunload', this.unLoadEvent)
+    window.addEventListener("beforeunload", this.unLoadEvent);
   },
   beforeUnmount() {
-    window.removeEventListener('beforeunload', this.unLoadEvent);
+    window.removeEventListener("beforeunload", this.unLoadEvent);
   },
   unLoadEvent(event) {
     event.preventDefault();
@@ -379,11 +400,12 @@ export default {
     if (this.role.includes("SUBSCRIBER")) {
       this.leaveSession();
       next();
-    }
-    else if (confirm('이 사이트에서 나가시겠습니까?\n진행 중인 라이브가 종료됩니다.')) {
+    } else if (
+      confirm("이 사이트에서 나가시겠습니까?\n진행 중인 라이브가 종료됩니다.")
+    ) {
       this.leaveSession();
       next();
     }
-  }
+  },
 };
 </script>

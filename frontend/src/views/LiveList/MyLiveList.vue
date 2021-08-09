@@ -32,14 +32,14 @@ export default {
     setToken: function () {
       const jwtToken = localStorage.getItem('jwt')
       const config = {
-        Authorization: `JWT ${jwtToken}`
+        Authorization: `Bearer ${jwtToken}`
       }
       return config
     },
     getLiveList: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/users/'+localStorage.getItem('userId')+'/myLive',
+        url: '/dabid/users/myLive',
         headers: this.setToken()
       })
         .then((res) => {

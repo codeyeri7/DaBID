@@ -8,6 +8,8 @@ import Session from '../views/Live/Session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 // import MyLiveListEnd from '../views/LiveList/MyLiveListEnd.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
+import NoticeList from '../views/Notice/NoticeList.vue'
+import AllLiveList from '../views/LiveList/AllLiveList.vue'
 // import OnetoOneChat from '../views/MyPage/OnetoOneChat.vue'
 // import OnetoOneChatList from '../views/MyPage/OnetoOneChatList.vue'
 import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
@@ -50,6 +52,16 @@ const routes = [
     path: '/update',
     name: 'UpdateMyLiveList',
     component: UpdateMyLiveList
+  },
+  {
+    path: '/notice',
+    name: 'NoticeList',
+    component: NoticeList
+  },
+  {
+    path: '/AllLiveList',
+    name: 'AllLiveList',
+    component: AllLiveList
   },
   // {
   //   path: '/onetoonechat',

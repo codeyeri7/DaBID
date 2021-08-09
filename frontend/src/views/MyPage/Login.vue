@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import rest from "../../js/httpCommon.js";
+// import rest from "../../js/httpCommon.js";
+import axios from 'axios'
 export default {
   name: "Login",
   data () {
@@ -45,9 +46,9 @@ export default {
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
-        rest.axios({
-          method: "post",
-        url: "/auth/login",
+        axios({
+        method: "post",
+        url: "https://localhost:8080/auth/login",
         data: {
           id_token: this.id_token
         }

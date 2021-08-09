@@ -58,12 +58,12 @@ export default {
   },
   methods: {
     setToken: function () {
-      const jwtToken = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `Bearer ${jwtToken}`
-      }
-      return config
-    },
+        const jwtToken = localStorage.getItem('jwt')
+        const config = {
+          Authorization: `Bearer ${jwtToken}`
+        }
+        return config
+      },
     getLiveList: function () {
       rest.axios({
         method: 'get',

@@ -90,7 +90,7 @@
             </v-time-picker>
           </v-dialog>
           </div>
-            <v-btn @click="createLive" x-small color="white"  
+            <v-btn @click="createLive" x-small color="white" :disabled="!valid"
           style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
@@ -147,8 +147,6 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
-      // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      // date: dayjs().format('YYYY-MM-DD HH:mm'),
       date: '',
       today: dayjs().format('YYYY-MM-DD'),
       sevenday: '',
@@ -176,6 +174,9 @@ export default {
       return config
     },
     createLive() {
+      // 유효성 검사 후 버튼 활성화
+      this.$refs.form.validate()
+      
       const live = {
         prdName: this.productName,
         prdNo: this.productNumber,
@@ -203,18 +204,6 @@ export default {
           })
       }
     },
-    // formatDate (date) {
-    //     if (!date) return null
-
-    //     const [year, month, day] = date.split('-')
-    //     return `${month}/${day}/${year}`
-    // },
-    // parseDate (date) {
-    //   if (!date) return null
-    
-    //   const [month, day, year] = date.split('/')
-    //   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    // },
     setDate() {
       this.date = this.date +" "+ this.time
       this.$refs.dialog.save(this.date)

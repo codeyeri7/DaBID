@@ -1,59 +1,90 @@
 <template>
-<div class="container">
-  <button class="btn btn-danger ms-3" @click="logout()">Logout</button>
-  <v-card
-    class="mx-auto elevation-20"
-    style="max-width: 80%; margin-top:50px"
-  >
-    <v-row justify="space-between">
-      <v-col>
-        <v-card-title>
-          <div>
-            <div class="text-h5">
-              {{ userName}}
-            </div>
-          </div>
-        </v-card-title>
-      </v-col>
-    </v-row>
-    <v-divider dark></v-divider>
-    <v-card-actions class="pa-4">
-      check your points 
-      <v-spacer></v-spacer>
-      <span class="black--text text--lighten-2 text-caption mr-2">
-        ({{ rating }})
-      </span>
-      <v-rating
-        v-model="rating"
-        background-color="white"
-        color="yellow accent-4"
-        dense
-        half-increments
-        hover
-        size="15"
-      ></v-rating>
-    </v-card-actions>
-  </v-card>
-	</div>
+  <div>
+     <h2 style="margin-left:40px;font-family: 'Lora', serif;">{{ person.userName }} yunseo's Profile</h2>
+    <MyProfile/>
+      <v-card
+        class="mx-auto"
+        max-width="300"
+      >
+        <v-list>
+          <v-list-item-group v-model="model">
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              @click="menuActionClick(item.action)"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="item.icon" style="color:#FF7043"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title v-text="item.text" id="item-text"></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+  </div>
 </template>
 
 <script>
+import MyProfile from "@/components/MyProfile"
+import rest from "../../js/httpCommon.js"
+
 export default {
   name: 'Mypage',
-  data () {
-      return {
-        userName: null,
-        rating: 2.7,
-      }
-    },
+  components: {
+    MyProfile,
+  },
+  data: function () {
+    return {
+      person: [],
+      items: [
+        {
+          icon: 'mdi-monitor',
+          text: 'My B-live',
+          action: "goMyLive"
+        },
+        {
+          icon: 'mdi-star',
+          text: 'My Wish Live',
+          action: "goWishLive"
+        },
+        {
+          icon: 'mdi-send',
+          text: 'Chat List',
+          action: "goChat"
+        },
+        {
+          icon: 'mdi-logout',
+          text: 'Logout',
+          action: "logout"
+        },
+      ],
+      model: 1,
+    }
+  },
   methods: {
-    setToken: function() {
-      const jwtToken = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${jwtToken}`
-      }
-      return config
-    },
+    setToken: function () {
+        const jwtToken = localStorage.getItem('jwt')
+        const config = {
+          Authorization: `Bearer ${jwtToken}`
+        }
+        return config
+      },
+      getProfile: function() {
+        rest.axios({
+          method: 'get',
+          url: 'dabid/users/me',
+          headers: this.setToken()
+        })
+          .then((res) => {
+            console.log(res.data)
+            this.person = res.data
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
     async logout() {
     // google 로그아웃 
       const result = await this.$gAuth.signOut()
@@ -65,18 +96,37 @@ export default {
       localStorage.removeItem('userName')
       this.$router.push({ name: 'main' })
       this.$router.go();
+    },
+    menuActionClick(action) {
+      if (action === 'logout') {
+        this.logout()
+      }
+      else if (action === 'goChat') {
+        this.$router.push({ name: 'ChattingList' })
+      }
+      else if (action === 'goWishLive') {
+        this.$router.push({ name: 'MyWishList' })
+      }
+      else if (action === 'goMyLive') {
+        this.$router.push({ name: 'MyLiveList' })
+      }
     }
   },
-  mounted: async function () {
+  created: function () {
     if (localStorage.getItem('jwt')) {
-      // console.log(localStorage)
-      this.userName = localStorage.getItem('userName')
+      this.getProfile()
     } else {
       this.$router.push({ name: 'Login' })
     }
-  },
+  }
 }
 </script>
 
-<style>
+<style scoped>
+  .btn {
+    font-family: 'PT Serif'
+  }
+  #item-text {
+    font-family: 'PT Serif', serif;
+  }
 </style>

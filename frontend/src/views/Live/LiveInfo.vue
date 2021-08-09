@@ -168,15 +168,9 @@ export default {
     this.calcDate()
   },
   methods: {
-    setToken: function () {
-      const jwtToken = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `Bearer ${jwtToken}`
-      }
-      return config
-    },
     createLive() {
       const live = {
+        userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
         prdPhoto: this.prdPhoto,
@@ -192,7 +186,6 @@ export default {
           method: 'post',
           url: '/dabid/live/',
           data: live,
-          headers: this.setToken()
         })
           .then((res) => {
             console.log(res)

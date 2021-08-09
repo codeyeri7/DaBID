@@ -102,7 +102,7 @@ public class AuthController {
 //			String givenName = (String) payload.get("given_name");
 
 			// 유저 fullname과 JwtToken 반환
-			return ResponseEntity.ok(UserLoginPostRes.of(authUserId, name, JwtTokenUtil.getToken(authUserId)));
+			return ResponseEntity.ok(UserLoginPostRes.of(authUserId, name, JwtTokenUtil.getToken(name)));
 
 		} else {
 			// Invalid ID token

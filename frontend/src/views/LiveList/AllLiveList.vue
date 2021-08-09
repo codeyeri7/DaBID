@@ -8,7 +8,7 @@
       show-arrows-on-hover
     >
       <v-carousel-item
-        v-for="(slide, i) in slides"
+        v-for="(hot_live, i) in hot_lives"
         :key="i"
       >
         <v-sheet
@@ -21,12 +21,40 @@
             justify="center"
           >
             <div class="text-h2">
-              #{{ slide }} hot live
+              hot_live.liveTitle
             </div>
           </v-row>
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
+
+    <!-- 검색 카테고리 창 --> 
+    <v-expansion-panels>
+     <v-expansion-panel>
+      <v-expansion-panel-header>
+        Search
+      </v-expansion-panel-header>
+
+      <v-expansion-panel-content>
+        <v-col cols="12">
+          <v-autocomplete
+            v-model="values"
+            :items="items"
+            dense
+            chips
+            small-chips
+            label="카테고리"
+            multiple
+          ></v-autocomplete>
+        </v-col>
+         <v-text-field
+          label="검색어"
+        ></v-text-field>
+        <v-btn>검색</v-btn>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
+
 
     <!-- 하단 all live 카드 --> 
     <div style="font-family: 'InfinitySans-RegularA1';">
@@ -34,7 +62,6 @@
         <v-card class="mx-auto" width="500">
           <v-container fluid>
             <div>
-              <!-- card를 component로 하고 나서 이 글씨가 안보여요 ㅠ --> 
               <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>All Live</b></span>
             </div>
             <v-row dense>
@@ -56,19 +83,13 @@ export default {
   components: { MyLiveListCard },
   data: function () {
     return {
+      hot_lives: [],
       lives: [],
-      colors: [
-          'indigo',
-          'warning',
-          'pink darken-2',
-          'red lighten-1',
-        ],
-        slides: [
-          '1',
-          '2',
-          '3',
-          '4',
-        ],
+
+      //검색 관련
+      values: '',
+      items: ['의류', '가방', '신발', '악세사리']
+
     }
   },
   methods: {
@@ -87,16 +108,30 @@ export default {
       })
         .then((res) => {
           this.lives = res.data
-          console.log(this.lives)
+          console.log('전체 라이브', this.lives)
         })
         .catch((err) => {
           console.log(err)
         })
     },
+    getHotLives: function () {
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live',
+      })
+      .then((res) => {
+        console.log('받아온 인기 방송', res.data)
+        this.hot_lives = res.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
       this.getAllLiveList()
+      this.getHotLives()
     } else {
       this.$router.push({ name: 'Login' })
     }

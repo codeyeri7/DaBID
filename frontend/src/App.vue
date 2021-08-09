@@ -13,7 +13,41 @@
         </RouterLink>
 
         <v-spacer></v-spacer>
-        <img src="@/assets/warning.png" alt="warning" style="width:35px">
+        <!-- 우상단 더치트 링크 --> 
+      <div class="text-center">
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
+            <template v-slot:activator="{ on, attrs }">                
+              <img src="@/assets/warning.png" alt="warning" style="width:35px" v-bind="attrs" v-on="on">
+            </template>
+
+            <v-card>
+              <v-card-title class="text-h5 grey lighten-2">
+                Accident Policy
+              </v-card-title>
+
+              <v-card-text style="margin-top:2.5rem">
+                다비드는 원활한 거래 연결을 위해 더치트 계좌 조회 서비스를 지원합니다. <hr>
+                <v-btn @click="onClick()">위험 계좌조회 더치트 바로가기</v-btn>
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="brown darken-2"
+                  text
+                  @click="dialog = false"
+                >
+                  확인
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
         <!-- 지운 검색창 --> 
         <!-- <v-text-field
           hide-details
@@ -58,6 +92,7 @@ export default {
     return {
       isLogin: false,
       userName: null,
+      dialog: false,
     }
   },
    methods: {
@@ -67,6 +102,9 @@ export default {
       localStorage.removeItem('userName')
       this.$router.push({ name: 'Login' })
     },
+    onclick: function () {
+      window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account', '_blank')
+    }
   },
   async mounted() {
     try {

@@ -7,10 +7,10 @@
         <v-col>
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-bind="live" v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="prdName" required="required">{{ live.prdName }} </v-text-field>
-            <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-bind="live" v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required">{{ live.prdName }} </v-text-field>
+            <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
+            
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
               <v-btn @click="upload" color=primary flat>업로드</v-btn>

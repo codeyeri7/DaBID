@@ -7,6 +7,8 @@ import LiveInfo from '../views/Live/LiveInfo.vue'
 import Session from '../views/Live/Session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
+import NoticeList from '../views/Notice/NoticeList.vue'
+import AllLiveList from '../views/LiveList/AllLiveList.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,16 @@ const routes = [
     path: '/update',
     name: 'UpdateMyLiveList',
     component: UpdateMyLiveList
+  },
+  {
+    path: '/notice',
+    name: 'NoticeList',
+    component: NoticeList
+  },
+  {
+    path: '/AllLiveList',
+    name: 'AllLiveList',
+    component: AllLiveList
   },
 ]
 

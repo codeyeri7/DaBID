@@ -13,7 +13,7 @@
         </RouterLink>
 
         <v-spacer></v-spacer>
-        <img src="@/assets/menu.png" alt="menubar" style="width:35px">
+        <img src="@/assets/warning.png" alt="warning" style="width:35px">
         <!-- 지운 검색창 --> 
         <!-- <v-text-field
           hide-details
@@ -39,7 +39,7 @@
         <RouterLink :to="{ name: '' }">
           <img src="@/assets/Chat.png" width="30" style="margin-left:35px;margin-top:7px">
         </RouterLink>
-        <RouterLink :to="{ name: 'MyLiveList' }">
+        <RouterLink :to="{ name: 'AllLiveList' }">
           <img src="@/assets/live.png" width="40" style="margin-left:35px;margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: 'MyPage' }">

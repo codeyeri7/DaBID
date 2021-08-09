@@ -7,22 +7,21 @@
         <v-col>
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-bind="live" v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required">{{ live.prdName }} </v-text-field>
-            <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
+            <v-text-field  v-model.trim="live.prdId" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required"></v-text-field>
+            <v-text-field v-model.trim="live.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
             
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
               <v-btn @click="upload" color=primary flat>업로드</v-btn>
-              <h5 :v-bind="live">{{ live }}</h5>
             </div>
           </div>
           
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
-            <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
-            <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="live.title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="live.liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
+            <v-text-field v-model.trim="live.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
             <v-menu
               v-model="menu2"

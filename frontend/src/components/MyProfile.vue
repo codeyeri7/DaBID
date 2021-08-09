@@ -1,86 +1,113 @@
 <template>
   <div>
-      <div class="container">
-  <button class="btn btn-danger ms-3" @click="logout()">Logout</button>
-  <v-card
-    class="mx-auto elevation-20"
-    style="max-width: 80%; margin-top:50px"
-  >
-    <v-row justify="space-between">
-      <v-col>
-        <v-card-title>
-          <div>
-            <div class="text-h5">
-              {{ userName}}
+      <div class="container" style="padding:0px;">
+        <v-card
+          class="mx-auto elevation-20"
+          style="max-width: 80%; margin-top:50px; "
+        >
+          <v-row justify="space-between">
+            <v-col>
+              <v-card-title>
+                <div>
+                  <img src="@/assets/profileImg.jpg" alt="profile image">
+                  <span id="userName"><b>{{ userName }}</b></span>
+                </div>
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <div id="barEmoji">
+             <!-- v-bind:buffer-value="userScore" -->
+            <v-progress-linear
+                v-model="userScore"
+                color="deep-orange darken-1"
+                background-color="deep-orange lighten-3"
+                height="15"
+              ></v-progress-linear>
+              <br>
+              <div class="emoji">
+                <img src="@/assets/sad.png" alt="sad_emoji">
+                <img src="@/assets/neutral.png" alt="neutral">
+                <img src="@/assets/laughing.png" alt="laughing_emojiss">
+              </div>
             </div>
+           <div id="review">
+              <span>
+                <img src="@/assets/positive-vote.png" alt="rating_click_img" style="width:16%">
+                </span>
+              <button id="review-btn" class="btn" type="button" @click="checkReviews(userName)">Check your reviews</button>
+          </div> 
+          <v-divider dark></v-divider>
+          </v-card>
           </div>
-        </v-card-title>
-      </v-col>
-    </v-row>
-    <v-divider dark></v-divider>
-    <v-card-actions class="pa-4">
-      check your points 
-      <v-spacer></v-spacer>
-      <span class="black--text text--lighten-2 text-caption mr-2">
-        ({{ rating }})
-      </span>
-      <v-rating
-        v-model="rating"
-        background-color="white"
-        color="yellow accent-4"
-        dense
-        half-increments
-        hover
-        size="15"
-      ></v-rating>
-    </v-card-actions>
-  </v-card>
-	</div>
-  </div>
+        <hr id="hrline">
+        </div>
 </template>
 
 <script>
+import rest from "../js/httpCommon.js"
 export default {
     name: 'MyProfile',
-    data () {
-      return {
-        userName: null,
-        rating: 2.7,
-      }
+    props: {
+      user: Object,
     },
-  methods: {
-    setToken: function() {
-      const jwtToken = localStorage.getItem('jwt')
-      const config = {
-        Authorization: `JWT ${jwtToken}`
-      }
-      return config
-    },
-    async logout() {
-    // google 로그아웃 
-      const result = await this.$gAuth.signOut()
-      console.log('result', result)
-      console.log('logout성공이닷')
-      // localstorage 처리 
-      this.isLogin = false
-      localStorage.removeItem('userId')
-      localStorage.removeItem('jwt')
-      localStorage.removeItem('userName')
-      this.$router.push({ name: 'main' })
-      this.$router.go();
+    data: function () {
+    return {
+      person: [],
+      userName: '쓰윤서',
+      userScore: 40,
     }
   },
-  mounted: async function () {
-    if (localStorage.getItem('jwt')) {
-      // console.log(localStorage)
-      this.userName = localStorage.getItem('userName')
-    } else {
-      this.$router.push({ name: 'Login' })
-    }
+  methods: {
+      // review list로 페이지 전환
+      checkReviews(userName) {
+        rest.axios({
+          method: 'get',
+          url: '',
+          headers: this.setToken()
+        })
+          .then((res) => {
+            this.$router.push({ name: 'ReviewList' })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
   },
 }
 </script>
 
-<style>
-
+<style scoped>
+.emoji > img {
+  width: 2rem
+}
+.emoji {
+  display: flex;
+  justify-content: space-between;
+}
+#review-btn {
+  width:150px; 
+  margin:auto;
+  padding:0
+  
+}
+#userName {
+  font-family: 'IBMPlexSansKR-Regular';
+}
+#barEmoji {
+  width: 85%;
+  margin:auto;
+  margin-bottom:1.2rem;
+}
+#review {
+  margin-left: 2rem;
+  background-color:rgb(212, 212, 212);
+  margin-right: 2rem;
+  border-radius: 30px;
+}
+#hrline {
+  height:1px;
+  background:#bbb;
+  width: 80%;
+  margin: auto;
+}
 </style>

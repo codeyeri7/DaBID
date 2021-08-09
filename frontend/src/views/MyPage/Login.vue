@@ -47,10 +47,10 @@ export default {
       // 서버에 id_token 보내기 
       sendToken: function () {
         axios({
-          method: "post",
+        method: "post",
         url: "https://localhost:8080/auth/login",
         data: {
-          id_token: this.id_tokens
+          id_token: this.id_token
         }
       })
       .then((res) => {

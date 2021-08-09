@@ -92,7 +92,6 @@ export default {
       console.log('logout성공이닷')
       // localstorage 처리 
       this.isLogin = false
-      localStorage.removeItem('userId')
       localStorage.removeItem('jwt')
       localStorage.removeItem('userName')
       this.$router.push({ name: 'main' })

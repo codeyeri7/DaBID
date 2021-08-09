@@ -166,12 +166,18 @@ export default {
     this.calcDate()
   },
   methods: {
+    setToken: function () {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${jwtToken}`
+      }
+      return config
+    },
     createLive() {
       // 유효성 검사 후 버튼 활성화
       this.$refs.form.validate()
       
       const live = {
-        userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
         prdPhoto: this.prdPhoto,
@@ -187,6 +193,7 @@ export default {
           method: 'post',
           url: '/dabid/live/',
           data: live,
+          headers: this.setToken()
         })
           .then((res) => {
             console.log(res)

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Update your LIVE</h2>
+      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Update new LIVE</h2>
       <hr id="top-hr">
       <v-row>
         <v-col>
@@ -23,7 +23,8 @@
             <v-text-field v-model.trim="live.liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="live.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
-            <v-menu
+            <v-dialog
+              ref="dialog"
               v-model="menu2"
               :close-on-content-click="false"
               transition="scale-transition"
@@ -44,13 +45,12 @@
               <v-date-picker
                 v-model="date"
                 @input="menu2 = false"
-                min="2021-08-06"
-                max= "2021-08-13"
+                :min= "today"
+                :max= "sevenday"
               ></v-date-picker>
-            </v-menu>
-
+            </v-dialog>
           <v-dialog
-            ref="dialog"
+            ref="dialog2"
             v-model="modal2"
             :return-value.sync="time"
             persistent
@@ -83,7 +83,7 @@
               <v-btn
                 text
                 color="blue"
-                @click="$refs.dialog.save(time)"
+                @click="$refs.dialog2.save(time)"
               >
                 OK
               </v-btn>
@@ -100,6 +100,8 @@
 
 <script>
 import rest from "../../js/httpCommon.js"
+import AWS from 'aws-sdk'
+import dayjs from 'dayjs'
 
 export default {
   name: 'UpdateMyLiveList',
@@ -141,10 +143,12 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
-      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      date: '',
+      today: dayjs().format('YYYY-MM-DD'),
+      sevenday: '',
       modal: false,
       menu2: false,
-      time: null,
+      time: '',
       modal2: false,
       hover:false,
       // image 
@@ -153,9 +157,10 @@ export default {
       bucketRegion:'ap-northeast-2',
       IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
   }),
+  
   methods: {
     updateLive: function() {
-      const prdId = this.live.prdId
+      const prdId = this.prdId
       const liveData = {
         userId: localStorage.getItem("userId"),
         prdName: this.productName,
@@ -168,21 +173,64 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      rest.axios({
+      if (liveData.liveTitle) {
+        rest.axios({
         method: 'put',
         url: `/dabid/live/${prdId}`,
         data: liveData
       })
-        .then((res) => {
-          // my live list로 전환 
-          this.$router.push({ name: 'MyLiveList' })
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+          .then((res) => {
+            console.log(res)
+            this.$router.push({ name: 'MyLiveList' })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
     },
+    setDate() {
+      this.date = this.date +" "+ this.time
+      this.$refs.dialog.save(this.date)
+      this.$refs.dialog2.save(this.time)
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0]
+      console.log(this.file, '파일이 잘 업로드 되었습니다.')
+    },
+    calcDate() {
+      this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
+    },
+    upload() {
+      AWS.config.update({
+        region: this.bucketRegion,
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: this.IdentityPoolId,
+        })
+      })
+
+      const s3 = new AWS.S3({
+        apiVersion: '2012-10-17',
+        params: {
+          Bucket: this.albumBucketName
+        }
+      })
+      let photoKey = this.file.name
+      s3.upload({
+        Key: photoKey,
+        Body: this.file,
+        ACL: 'public-read'
+      }, (err, data) => {
+        if (err) {
+          console.log(err)
+          return alert('There was an error uploading your photo: ', err.message);
+        }
+        alert('사진 업로드에 성공했습니다');
+        this.prdPhoto = data.Location
+        console.log(this.prdPhoto)
+      });
+    }
   },
-  mounted: function () {
+  mounted() {
     if (localStorage.getItem('jwt')) {
       // 바로 정보 가져오기 
       this.live = this.$route.params.live
@@ -190,7 +238,8 @@ export default {
     } else {
       console.log('오류')
     }
-  }
+    this.calcDate()
+  },
 }
 </script>
 

@@ -1,6 +1,5 @@
 <template>
-<div style="font-family: 'InfinitySans-RegularA1';">
-    <!-- card -->
+  <div style="font-family: 'InfinitySans-RegularA1';">
     <div class="main-card">
       <v-card class="mx-auto" width="500">
         <v-container fluid>
@@ -8,29 +7,7 @@
             <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My Live List</b></span>
           </div>
           <v-row dense>
-            <v-col v-for="(live, idx) in this.lives" :key="idx" :live="live" :cols="6">
-              <v-card class="section1" height="300px">
-                <!-- Image -->
-                <v-img
-                  src="@/assets/prada.png"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="200px"
-                  style="padding: 40px"
-                  @click="goDetail(live.id)"
-                  v-if="live.liveTitle" 
-                  title="상세정보 확인을 확인해보세요"
-                >
-                  <!-- image 안 title -->
-                  <v-card-title class="subtitle-style" style="margin-left:15px; color:red">❤</v-card-title>
-                </v-img>
-                <!-- 카드 하단-->
-                <v-card-subtitle class="text-subtitle-4">{{ live.prdName }}</v-card-subtitle>
-                <v-card-subtitle class="text-subtitle-4">
-                  시작가 | {{ live.prdPriceStart | comma }}원
-                </v-card-subtitle>
-              </v-card>
-            </v-col>
+            <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
           </v-row>
         </v-container>
       </v-card>
@@ -38,19 +15,18 @@
   </div>
 </template>
 
+
 <script>
+import MyLiveListCard from '../../components/MyLiveListCard.vue'
 import rest from "../../js/httpCommon.js"
+
 export default {
   name: 'MyLiveList',
+  components: { MyLiveListCard },
   data: function () {
     return {
       lives: [],
     }
-  },
-  filters: {
-      comma: function (value) {
-          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
   },
   methods: {
     setToken: function () {
@@ -73,6 +49,23 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    remove: function (prdId) {
+      rest.axios({
+        method: 'delete',
+        url: `/dabid/live/${prdId}`,
+      })
+        .then((res) => {
+          this.getLiveList()
+          console.log(res)
+          alert('해당 게시글이 삭제되었습니다')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    edit: function (live) {
+      this.$router.push({ name: 'UpdateMyLiveList', params: {live: live} });
     }
   },
   created: function () {

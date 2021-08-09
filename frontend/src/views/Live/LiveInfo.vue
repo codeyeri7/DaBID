@@ -11,8 +11,11 @@
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
             <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
+            <div>
+              <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
+              <v-btn @click="upload" color=primary flat>업로드</v-btn>
+            </div>
           </div>
-          <!-- <v-btn @click="upload" color=primary flat>업로드</v-btn> -->
           
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
@@ -20,7 +23,8 @@
             <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
-            <v-menu
+            <v-dialog
+              ref="dialog"
               v-model="menu2"
               :close-on-content-click="false"
               transition="scale-transition"
@@ -41,13 +45,12 @@
               <v-date-picker
                 v-model="date"
                 @input="menu2 = false"
-                min="2021-08-06"
-                max= "2021-08-13"
+                :min= "today"
+                :max= "sevenday"
               ></v-date-picker>
-            </v-menu>
-
+            </v-dialog>
           <v-dialog
-            ref="dialog"
+            ref="dialog2"
             v-model="modal2"
             :return-value.sync="time"
             persistent
@@ -80,7 +83,7 @@
               <v-btn
                 text
                 color="blue"
-                @click="$refs.dialog.save(time)"
+                @click="$refs.dialog2.save(time)"
               >
                 OK
               </v-btn>
@@ -99,10 +102,15 @@
 
 import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
-// import axios from 'axios'
+import dayjs from 'dayjs'
+
 export default {
   name: 'LiveInfo',
-  data: vm => ({
+  component: {
+    dayjs
+  },
+  data() {
+    return {
       valid: true,
       productName: '',
       nameRules: [
@@ -114,7 +122,6 @@ export default {
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
         v => /^[a-zA-Z0-9-]*$/ .test(v) || '일련 번호는 영문숫자만 입력 가능합니다.'
       ],
-      productPhoto: '',
       select: null,
       selectedIndex: '',
       items: [
@@ -140,24 +147,33 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
-      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      // date: dayjs().format('YYYY-MM-DD HH:mm'),
+      date: '',
+      today: dayjs().format('YYYY-MM-DD'),
+      sevenday: '',
       modal: false,
       menu2: false,
-      time: null,
+      time: '',
       modal2: false,
       hover:false,
       // image 
-      albumBucketName:'dabid-img',
+      file: null,
+      albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
-      IdentityPoolId: 'ap-northeast-2:2446626d-3eb7-4489-adcb-dd0ea57521cd'
-  }),
+      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
+    }
+  },
+  mounted() {
+    this.calcDate()
+  },
   methods: {
     createLive() {
       const live = {
         userId: localStorage.getItem("userId"),
         prdName: this.productName,
         prdNo: this.productNumber,
-        prdPhoto: this.productPhoto,
+        prdPhoto: this.prdPhoto,
         prdCategory: this.items.indexOf(this.select),
         liveTitle: this.title,
         prdPriceStart: this.startPrice,
@@ -172,6 +188,7 @@ export default {
           data: live,
         })
           .then((res) => {
+            console.log(res)
             this.$router.push({ name: 'MyLiveList' })
           })
           .catch((err) => {
@@ -179,28 +196,35 @@ export default {
           })
       }
     },
-    formatDate (date) {
-        if (!date) return null
+    // formatDate (date) {
+    //     if (!date) return null
 
-        const [year, month, day] = date.split('-')
-        return `${month}/${day}/${year}`
-    },
-    parseDate (date) {
-      if (!date) return null
+    //     const [year, month, day] = date.split('-')
+    //     return `${month}/${day}/${year}`
+    // },
+    // parseDate (date) {
+    //   if (!date) return null
     
-      const [month, day, year] = date.split('/')
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    //   const [month, day, year] = date.split('/')
+    //   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    // },
+    setDate() {
+      this.date = this.date +" "+ this.time
+      this.$refs.dialog.save(this.date)
+      this.$refs.dialog2.save(this.time)
     },
     handleFileUpload() {
-      console.log(this.productPhoto, '파일이 잘 업로드 되었습니다.')
+      this.file = this.$refs.file.files[0]
+      console.log(this.file, '파일이 잘 업로드 되었습니다.')
+    },
+    calcDate() {
+      this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
     },
     upload() {
       AWS.config.update({
         region: this.bucketRegion,
         credentials: new AWS.CognitoIdentityCredentials({
           IdentityPoolId: this.IdentityPoolId,
-          // accessKeyId: "AKIAXPHRRUK3P5LDGSOK",
-          // secretAccessKey: "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",
         })
       })
 
@@ -210,18 +234,19 @@ export default {
           Bucket: this.albumBucketName
         }
       })
-      let photoKey = this.productPhoto.name
+      let photoKey = this.file.name
       s3.upload({
         Key: photoKey,
-        Body: this.productPhoto,
+        Body: this.file,
         ACL: 'public-read'
       }, (err, data) => {
         if (err) {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        alert('Successfully uploaded photo.');
-        console.log(data)
+        alert('사진 업로드에 성공했습니다');
+        this.prdPhoto = data.Location
+        console.log(this.prdPhoto)
       });
     }
   },

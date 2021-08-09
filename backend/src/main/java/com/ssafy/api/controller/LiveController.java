@@ -64,14 +64,13 @@ public class LiveController {
 
 		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
 		Live live = liveService.getLiveByPrdId(prdId);
-
-//		try {
+		try {
 		liveService.updateLive(registerInfo, live);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
 	}
 	@DeleteMapping("/{prdId}")
 	@ApiOperation(value = "라이브 삭제", notes = "상품 고유 아이디를 받아 등록된 라이브를 삭제한다.")

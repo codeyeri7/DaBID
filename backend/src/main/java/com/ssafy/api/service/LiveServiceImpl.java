@@ -30,7 +30,6 @@ public class LiveServiceImpl implements LiveService {
 	@Override
 	public void createLive(User user, LiveRegisterPostReq liveInfo) {
 		Live live = new Live();
-
 //		live.setPrdSellerId(user.getUserId());			// 판매자 고유 아이디
 		live.setUser(user);
 		live.setLiveTitle(liveInfo.getLiveTitle());		// 라이브 제목
@@ -55,6 +54,7 @@ public class LiveServiceImpl implements LiveService {
 
 		live.setPrdNo(liveInfo.getPrdNo());				// 상품 일련 번호
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());	// 경매 시작 가격
+		live.setPrdPhoto(liveInfo.getPrdPhoto()); //상품사진
 
 		List<Live> liveList = user.getLiveList();
 		liveList.add(live);
@@ -66,12 +66,24 @@ public class LiveServiceImpl implements LiveService {
 	public void updateLive(LiveRegisterPostReq liveInfo, Live live) {
 		live.setLiveTitle(liveInfo.getLiveTitle());
 		live.setLiveDesc(liveInfo.getLiveDesc());
-//		live.setLiveDate(liveInfo.getLiveDate());
-		live.setPrdName(liveInfo.getPrdNo());
+
+		String liveDate = liveInfo.getLiveDate() + " " + liveInfo.getLiveTime() + ":00";
+		System.out.println("");
+		Timestamp timestamp = Timestamp.valueOf(liveDate);
+		live.setLiveDate(timestamp);
+
+		Optional<ProductCategory> productcategory = productCategoryRepository.findByPrdCategory(liveInfo.getPrdCategory());
+		live.setProductCategory(productcategory.orElseGet(null));
+
+		live.setPrdName(liveInfo.getPrdName());
+
+		Optional<LiveStatus> livestatus = liveStatusRepository.findByLiveStatus(0);
+		live.setLiveStatus(livestatus.orElseGet(null));
+
 		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
-		live.setPrdPhoto(liveInfo.getPrdPhoto());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
+		live.setPrdPhoto(liveInfo.getPrdPhoto());
 
 		liveRepository.save(live);
 	}

@@ -1,28 +1,66 @@
 <template>
-  <div id="app">
-    유저이름: 
+<div>
+  <v-container class="fill-height">
+    <v-row class="fill-height pb-14" align="end">
+      <v-col>
+        <div v-for="(item, idx) in recvList" :key="idx" 
+            :class="['d-flex flex-row align-center my-2', item.from == 'userName' ? 'justify-end': null]">
+          <span v-if="item.from == 'userName'" class="blue--text mr-3">{{ item.message }}</span>
+          <v-avatar :color="item.from == 'userName' ? 'indigo': 'red'" size="36">
+              <span class="white--text">{{ item.from[0] }}</span>
+          </v-avatar>
+          <span v-if="item.from != 'userName'" class="blue--text ml-3">{{ item.message }}</span>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
+  <v-form class="chatsend">
+    <v-container>
+      <v-row>
+        <v-col cols="12" class="d-flex flex-row align-center">
+          <v-text-field
+            v-model="message"
+            filled
+            label="Message"
+            type="text"
+          ></v-text-field>
+          <v-btn 
+            icon 
+            class="ml-4" 
+            @click="send"
+          >
+            <v-icon>mdi-send</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
+</div>
+
+    <!-- 유저이름: 
     <input
       v-model="userName"
       type="text"
-    >
-    내용: <input
+    > -->
+    <!-- 내용: <input
       v-model="message"
       type="text"
       @keyup="sendMessage"
-    >
-    <div
+    > -->
+    <!-- <div
       v-for="(item, idx) in recvList"
       :key="idx"
     >
       <h3>유저이름: {{ item.userName }}</h3>
       <h3>내용: {{ item.content }}</h3>
-    </div>
-  </div>
+    </div> -->
 </template>
+
 
 <script>
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
+import $ from "jquery";
 
 export default {
   name: 'Chat',
@@ -55,9 +93,10 @@ export default {
       }
     },    
     connect() {
-      const serverURL = "http://localhost:8080"
+      const serverURL = "https://localhost:8081"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
+      console.log(this.stompClient)
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect(
         {},
@@ -80,7 +119,46 @@ export default {
           this.connected = false;
         }
       );        
-    }
+    },
+  //   connect() {
+  //     const socket = new SockJS('/chat');
+  //     this.stompClient = Stomp.over(socket);
+  //     this.stompClient.connect({}, 
+  //       function () {
+  //         this.stompClient.subscribe('/topic/' + this.userName, 
+  //         function () {
+  //           // this.showMessage(JSON.parse(e.body));
+  //           this.alertClosing('comeMessage',2000);
+  //         });
+  //     });
+  //   },
+
+  //   send() {
+  //     const chatdata = {
+  //       chatRoomId: this.chatRoomId,
+  //       sender :this.userName,
+  //       receiver: this.receiver,
+  //       message: $("#message").val()
+  //     }
+  //     this.stompClient.send("/app/chat/send", {}, JSON.stringify(chatdata));
+  //     this.showMessage(chatdata);
+  //     $("#message").val('');
+  //     this.alertClosing('successMessage',2000);
+  //   }
+  // }
   }
 }
 </script>
+
+<style scoped>
+  .chatsend{
+    position: fixed;
+    left:0px;
+    bottom:80px;
+    height:50px;
+    width:100%;
+    /* background:rgb(231, 189, 255); 
+    color: rgb(255, 255, 255);
+    border-radius: 30% 30% 0% 0%; */
+  }
+</style>

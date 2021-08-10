@@ -13,7 +13,7 @@ import AllLiveList from '../views/LiveList/AllLiveList.vue'
 // import OnetoOneChat from '../views/MyPage/OnetoOneChat.vue'
 // import OnetoOneChatList from '../views/MyPage/OnetoOneChatList.vue'
 import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
-import Chat from '../views/MyPage/Chat.vue'
+import onetoonechat from '../views/MyPage/Chat.vue'
 
 Vue.use(VueRouter)
 
@@ -79,9 +79,9 @@ const routes = [
     component: ReviewCreate
   },
   {
-    path: '/Chat',
-    name: 'Chat',
-    component: Chat
+    path: '/onetoonechat',
+    name: 'onetoonechat',
+    component: onetoonechat
   },
 ]
 

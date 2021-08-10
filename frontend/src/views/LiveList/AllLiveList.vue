@@ -43,12 +43,21 @@
       <v-expansion-panel-content>
         <v-col>
           <v-autocomplete
-            v-model="values"
-            :items="items"
+            v-model="values1"
+            :items="items1"
             dense
             chips
             small-chips
             label="카테고리"
+            multiple
+          ></v-autocomplete>
+          <v-autocomplete
+            v-model="values2"
+            :items="items2"
+            dense
+            chips
+            small-chips
+            label="방송 상태"
             multiple
           ></v-autocomplete>
          <v-text-field
@@ -74,6 +83,7 @@
             </v-row>
           </v-container>
         </v-card>
+        
       </div>
     </div>
   </div>
@@ -92,9 +102,10 @@ export default {
       lives: [],
 
       //검색 관련
-      values: '',
-      items: ['의류', '가방', '신발', '악세사리']
-
+      values1: '',
+      values2: '',
+      items1: ['의류', '가방', '신발', '악세사리'],
+      items2: ['방송 종료', '방송 진행 중', '방송 예정']
     }
   },
   methods: {

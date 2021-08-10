@@ -4,7 +4,8 @@ import Main from '../views/main.vue'
 import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
-import Session from '../views/Live/Session.vue'
+// import Session from '../views/Live/Session.vue'
+import session from '../views/session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
 import MyWishList from '../views/LiveList/MyWishList.vue'
@@ -40,8 +41,8 @@ const routes = [
   },
   {
     path: '/session',
-    name: 'Session',
-    component: Session
+    name: 'session',
+    component: session
   },
   {
     path: '/MyLiveList',

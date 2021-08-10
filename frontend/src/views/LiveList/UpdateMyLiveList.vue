@@ -7,9 +7,9 @@
         <v-col>
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field  v-model.trim="live.prdId" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required"></v-text-field>
-            <v-text-field v-model.trim="live.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
-            <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
+            <v-text-field  v-model.trim="this.live.prdId" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required"></v-text-field>
+            <v-text-field v-model.trim="this.live.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
+            <v-select v-model="this.live.select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
             
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
@@ -19,9 +19,9 @@
           
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="live.title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
-            <v-text-field v-model.trim="live.liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
-            <v-text-field v-model.trim="live.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="this.live.title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="this.live.liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
+            <v-text-field v-model.trim="this.live.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
             <v-dialog
               ref="dialog"
@@ -33,7 +33,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="this.live.date"
                   label="방송 예정 날짜 (1주 이내)"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -43,7 +43,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="date"
+                v-model="this.live.date"
                 @input="menu2 = false"
                 :min= "today"
                 :max= "sevenday"
@@ -58,7 +58,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="time"
+                v-model="this.live.time"
                 label="방송 예정 시간"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
@@ -69,7 +69,7 @@
             </template>
             <v-time-picker
               v-if="modal2"
-              v-model="time"
+              v-model="this.live.time"
               full-width
             >
               <v-spacer></v-spacer>
@@ -90,7 +90,7 @@
             </v-time-picker>
           </v-dialog>
           </div>
-            <v-btn @click="updateLive" x-small color="white"  
+            <v-btn @click="updateLive" x-small color="white" :disabled="!valid"
           style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
@@ -105,7 +105,11 @@ import dayjs from 'dayjs'
 
 export default {
   name: 'UpdateMyLiveList',
-  data: vm => ({
+  // props: {
+  //   live: Object
+  // },
+  data() {
+    return {
       live: [],
       valid: true,
       productName: '',
@@ -156,8 +160,8 @@ export default {
       albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
       IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
-  }),
-  
+    }
+  },
   methods: {
     updateLive: function() {
       const prdId = this.prdId
@@ -185,6 +189,7 @@ export default {
           })
           .catch((err) => {
             console.log(err)
+            console.log(this.live)
           })
       }
     },
@@ -231,6 +236,7 @@ export default {
     }
   },
   mounted() {
+    this.calcDate()
     if (localStorage.getItem('jwt')) {
       // 바로 정보 가져오기 
       this.live = this.$route.params.live
@@ -238,7 +244,6 @@ export default {
     } else {
       console.log('오류')
     }
-    this.calcDate()
   },
 }
 </script>

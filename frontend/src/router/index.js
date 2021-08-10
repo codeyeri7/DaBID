@@ -74,7 +74,7 @@ const routes = [
   //   component: OnetoOneChatList
   // },
   {
-    path: '/ReviewCreate',
+    path: '/Review',
     name: 'ReviewCreate',
     component: ReviewCreate
   },

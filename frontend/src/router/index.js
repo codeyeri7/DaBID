@@ -8,6 +8,7 @@ import Session from '../views/Live/Session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 // import MyLiveListEnd from '../views/LiveList/MyLiveListEnd.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
+import MyWishList from '../views/LiveList/MyWishList.vue'
 import NoticeList from '../views/Notice/NoticeList.vue'
 import AllLiveList from '../views/LiveList/AllLiveList.vue'
 // import OnetoOneChat from '../views/MyPage/OnetoOneChat.vue'
@@ -83,6 +84,11 @@ const routes = [
     name: 'Chat',
     component: Chat
   },
+  {
+    path: '/MyWishList',
+    name: 'MyWishList',
+    component: MyWishList
+  }
 ]
 
 const router = new VueRouter({

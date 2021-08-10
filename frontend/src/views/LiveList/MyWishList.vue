@@ -1,5 +1,6 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
+    <h1>hi</h1>
       <div class="main-card">
         <v-card class="mx-auto" width="500">
           <v-container fluid>
@@ -40,7 +41,7 @@ export default {
     getWishList: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/users/'+localStorage.getItem('userId')+'/wishLive',
+        url: '/dabid/wish/'+localStorage.getItem('userId')+'/wishLive',
         headers: this.setToken()
       })
         .then((res) => {

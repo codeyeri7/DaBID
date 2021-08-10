@@ -42,17 +42,18 @@ export default {
   },
   methods: {
     setToken: function () {
-        const jwtToken = localStorage.getItem('jwt')
-        const config = {
-          Authorization: `Bearer ${jwtToken}`
-        }
-        return config
-      },
+      const jwtToken = localStorage.getItem("jwt");
+      const config = {
+        Authorization: ` Bearer ${jwtToken}`,
+      };
+      return config;
+    },
+
     getWishList: function () {
       rest
         .axios({
           method: "get",
-          url: "/dabid/wish/" + localStorage.getItem("userId") + "/wishLive",
+          url: "/dabid/wish/wishLive",
           headers: this.setToken(),
         })
         .then((res) => {

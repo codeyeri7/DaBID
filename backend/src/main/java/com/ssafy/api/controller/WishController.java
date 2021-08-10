@@ -52,8 +52,7 @@ public class WishController {
 	public ResponseEntity<? extends BaseResponseBody> deleteWishLive(
 			@PathVariable int prdId, @PathVariable String userId) {
 
-		wishService.deleteWishLive(prdId);
-
+		wishService.deleteWishLive(userId,prdId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 

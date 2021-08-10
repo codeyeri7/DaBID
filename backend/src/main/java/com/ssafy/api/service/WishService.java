@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
 import java.util.List;

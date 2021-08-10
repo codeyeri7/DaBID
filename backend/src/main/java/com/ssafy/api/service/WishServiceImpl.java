@@ -42,6 +42,7 @@ public class WishServiceImpl implements WishService{
     public void deleteWishLive(String userId, int prdId) {
         Live live = liveService.getLiveByPrdId(prdId);
         User user = userService.getUserByUserId(userId);
-
+        WishList wishList = wishListRepository.findByUserAndLive(user,live);
+        wishListRepository.delete(wishList);
     }
 }

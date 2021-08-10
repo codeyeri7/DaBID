@@ -7,6 +7,7 @@ import java.util.List;
 public interface WishService {
 
     List<WishList> getWishLives(String userId);
-    WishList putWishList(String userId, int prdId);
+    void putWishLive(String userId, int prdId);
+    void deleteWishLive(String userId, int prdId);
 
 }

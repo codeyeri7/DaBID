@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.response.LiveRes;
 import com.ssafy.api.service.LiveService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
@@ -56,7 +57,7 @@ public class SessionController {
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 	}
 
-	@PostMapping("/session/{prdId}/{userId}")
+	@PostMapping("/session/{prdId}")
 	@ApiOperation(value = "세션 생성 혹은 참가",
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 생성, 세션 생성 혹은 참가.")
 	@ApiResponses({
@@ -65,7 +66,10 @@ public class SessionController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<?> joinSession(@PathVariable @ApiParam(name="prdId") int prdId,
-							  @PathVariable String userId) {
+										 @ApiIgnore Authentication authentication) {
+
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
 
 		// 여기부터
 		User user = userService.getUserByUserId(userId);	// userId로 user 검색

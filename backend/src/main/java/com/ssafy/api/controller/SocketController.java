@@ -1,15 +1,20 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.db.vo.SocketVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@Api(value = "유저 API", tags = {"User"})
+@RestController
 public class SocketController {
 
     // /receive를 메시지를 받을 endpoint로 설정합니다.
     @MessageMapping("/receive")
+    @ApiOperation(value = "채팅", notes = "채팅")
 
     // /send로 메시지를 반환합니다. /send를 토픽으로 삼는 모든 subscriber에게 return
     @SendTo("/send")

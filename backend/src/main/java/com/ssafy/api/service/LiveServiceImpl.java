@@ -113,4 +113,10 @@ public class LiveServiceImpl implements LiveService {
 		return list;
 	}
 
+	@Override
+	public List<Live> searchLives(String category, String keyword) {
+		List<Live> liveList =
+		return null;
+	}
+
 }

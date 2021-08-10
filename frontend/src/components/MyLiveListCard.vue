@@ -93,22 +93,29 @@ export default {
       }
   },
   methods: {
-    remove: function (prdId) {
+    remove: function () {
+      // this.prdId = this.live.prdId
       rest.axios({
         method: 'delete',
-        url: `/dabid/live/${prdId}`,
+        url: `/dabid/live/${this.prdId}`,
       })
         .then((res) => {
-          this.getLiveList()
+          this.refreshAll()
           console.log(res)
           alert('해당 게시글이 삭제되었습니다')
         })
         .catch((err) => {
           console.log(err)
+          console.log(this.live)
+          console.log(this.prdId)
         })
     },
-    edit: function (live) {
-      this.$router.push({ name: 'UpdateMyLiveList', params: {live: live} });
+    refreshAll() {
+      // 새로고침
+      this.$router.go();
+    },
+    edit: function () {
+      this.$router.push({ name: 'UpdateMyLiveList'});
     }
   },
 }

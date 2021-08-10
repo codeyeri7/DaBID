@@ -20,7 +20,7 @@
     </v-carousel>
 
     <button @click="goLive1">goLive1</button>
-    <button @click="goLive2">goLive2</button>
+    <!-- <button @click="goLive2">goLive2</button> -->
     <!-- card -->
     <div class="main-card">
       <v-card class="mx-auto" width="500">
@@ -154,13 +154,21 @@ export default {
       }
   },
   methods: {
+    
+    setToken: function () {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${jwtToken}`
+      }
+      return config
+    },
     // live 열기
     goLive1: function () {
       rest
         .axios({
           method: "post",
-          url: `/dabid/session/2/P1628131859142`,
-          // +localStorage.getItem("userId"),
+          url: `/dabid/session/2`,
+          headers: this.setToken()
         })
         .then((res) => {
           console.log("켜짐");
@@ -188,35 +196,35 @@ export default {
           console.log(err);
         });
     },
-    goLive2: function () {
-      rest
-      .axios({
-        method: "post",
-        url: "/dabid/session/2/P1628141880829",
-      })
-        .then((res) => {
-          this.sessionData.liveTitle = res.data.liveTitle;
-          this.sessionData.token = res.data.token;
-          this.sessionData.userName = res.data.userName;
-          this.sessionData.userId = res.data.userId;
-          this.sessionData.role = res.data.role;
-          console.log(res);
-          console.log(res.data.role + "입니다.");
-          this.$router.push({ 
-            name: "Session",
-            params: {
-              liveTitle: this.sessionData.liveTitle, 
-              token: this.sessionData.token, 
-              userName: this.sessionData.userName, 
-              userId: this.sessionData.userId,
-              role: this.sessionData.role
-            }
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // goLive2: function () {
+    //   rest
+    //   .axios({
+    //     method: "post",
+    //     url: "/dabid/session/2/P1628141880829",
+    //   })
+    //     .then((res) => {
+    //       this.sessionData.liveTitle = res.data.liveTitle;
+    //       this.sessionData.token = res.data.token;
+    //       this.sessionData.userName = res.data.userName;
+    //       this.sessionData.userId = res.data.userId;
+    //       this.sessionData.role = res.data.role;
+    //       console.log(res);
+    //       console.log(res.data.role + "입니다.");
+    //       this.$router.push({ 
+    //         name: "Session",
+    //         params: {
+    //           liveTitle: this.sessionData.liveTitle, 
+    //           token: this.sessionData.token, 
+    //           userName: this.sessionData.userName, 
+    //           userId: this.sessionData.userId,
+    //           role: this.sessionData.role
+    //         }
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     // live 정보
     getLive: function () {
       rest

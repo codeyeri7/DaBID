@@ -85,7 +85,7 @@ public class LiveController {
 	@GetMapping("/all")
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
 	public ResponseEntity<?> selectAllLives() {
-		List<Live> liveList = liveService.getRecentLives(0);
+		List<Live> liveList = liveService.getAllLives();
 		return ResponseEntity.status(200).body(liveList);
 	}
 

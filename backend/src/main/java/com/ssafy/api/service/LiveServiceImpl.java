@@ -109,8 +109,8 @@ public class LiveServiceImpl implements LiveService {
 
 	@Override
 	public List<Live> getAllLives(){
-		System.out.println();
-		return null;
+		List<Live> list = liveRepository.findAll();
+		return list;
 	}
 
 }

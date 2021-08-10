@@ -38,15 +38,13 @@ public class LiveController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
-			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo){
+			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo,
+			@ApiIgnore Authentication authentication){
 
-//		System.out.println(authentication.toString());
-//		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//		System.out.println(userDetails.toString());
-//		System.out.println(userDetails.getUsername());
-//		String userId = userDetails.getUsername();
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
 
-		User user = userService.getUserByUserId(registerInfo.getUserId());
+		User user = userService.getUserByUserId(userId);
 
 		try {
 			liveService.createLive(user, registerInfo);

@@ -43,4 +43,9 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Live> liveList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<WishList> WishList = new ArrayList<>();
+
 }

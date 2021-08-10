@@ -37,7 +37,6 @@ public class UserController {
 	@GetMapping("/myLive")
 	@ApiOperation(value = "마이 라이브 조회", notes = "내가 등록한 라이브 전체 조회")
 	public ResponseEntity<?> selectMyLives(@ApiIgnore Authentication authentication) {
-
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 

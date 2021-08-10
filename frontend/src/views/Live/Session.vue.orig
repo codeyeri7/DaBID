@@ -19,44 +19,49 @@
             </v-btn>
           </div>
         </div>
-        
-        <!-- 마이크 on/off 버튼 -->
-        <v-btn
-          icon
-          v-if="this.publisher.properties.publishAudio"
-          @click="toggleAudio"
-          class="toggleBtn"
-        >
-          <i class="fas fa-microphone"></i>
-        </v-btn>
-        <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
-          <i class="fas fa-microphone-slash"></i
-        ></v-btn>
-
-        <!-- 카메라 on/off 버튼 -->
-        <v-btn
-          icon
-          v-if="this.publisher.properties.publishVideo"
-          @click="toggleVideo"
-          class="toggleBtn video"
-        >
-          <i class="fas fa-video"></i>
-        </v-btn>
-        <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
-          <i class="fas fa-video-slash"></i
-        ></v-btn>
-
         <div id="main-video" class="col-md-6">
           <!-- <p class="userName"></p>
 					<p class="userId"></p>
 					<video autoplay="autoplay" playsinline="true"></video> -->
+
+          <!-- 마이크 on/off 버튼 -->
+          <v-btn
+            icon
+            v-if="this.publisher.properties.publishAudio"
+            @click="toggleAudio"
+            class="toggleBtn"
+          >
+            <i class="fas fa-microphone"></i>
+          </v-btn>
+          <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
+            <i class="fas fa-microphone-slash"></i
+          ></v-btn>
+
+          <!-- 카메라 on/off 버튼 -->
+          <v-btn
+            icon
+            v-if="this.publisher.properties.publishVideo"
+            @click="toggleVideo"
+            class="toggleBtn video"
+          >
+            <i class="fas fa-video"></i>
+          </v-btn>
+          <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
+            <i class="fas fa-video-slash"></i
+          ></v-btn>
+
           <!-- 메인 카메라 -->
           <user-video :stream-manager="mainStreamManager"></user-video>
         </div>
-        
         <div id="video-container" class="col-md-6">
-          <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)" />
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
+          <user-video
+            :stream-manager="publisher"
+            @click.native="updateMainVideoStreamManager(publisher)"
+          />
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
             @click.native="updateMainVideoStreamManager(sub)"
           />
         </div>
@@ -97,17 +102,11 @@ export default {
       userId: this.$route.params.userId,
       role: this.$route.params.role,
 
-      // OpenVidu Object: session에서 get하기
       OV: undefined,
       session: undefined,
-
-      // publisher StreamManager object will be our own local webcam stream
-      // and subscribers StreamManager array will store the active streams of other users in the video-call. 
-      publisher: undefined, // Local
-      subscribers: [],      // Remotes
-
-      // publisher 거나 subscribers 중 하나
       mainStreamManager: undefined,
+      publisher: undefined,
+      subscribers: [],
 
       myUserId: "Participant" + Math.floor(Math.random() * 100),
     };
@@ -131,18 +130,12 @@ export default {
       // streamCreated: session publishing을 시작했을 때
       this.session.on("streamCreated", (event) => {
         // Subscribe to the Stream to receive it
-        // Second parameter is undefined
-        // so OpenVidu doesn't create an HTML video by its own
-
         // HTML video will be appended to element with 'video-container' id
 
         // <div id="video-container">에 <video> append
-        let subscriber = this.session.subscribe(
+        var subscriber = this.session.subscribe(
           event.stream,
-          // undefined,
-          // event.element
-          // "video-container"
-          "main-video"
+          "video-container"
         );
         this.subscribers.push(subscriber);
 
@@ -162,12 +155,6 @@ export default {
       this.session.on("streamDestroyed", (event) => {
         // Delete the HTML element with the user's name and nickname
         this.removeUserData(event.stream.connection);
-
-        // Remove the stream from 'subscribers' array
-        const index = this.subscribers.indexOf(event.stream.streamManager, 0);
-        if (index >= 0) {
-            this.subscribers.splice(index, 1);
-        }
       });
 
       // On every asynchronous exception...
@@ -187,7 +174,7 @@ export default {
           // $("#liveTitle").text(this.liveTitle);
 
           // #join이 뭔지 모르겠음
-          // $("#join").hide();
+          $("#join").hide();
           // 숨겨져있던 방제목과 비디오 보여주기
           $("#session").show();
 
@@ -200,7 +187,7 @@ export default {
           if (this.isPublisher()) {
             // --- 6) Get your own camera stream ---
 
-            let publisher = this.OV.initPublisher(undefined, {
+            var publisher = this.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
 
@@ -215,9 +202,9 @@ export default {
 
               // <div id="video-container">에 <video>를 어떻게 추가할 건지 옵션 설정
               // AFTER, APPEND(default), BEFORE, PREPEND, REPLACE
-              insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+              insertMode: "REPLACE", // How the video is inserted in the target element 'video-container'
               // 좌우 반전
-              mirror: false, // Whether to mirror your local video or not
+              mirror: true, // Whether to mirror your local video or not
             });
 
             // mainStreamManager: 하위 컴포넌트인 UserVideo에 넘기기위함
@@ -242,18 +229,13 @@ export default {
 
             // --- 8) Publish your stream ---
             // 설정 끝났고 드디어 publish!
-            this.publisher.subscribeToRemote(true);
             this.session.publish(this.publisher);
             console.log("설정 끝났고 드디어 publish!");
-            console.log("publisher: this.session:");
-            console.log(this.session);
           } else {
             console.warn("You don't have permissions to publish");
-            console.log("subscriber: this.session:");
-            console.log(this.session);
-            // this.initMainVideoThumbnail(); // Show SUBSCRIBER message in main video
-            // this.updateMainVideoStreamManager(this.publisher);
-            // this.session.subscribe();
+            this.initMainVideoThumbnail(); // Show SUBSCRIBER message in main video
+            this.updateMainVideoStreamManager(this.publisher);
+            this.session.subscribe();
           }
         })
         .catch((error) => {
@@ -370,7 +352,7 @@ export default {
     initMainVideoThumbnail() {
       $("#main-video video").css(
         "background",
-        "url('assets/Banner1.png') round"
+        "url('images/subscriber-msg.jpg') round"
       );
     },
     isPublisher() {

@@ -23,6 +23,7 @@
         </v-container>
       </v-card>
     </div>
+  </div>
 </template>
 
 <script>
@@ -43,7 +44,7 @@ export default {
     setToken: function () {
       const jwtToken = localStorage.getItem("jwt");
       const config = {
-        Authorization: `JWT ${jwtToken}`,
+        Authorization: ` Bearer ${jwtToken}`,
       };
       return config;
     },
@@ -51,7 +52,7 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/wish/" + localStorage.getItem("userId") + "/wishLive",
+          url: "/dabid/wish/wishLive",
           headers: this.setToken(),
         })
         .then((res) => {

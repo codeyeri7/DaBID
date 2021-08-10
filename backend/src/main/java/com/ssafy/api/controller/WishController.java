@@ -1,21 +1,24 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.service.WishService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
-@Api(value = "찜하 API", tags = {"WishList"})
+@Api(value = "찜하기 API", tags = {"WishList"})
 @RestController
 @RequestMapping("/dabid/wish")
 public class WishController {
@@ -23,9 +26,14 @@ public class WishController {
 	@Autowired
 	WishService wishService;
 
-	@GetMapping("/{userId}/wishLive")
+	@GetMapping("/wishLive")
 	@ApiOperation(value = "찜하기 목록 라이브 조회", notes = "내가 찜한 라이브 전체 조회")
-	public ResponseEntity<?> selectWishLive(@PathVariable String userId) {
+	public ResponseEntity<?> selectWishLive(@ApiIgnore Authentication authentication) {
+		System.out.println("들어오나");
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+
+		System.out.println("USER아이디"+userId);
 		List<WishList> wishLiveList = wishService.getWishLives(userId);
 		return ResponseEntity.status(200).body(wishLiveList);
 	}

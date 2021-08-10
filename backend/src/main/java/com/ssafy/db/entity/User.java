@@ -25,7 +25,7 @@ public class User {
     String userId;      // 회원 고유 아이디
     String userName;    // 이름(닉네임)
 
-    @ColumnDefault("0")
+    @ColumnDefault("30")
     int userScore;   // 평점
 
     @JsonIgnore

@@ -1,6 +1,7 @@
 <template>
   <div>
      <h2 style="margin-left:40px;font-family: 'Lora', serif;">{{ person.userName }} yunseo's Profile</h2>
+
     <MyProfile/>
       <v-card
         class="mx-auto"
@@ -23,6 +24,42 @@
           </v-list-item-group>
         </v-list>
       </v-card>
+      <div class="fixedbutton" style="float: right">
+        <div class="text-center mr-5">
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
+            <template v-slot:activator="{ on, attrs }">                
+              <img src="@/assets/warning.png" alt="warning" style="width:35px" v-bind="attrs" v-on="on">
+            </template>
+
+            <v-card>
+              <v-card-title class="text-h5 grey lighten-2">
+                Accident Policy
+              </v-card-title>
+
+              <v-card-text style="margin-top:2.5rem">
+                다비드는 원활한 거래 연결을 위해 더치트 계좌 조회 서비스를 지원합니다. <hr>
+                <v-btn @click="onClick()">위험 계좌조회 더치트 바로가기</v-btn>
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="brown darken-2"
+                  text
+                  @click="dialog = false"
+                >
+                  확인
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -37,6 +74,7 @@ export default {
   },
   data: function () {
     return {
+      dialog: false,
       person: [],
       items: [
         {

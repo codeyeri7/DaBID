@@ -5,6 +5,7 @@ import com.ssafy.api.request.UserUpdatePatchReq;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.Session;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.WishList;
 
 import java.util.List;
 

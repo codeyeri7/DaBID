@@ -137,4 +137,5 @@ public class UserController {
 		
 		return ResponseEntity.status(204).body(UserRes.of(user));
 	}
+
 }

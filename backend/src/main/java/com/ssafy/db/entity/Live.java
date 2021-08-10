@@ -11,6 +11,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -55,4 +57,8 @@ public class Live { //라이브테이블
     @ManyToOne()
     @JoinColumn(name = "prd_seller_id") // 외래키
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "live", orphanRemoval = true)
+    private List<WishList> WishList = new ArrayList<>();
 }

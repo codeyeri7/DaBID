@@ -90,9 +90,9 @@ public class LiveController {
 	@GetMapping()
 	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
 	public ResponseEntity<?> selectTop2Lives() {
-		List<Live> liveList = liveService.getRecentLives(0);
-		liveList.addAll(liveService.getRecentLives(1));
-		liveList.addAll(liveService.getRecentLives(2));
+		List<Live> liveList = liveService.getRecentLives(0); //방송예정 중 인기방송 2개만
+//		liveList.addAll(liveService.getRecentLives(1));
+//		liveList.addAll(liveService.getRecentLives(2));
 		return ResponseEntity.status(200).body(liveList);
 	}
 }

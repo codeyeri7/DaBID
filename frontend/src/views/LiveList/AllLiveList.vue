@@ -1,32 +1,57 @@
 <template>
 <div>
   <!-- top2 carousel --> 
-  <v-carousel
-      cycle
-      height="230"
-      hide-delimiter-background
-      show-arrows-on-hover
-    >
-      <v-carousel-item
-        v-for="(hot_live, i) in hot_lives"
-        :key="i"
+  <v-row>
+  <v-card
+    class="mx-auto"
+    color="#546E7A"
+    dark
+    width="50%"
+    v-for="(hot_live, idx) in hot_lives" :key="idx" :hot_live="hot_live"
+  >
+    <v-card-title>
+      <v-icon
+        large
+        left
+        style="color:#FF7043"
       >
-        <v-sheet
-          :color="colors[i]"
-          height="100%"
+        mdi-star
+      </v-icon>
+      <span class="text-h6 font-weight-light">Hot LIVE</span>
+    </v-card-title>
+
+    <v-card-text class="text-h5 font-weight-bold">
+     {{ hot_live.liveTitle }}
+    </v-card-text>
+
+    <v-card-actions>
+      <v-list-item class="grow">
+        <v-list-item-avatar color="grey darken-3">
+          <v-img
+            class="elevation-6"
+            alt="profile image"
+            src="https://avataaars.io/"
+          ></v-img>
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ hot_live.user.userName }}</v-list-item-title>
+        </v-list-item-content>
+
+        <v-row
+          align="center"
+          justify="end"
         >
-          <v-row
-            class="fill-height"
-            align="center"
-            justify="center"
-          >
-            <div class="text-h2">
-              hot_live.liveTitle
-            </div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
+          <v-icon class="mr-1">
+            mdi-heart
+          </v-icon>
+          <span class="subheading mr-2">하트 수</span>
+    
+        </v-row>
+      </v-list-item>
+    </v-card-actions>
+  </v-card>
+  </v-row>
 
     <!-- 검색 카테고리 창 --> 
     <v-expansion-panels>
@@ -36,7 +61,7 @@
       </v-expansion-panel-header>
 
       <v-expansion-panel-content>
-        <v-col cols="12">
+        <v-col>
           <v-autocomplete
             v-model="values"
             :items="items"
@@ -46,11 +71,11 @@
             label="카테고리"
             multiple
           ></v-autocomplete>
-        </v-col>
          <v-text-field
           label="검색어"
         ></v-text-field>
-        <v-btn>검색</v-btn>
+        <v-btn @click="search()">검색</v-btn>
+        </v-col>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -126,6 +151,9 @@ export default {
       .catch((err) => {
         console.log(err)
       })
+    },
+    search: function () {
+      
     }
   },
   created: function () {

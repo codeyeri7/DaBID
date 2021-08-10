@@ -60,7 +60,6 @@ export default {
           action: "logout"
         },
       ],
-      model: 1,
     }
   },
   methods: {

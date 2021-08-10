@@ -4,13 +4,18 @@ import com.ssafy.api.request.UserUpdatePatchReq;
 import com.ssafy.db.entity.Auth;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.WishList;
 import com.ssafy.db.repository.AuthRepository;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.repository.UserRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

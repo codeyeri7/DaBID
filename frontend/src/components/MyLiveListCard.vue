@@ -106,8 +106,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-          console.log(this.live)
-          console.log(this.prdId)
         })
     },
     refreshAll() {
@@ -115,7 +113,7 @@ export default {
       this.$router.go();
     },
     edit: function () {
-      this.$router.push({ name: 'UpdateMyLiveList'});
+      this.$router.push({ name: 'UpdateMyLiveList', params: { lives: `${this.prdId}`}})
     }
   },
 }

@@ -6,15 +6,14 @@ import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
 import Session from '../views/Live/Session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
-// import MyLiveListEnd from '../views/LiveList/MyLiveListEnd.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
 import MyWishList from '../views/LiveList/MyWishList.vue'
 import NoticeList from '../views/Notice/NoticeList.vue'
 import AllLiveList from '../views/LiveList/AllLiveList.vue'
-// import OnetoOneChat from '../views/MyPage/OnetoOneChat.vue'
-// import OnetoOneChatList from '../views/MyPage/OnetoOneChatList.vue'
 import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
-import onetoonechat from '../views/MyPage/Chat.vue'
+import Chathome from '../views/MyPage/Chathome.vue'
+import Chatroom from '../views/MyPage/Chatroom.vue'
+import Chatlist from '../views/MyPage/Chatlist.vue'
 
 Vue.use(VueRouter)
 
@@ -64,30 +63,30 @@ const routes = [
     name: 'AllLiveList',
     component: AllLiveList
   },
-  // {
-  //   path: '/onetoonechat',
-  //   name: 'OnetoOneChat',
-  //   component: OnetoOneChat
-  // },
-  // {
-  //   path: '/onetoonechatlist',
-  //   name: 'OnetoOneChatList',
-  //   component: OnetoOneChatList
-  // },
   {
     path: '/ReviewCreate',
     name: 'ReviewCreate',
     component: ReviewCreate
   },
   {
-    path: '/onetoonechat',
-    name: 'onetoonechat',
-    component: onetoonechat
-  },
-  {
     path: '/MyWishList',
     name: 'MyWishList',
     component: MyWishList
+  },
+  {
+    path: '/Chathome',
+    name: 'Chathome',
+    component: Chathome
+  },
+  {
+    path: '/Chatroom',
+    name: 'Chatroom',
+    component: Chatroom
+  },
+  {
+    path: '/Chatlist',
+    name: 'Chatlist',
+    component: Chatlist
   }
 ]
 

@@ -23,7 +23,6 @@
         </v-container>
       </v-card>
     </div>
-  </div>
 </template>
 
 <script>

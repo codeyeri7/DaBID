@@ -121,7 +121,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style>
 
 footer{ 
   position:fixed; 
@@ -133,4 +133,11 @@ footer{
   color: rgb(255, 255, 255);
   border-radius: 30% 30% 0% 0%;
   }
+
+#eng-font {
+  font-family: 'Lora', serif;
+}
+#kor-font {
+  font-family: 'IBMPlexSansKR-Regular';
+}
 </style>

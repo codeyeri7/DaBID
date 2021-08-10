@@ -1,60 +1,40 @@
 <template>
-<div>
+<div class="container">
   <!-- top2 carousel --> 
-  <v-row>
+  <v-row style="width:90%; margin:auto; margin-bottom: 7%">
   <v-card
     class="mx-auto"
-    color="#546E7A"
+    color="#455A64"
     dark
     width="50%"
     v-for="(hot_live, idx) in hot_lives" :key="idx" :hot_live="hot_live"
   >
     <v-card-title>
-      <v-icon
-        large
-        left
-        style="color:#FF7043"
-      >
-        mdi-star
-      </v-icon>
-      <span class="text-h6 font-weight-light">Hot LIVE</span>
-    </v-card-title>
-
-    <v-card-text class="text-h5 font-weight-bold">
-     {{ hot_live.liveTitle }}
-    </v-card-text>
-
-    <v-card-actions>
-      <v-list-item class="grow">
-        <v-list-item-avatar color="grey darken-3">
+      <v-list-item-avatar color="white">
           <v-img
             class="elevation-6"
             alt="profile image"
-            src="https://avataaars.io/"
+            src="https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Kurt&hairColor=Red&facialHairType=Blank&clotheType=ShirtVNeck&clotheColor=Blue03&eyeType=Hearts&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light"
           ></v-img>
         </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>{{ hot_live.user.userName }}</v-list-item-title>
-        </v-list-item-content>
-
-        <v-row
-          align="center"
-          justify="end"
-        >
-          <v-icon class="mr-1">
+        <div>
+        <v-icon class="mr-1">
             mdi-heart
           </v-icon>
-          <span class="subheading mr-2">하트 수</span>
-    
-        </v-row>
-      </v-list-item>
-    </v-card-actions>
+          <span class="subheading mr-2">28</span>
+        </div>
+        <h5>{{ hot_live.user.userName }}</h5>
+    </v-card-title>
+
+    <v-card-text id="kor-font">
+     {{ hot_live.liveTitle | truncate(9, '...') }} <br>
+     <span> <b>시작가</b> </span> | {{ hot_live.prdPriceStart }}
+    </v-card-text>
   </v-card>
   </v-row>
 
     <!-- 검색 카테고리 창 --> 
-    <v-expansion-panels>
+    <v-expansion-panels id="panel">
      <v-expansion-panel>
       <v-expansion-panel-header>
         Search
@@ -167,6 +147,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.mx-auto {
+  border-radius: 30px;
+}
 </style>

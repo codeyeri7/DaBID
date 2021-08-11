@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.WishService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -25,6 +26,8 @@ public class WishController {
 	
 	@Autowired
 	WishService wishService;
+	@Autowired
+	UserService userService;
 
 	@GetMapping("/wishLive")
 	@ApiOperation(value = "찜하기 목록 라이브 조회", notes = "내가 찜한 라이브 전체 조회")
@@ -48,8 +51,9 @@ public class WishController {
 		try {
 			SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 			String userId = userDetails.getUsername();
+			User user = userService.getUserByUserId(userId);
 
-			wishService.putWishLive(userId, prdId);
+			wishService.putWishLive(user, prdId);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}catch (Exception e){
 			e.printStackTrace();

@@ -137,10 +137,16 @@ export default {
       // 새로고침
       this.$router.go();
     },
+    // edit: function () {
+    //   this.$router.push({
+    //     name: "UpdateMyLiveList",
+    //     params: { prdId: `${this.prdId}` },
+    //   });
+    // },
     edit: function () {
       this.$router.push({
         name: "UpdateMyLiveList",
-        params: { lives: `${this.prdId}` },
+        params: { prdId: `${this.prdId}` },
       });
     },
     wish: function () {
@@ -177,12 +183,13 @@ export default {
     checkPrdId: function () {
       rest.axios({
         method: "get",
-        url: `"/dabid/wish/${this.prdId}"`,
+        url: `/dabid/wish/${this.prdId}`,
         headers: this.setToken(),
       })
         .then((res) => {
           this.check = res.data
           console.log('OK!');
+          console.log(this.check)
         })
         .catch((err) => {
           console.log(err);

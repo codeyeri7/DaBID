@@ -42,6 +42,7 @@ public class WishServiceImpl implements WishService{
     public void deleteWishLive(User user, int prdId) {
         Live live = liveService.getLiveByPrdId(prdId);
         WishList wishList = wishListRepository.findByUserAndLive(user,live);
+        System.out.println("삭제할wish"+wishList.getWishId());
         wishListRepository.delete(wishList);
     }
 }

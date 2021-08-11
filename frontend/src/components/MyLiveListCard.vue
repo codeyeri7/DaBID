@@ -120,7 +120,7 @@ export default {
       rest
         .axios({
           method: "delete",
-          url: `/dabid/live/${this.prdId}`,
+          url: `/dabid/wish/${this.prdId}`,
         })
         .then((res) => {
           this.refreshAll();
@@ -161,6 +161,7 @@ export default {
         .axios({
           method: "delete",
           url: `/dabid/wish/${this.prdId}`,
+          headers: this.setToken(),
         })
         .then((res) => {
           console.log("unwish!");

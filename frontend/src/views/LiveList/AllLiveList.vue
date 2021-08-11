@@ -119,7 +119,7 @@ export default {
     getAllLiveList: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/live/all',
+        url: '/dabid/live/',
         headers: this.setToken()
       })
         .then((res) => {
@@ -133,7 +133,7 @@ export default {
     getHotLives: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/live',
+        url: '/dabid/live/best',
       })
       .then((res) => {
         console.log('받아온 인기 방송', res.data)
@@ -145,17 +145,17 @@ export default {
     },
     search() {
       console.log(this.values)
-      // rest.axios({
-      //   method: 'get',
-      //   url: '/dabid/live'
-      // })
-      // .then((res) => {
-      //   this.lives = res.data
-      //   console.log('검색결과', this.lives)
-      // })
-      // .catch((err) => {
-      //   console.log(err)
-      // })
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live'
+      })
+      .then((res) => {
+        this.lives = res.data
+        console.log('검색결과', this.lives)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
   },
   created: function () {

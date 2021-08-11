@@ -3,97 +3,102 @@
     <v-container>
       <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
       <hr id="top-hr">
-      <v-row>
-        <v-col>
-          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
-          <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
-            <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
-            <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
-            <div>
-              <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-              <v-btn @click="upload" color=primary flat>업로드</v-btn>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation>
+        <v-row>
+          <v-col>
+            <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
+            <div style="font-family: 'IBMPlexSansKR-Regular';">
+              <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
+              <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
+              <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
+              <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
+              <div>
+                <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
+                <v-btn @click="upload" color=primary flat>업로드</v-btn>
+              </div>
             </div>
-          </div>
-          
-          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
-          <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
-            <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
-            <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
+            <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
+            <div style="font-family: 'IBMPlexSansKR-Regular';">
+              <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
+              <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
+              <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+              
+              <v-dialog
+                ref="dialog"
+                v-model="menu2"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="date"
+                    label="방송 예정 날짜 (1주 이내)"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    :rules="DateRules"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="date"
+                  @input="menu2 = false"
+                  :min= "today"
+                  :max= "sevenday"
+                ></v-date-picker>
+              </v-dialog>
             <v-dialog
-              ref="dialog"
-              v-model="menu2"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              min-width="auto"
+              ref="dialog2"
+              v-model="modal2"
+              :return-value.sync="time"
+              persistent
+              width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
-                  label="방송 예정 날짜 (1주 이내)"
-                  prepend-icon="mdi-calendar"
+                  v-model="time"
+                  label="방송 예정 시간"
+                  prepend-icon="mdi-clock-time-four-outline"
                   readonly
                   v-bind="attrs"
                   v-on="on"
                   :rules="DateRules"
                 ></v-text-field>
               </template>
-              <v-date-picker
-                v-model="date"
-                @input="menu2 = false"
-                :min= "today"
-                :max= "sevenday"
-              ></v-date-picker>
-            </v-dialog>
-          <v-dialog
-            ref="dialog2"
-            v-model="modal2"
-            :return-value.sync="time"
-            persistent
-            width="290px"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
+              <v-time-picker
+                v-if="modal2"
                 v-model="time"
-                label="방송 예정 시간"
-                prepend-icon="mdi-clock-time-four-outline"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-                :rules="DateRules"
-              ></v-text-field>
-            </template>
-            <v-time-picker
-              v-if="modal2"
-              v-model="time"
-              full-width
-            >
-              <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="red"
-                @click="modal2 = false"
+                full-width
               >
-                Cancel
-              </v-btn>
-              <v-btn
-                text
-                color="blue"
-                @click="$refs.dialog2.save(time)"
-              >
-                OK
-              </v-btn>
-            </v-time-picker>
-          </v-dialog>
-          </div>
-            <v-btn @click="createLive" x-small color="white" :disabled="!valid"
-          style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
-        </v-col>
-      </v-row>
+                <v-spacer></v-spacer>
+                <v-btn
+                  text
+                  color="red"
+                  @click="modal2 = false"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  text
+                  color="blue"
+                  @click="$refs.dialog2.save(time)"
+                >
+                  OK
+                </v-btn>
+              </v-time-picker>
+            </v-dialog>
+            </div>
+              <v-btn @click="createLive" x-small color="white" :disabled="!valid"
+            style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
+          </v-col>
+        </v-row>
+      </v-form>
     </v-container>
   </div>
 </template>
@@ -196,6 +201,7 @@ export default {
           headers: this.setToken()
         })
           .then((res) => {
+            console.log(this.$refs.form)
             console.log(res)
             this.$router.push({ name: 'MyLiveList' })
           })

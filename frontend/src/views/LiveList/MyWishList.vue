@@ -48,16 +48,15 @@ export default {
       };
       return config;
     },
-
     getWishList: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "/dabid/wish/wishLive",
-          headers: this.setToken(),
-        })
+      rest.axios({
+        method: "get",
+        url: "/dabid/wish/wishLive",
+        headers: this.setToken(),
+      })
         .then((res) => {
           this.lives = res.data;
+          console.log(this.lives)
         })
         .catch((err) => {
           console.log(err);

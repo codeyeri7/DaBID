@@ -67,8 +67,9 @@ public class WishController {
 			@PathVariable int prdId, @ApiIgnore Authentication authentication) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
 
-		wishService.deleteWishLive(userId,prdId);
+		wishService.deleteWishLive(user,prdId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 

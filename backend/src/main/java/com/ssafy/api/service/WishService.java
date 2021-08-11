@@ -9,6 +9,6 @@ public interface WishService {
 
     List<WishList> getWishLives(String userId);
     void putWishLive(User user, int prdId);
-    void deleteWishLive(String userId, int prdId);
+    void deleteWishLive(User user, int prdId);
 
 }

@@ -34,6 +34,7 @@
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
+        <!-- <span v-if="this.prdId === this.wishlist.live.prdId"> -->
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
@@ -106,7 +107,6 @@ export default {
   data: function () {
     return {
       prdId: this.live.prdId,
-      userId: this.live.user.userId,
       lives: [],
       show: false,
       dialog: false,
@@ -151,7 +151,7 @@ export default {
     wish: function () {
       rest.axios({
         method: 'post',
-        url: `/dabid/wish/${this.userId}/${this.prdId}`,
+        url: `/dabid/wish/${this.prdId}`,
         headers: this.setToken(),
       })
         .then((res) => {
@@ -165,7 +165,8 @@ export default {
     unwish: function () {
       rest.axios({
         method: 'delete',
-        url: `/dabid/wish/${this.userId}/${this.prdId}`
+        url: `/dabid/wish/${this.prdId}`,
+        headers: this.setToken(),
       })
         .then((res) => {
           console.log('unwish!')
@@ -174,6 +175,27 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    getWishList: function () {
+      rest.axios({
+        method: "get",
+        url: "/dabid/wish/wishLive",
+        headers: this.setToken(),
+      })
+        .then((res) => {
+          this.wishlist = res.data;
+          console.log(this.wishlist)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  created: function () {
+    if (localStorage.getItem("jwt")) {
+      this.getWishList();
+    } else {
+      this.$router.push({ name: "Login" });
     }
   },
 }

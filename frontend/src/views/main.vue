@@ -233,7 +233,7 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/live",
+          url: "/dabid/live/top2",
         })
         .then((res) => {
           this.cards = res.data;

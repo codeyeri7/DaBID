@@ -62,6 +62,7 @@
           ></v-autocomplete>
          <v-text-field
           label="검색어"
+          v-model="keyword"
         ></v-text-field>
         <v-btn @click="search()">검색</v-btn>
         </v-col>
@@ -80,6 +81,7 @@
             </div>
             <v-row dense>
               <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
+              <div v-if="this.lives.length == 0">검색 결과가 없습니다.</div>
             </v-row>
           </v-container>
         </v-card>
@@ -102,10 +104,11 @@ export default {
       lives: [],
 
       //검색 관련
+      keyword: '',
       values1: '',
       values2: '',
       items1: ['의류', '가방', '신발', '악세사리'],
-      items2: ['방송 종료', '방송 진행 중', '방송 예정']
+      items2: ['방송종료', '방송중', '방송예정']
     }
   },
   methods: {
@@ -119,7 +122,7 @@ export default {
     getAllLiveList: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/live/all',
+        url: '/dabid/live',
         headers: this.setToken()
       })
         .then((res) => {
@@ -133,7 +136,7 @@ export default {
     getHotLives: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/live',
+        url: '/dabid/live/best',
       })
       .then((res) => {
         console.log('받아온 인기 방송', res.data)
@@ -144,18 +147,23 @@ export default {
       })
     },
     search() {
-      console.log(this.values)
-      // rest.axios({
-      //   method: 'get',
-      //   url: '/dabid/live'
-      // })
-      // .then((res) => {
-      //   this.lives = res.data
-      //   console.log('검색결과', this.lives)
-      // })
-      // .catch((err) => {
-      //   console.log(err)
-      // })
+      console.log(this.values1)
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live',
+        params: {
+          categories: this.values1 + '',
+          liveStatuses: this.values2 + '',
+          keyword: this.keyword,
+        },
+      })
+      .then((res) => {
+        this.lives = res.data
+        console.log('검색결과', this.lives)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
   },
   created: function () {

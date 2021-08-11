@@ -43,14 +43,14 @@
 </template>
 
 <script>
-import { OpenVidu } from 'openvidu-browser';
+import { OpenVidu } from 'openvidu-browsfer';
 import UserVideo from "../../components/UserVideo.vue"
 import axios from 'axios';
 import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://52.78.142.145:4443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {

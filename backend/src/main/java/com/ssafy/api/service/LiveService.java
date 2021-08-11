@@ -16,4 +16,5 @@ public interface LiveService {
     void deleteLive(int prdId);
     List<Live> getRecentLives(int liveStatus);
     List<Live> getAllLives();
+    List<Live> searchLives(List<String> category, String keyword);
 }

@@ -143,9 +143,20 @@ export default {
         console.log(err)
       })
     },
-    search: function () {
-      
-    }
+    search() {
+      console.log(this.values)
+      // rest.axios({
+      //   method: 'get',
+      //   url: '/dabid/live'
+      // })
+      // .then((res) => {
+      //   this.lives = res.data
+      //   console.log('검색결과', this.lives)
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
+    },
   },
   created: function () {
     if (localStorage.getItem('jwt')) {

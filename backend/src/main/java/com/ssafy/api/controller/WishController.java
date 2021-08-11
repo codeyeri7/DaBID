@@ -48,7 +48,7 @@ public class WishController {
 		try {
 			SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 			String userId = userDetails.getUsername();
-			
+
 			wishService.putWishLive(userId, prdId);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}catch (Exception e){

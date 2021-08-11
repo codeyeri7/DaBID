@@ -3,8 +3,10 @@ package com.ssafy.api.service;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
+import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,10 +40,10 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public List<Live> getBestLives() {
-       List<WishList> list = wishListRepository.findTop2ByLiveOrderByLive().orElseGet(null);
-        System.out.println(list.get(0).getWishId());
-        return null;
+    public List<WishList> getBestLives() {
+       List<WishList> wishList = wishListRepository.findAll(Sort.by(Sort.Direction.DESC, "Live_PrdId"));
+        System.out.println(wishList.get(0).getLive().getPrdId());
+        return wishList;
     }
 
     @Override

@@ -140,7 +140,7 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/live/best",
+          url: "/dabid/wish/best",
         })
         .then((res) => {
           console.log("받아온 인기 방송", res.data);

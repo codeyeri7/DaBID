@@ -1,33 +1,39 @@
 <template>
-  <div>
+  <div class="container">
       <!-- openvidu --> 
     <div id="join" v-if="!session">
 			<div id="join-dialog" class="jumbotron vertical-center">
-				<h1>Join a video session</h1>
+				<h1>Live</h1>
 				<div class="form-group">
-					<p>
-						<label>Participant</label>
-						<input v-model="myUserName" class="form-control" type="text" required>
-					</p>
-					<p>
+					<div>
+						<label>Seller</label>
+						<h5>{{ liveInfo.user.userName }}</h5>
+					</div>
+					<div>
 						<label>Session</label>
-						<input v-model="mySessionId" class="form-control" type="text" required>
-					</p>
+						<h5>{{ liveTitle }}</h5>
+					</div>
+					<div>
+						<label>Live Description</label>
+						<h5>{{ liveInfo.liveDesc }}</h5>
+					</div>
 					<p class="text-center">
-						<button class="btn btn-lg btn-success" @click="joinSession()">Join!</button>
+						<button class="btn btn-lg btn-success" @click="joinSession()">입장하기</button>
 					</p>
 				</div>
 			</div>
 		</div>
 
+		<!-- session live 화면 --> 
 		<div id="session" v-if="session">
 			<div id="session-header">
-				<h1 id="session-title">{{ mySessionId }}</h1>
-				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
+				<h1 id="session-title">{{ liveTitle }}</h1>
+				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave live">
 			</div>
 			<div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
 			</div>
+			<!-- video 중복 --> 
 			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
@@ -38,8 +44,9 @@
 
 <script>
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from "../components/UserVideo.vue"
+import UserVideo from "../../components/UserVideo.vue"
 import axios from 'axios';
+import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -59,9 +66,11 @@ export default {
             publisher: undefined, // Local
             subscribers: [], // Remotes
 
-            // Join form
-            mySessionId: 'SessionA',
-            myUserName: 'Participant' + Math.floor(Math.random() * 100),
+            // liveInfo 받아오고 title, userName만 저장 
+			liveInfo: null,
+            liveTitle: '',
+            userName: '',
+			prdId: '',
 
             // Main video of the page, will be 'publisher' or one of the 'subscribers',
             // updated by click event in UserVideoComponent children
@@ -76,7 +85,6 @@ export default {
 
 			// --- Init a session ---
 			this.session = this.OV.initSession();
-
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
@@ -102,8 +110,8 @@ export default {
 
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
-			this.getToken(this.mySessionId).then(token => {
-				this.session.connect(token, { clientData: this.myUserName })
+			this.getToken(this.liveTitle).then(token => {
+				this.session.connect(token, { clientData: this.userName })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -145,8 +153,12 @@ export default {
 
 			window.removeEventListener('beforeunload', this.leaveSession);
 		},
-    getToken (mySessionId) {
-			return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
+	updateMainVideoStreamManager (stream) {
+		if (this.mainStreamManager === stream) return;
+		this.mainStreamManager = stream;
+	},
+    getToken (liveTitle) {
+			return this.createSession(liveTitle).then(sessionId => this.createToken(sessionId));
 		},
     createSession (sessionId) {
 			return new Promise((resolve, reject) => {
@@ -188,7 +200,28 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
-    }
+	getLiveInfo () {
+		rest.axios({
+          method: 'get',
+          url:  `/dabid/live/${this.prdId}`,
+        })
+          .then((res) => {
+            console.log('방송 정보', res.data)
+            this.liveInfo = res.data
+			// 방송 제목 받아오기
+			this.liveTitle = res.data.liveTitle
+			this.userName = localStorage.getItem('userName')
+          })
+          .catch((err) => {
+            console.log('라이브 정보 받아오기 오류: ' + err)
+          })
+		}
+    },
+	created: function () {
+		this.prdId = this.$route.params.prdId
+		console.log(this.prdId+ '번 방송입니다.')
+		this.getLiveInfo()
+	}
 }
 </script>
 

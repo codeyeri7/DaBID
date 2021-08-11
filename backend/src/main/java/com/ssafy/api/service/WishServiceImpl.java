@@ -29,27 +29,38 @@ public class WishServiceImpl implements WishService{
 
     @Override
     public boolean checkWishLive(User user, int prdId) {
-        Live live = liveService.getLiveByPrdId(prdId);
-        WishList wishList = wishListRepository.findByUserAndLive(user,live);
+            Live live = liveService.getLiveByPrdId(prdId);
+            int check = wishListRepository.countByUserAndLive(user,live);
 
-        if(wishList!=null) return true;
-        else return false;
+            //찜했으면 true, 찜한 거 아니면 false
+             if(wishListRepository.countByUserAndLive(user,live)==0) return false;
+             else return true;
+    }
+
+    @Override
+    public List<Live> getBestLives() {
+       List<WishList> list = wishListRepository.findTop2ByLiveOrderByLive().orElseGet(null);
+        System.out.println(list.get(0).getWishId());
+        return null;
     }
 
     @Override
     public void putWishLive(User user, int prdId) {
+        System.out.println("여기들어와2");
         WishList wishList = new WishList();
         Live live = liveService.getLiveByPrdId(prdId);
         wishList.setLive(live);
         wishList.setUser(user);
-        System.out.println("추가"+wishList.getUser().getUserId()+" "+wishList.getLive().getPrdId());
-        wishListRepository.save(wishList);
+
+        //중복되면 안되니까 이미 찜한 목록은 찜할 수 없도록
+        if(wishListRepository.countByUserAndLive(user,live)==0) wishListRepository.save(wishList);
+        else return;
     }
 
     @Override
     public void deleteWishLive(User user, int prdId) {
         Live live = liveService.getLiveByPrdId(prdId);
-        WishList wishList = wishListRepository.findByUserAndLive(user,live);
+        WishList wishList = wishListRepository.findByUserAndLive(user,live).orElse(null);
         System.out.println("삭제할wish"+wishList.getWishId());
         wishListRepository.delete(wishList);
     }

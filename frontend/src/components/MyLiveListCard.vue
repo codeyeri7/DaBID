@@ -37,7 +37,7 @@
               icon
               v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
-              @click="checkWish()"
+              @click="wish()"
             >
               <v-icon>mdi-heart</v-icon>
             </v-btn>
@@ -152,7 +152,7 @@ export default {
         })
         .then((res) => {
           console.log("wish!!");
-          console.log(this.wishlist.includes(this.prdId))
+          console.log(this.wishlist.includes(this.prdId));
           console.log(res);
         })
         .catch((err) => {
@@ -175,32 +175,21 @@ export default {
         });
     },
     checkPrdId: function () {
-      rest.axios({
-        method: "get",
-        url: `"/dabid/wish/${this.prdId}"`,
-        headers: this.setToken(),
-      })
+      rest
+        .axios({
+          method: "get",
+          url: `/dabid/wish/check/${this.prdId}`,
+          headers: this.setToken(),
+        })
         .then((res) => {
-          this.check = res.data
-          console.log('OK!');
+          this.clicked = res.data;
+          console.log("OK!");
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    checkWish: function () {
-      if (this.wishlist.includes()) {
-        console.log("있음");
-      }
-    },
   },
-  // created: function () {
-  //   if (localStorage.getItem("jwt")) {
-  //     this.checkPrdId();
-  //   } else {
-  //     this.$router.push({ name: "Login" });
-  //   }
-  // },
 };
 </script>
 

@@ -108,6 +108,7 @@ export default {
   name: 'UpdateMyLiveList',
   props: {
     lives: Number,
+    live: Object,
   },
   component: {
     dayjs
@@ -116,28 +117,35 @@ export default {
     return {
       editlive: [],
       valid: true,
+      productName: this.live.prdName,
       nameRules: [
         v => !!v || '상품 명은 필수 항목 입니다. ',
         v => (v && v.length <= 20) || '상품 명은 20자 이상 입력할 수 없습니다.',
       ],
+      productNumber: '',
       productNumberRules: [
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
         v => /^[a-zA-Z0-9-]*$/ .test(v) || '일련 번호는 영문숫자만 입력 가능합니다.'
       ],
       select: null,
+      selectedIndex: '',
       items: [
         '의류',
         '가방',
         '신발',
         '악세사리',
-      ],      titleRules: [
+      ],
+      title: '',      
+      titleRules: [
          v => !!v || 'Live 제목은 필수 항목 입니다.',
          v => (v && v.length <= 20) || 'Live 제목은 20자 이상 입력할 수 없습니다.',
       ],
+      startPrice: '',
       startPriceRules: [
         v => !!v || '경매 시작가는 필수 항목 입니다.',
         v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
       ],
+      liveInfo: '',
       liveInfoRules: [
          v => (v && v.length <= 100) || '상세 정보는 100자 이상 입력할 수 없습니다.',
       ],

@@ -34,10 +34,23 @@ public class WishController {
 	public ResponseEntity<?> selectWishLive(@ApiIgnore Authentication authentication) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
 
 		System.out.println("USER아이디"+userId);
-		List<WishList> wishLiveList = wishService.getWishLives(userId);
+		List<WishList> wishLiveList = wishService.getWishLives(user);
 		return ResponseEntity.status(200).body(wishLiveList);
+	}
+
+	@GetMapping("/{prdId}}")
+	@ApiOperation(value = "내가 찜한 라이브인지 판별", notes = "로그인한 유저가 찜한 라이브인지 아닌지 판별")
+	public ResponseEntity<?> checkWishLive(@PathVariable int prdId,@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
+
+		Boolean flg = false;
+		flg = wishService.checkWishLive(user, prdId);
+		return ResponseEntity.status(200).body(flg);
 	}
 
 	@PostMapping("/{prdId}")
@@ -67,8 +80,9 @@ public class WishController {
 			@PathVariable int prdId, @ApiIgnore Authentication authentication) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
 
-		wishService.deleteWishLive(userId,prdId);
+		wishService.deleteWishLive(user,prdId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 

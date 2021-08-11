@@ -36,7 +36,7 @@
               icon
               v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
-              @click="wish()"
+              @click="checkWish()"
             >
               <v-icon>mdi-heart</v-icon>
             </v-btn>
@@ -121,7 +121,7 @@ export default {
       rest
         .axios({
           method: "delete",
-          url: `/dabid/live/${this.prdId}`,
+          url: `/dabid/wish/${this.prdId}`,
         })
         .then((res) => {
           this.refreshAll();
@@ -143,11 +143,12 @@ export default {
       });
     },
     wish: function () {
-      rest.axios({
-        method: 'post',
-        url: `/dabid/wish/${this.prdId}`,
-        headers: this.setToken(),
-      })
+      rest
+        .axios({
+          method: "post",
+          url: `/dabid/wish/${this.prdId}`,
+          headers: this.setToken(),
+        })
         .then((res) => {
           console.log("wish!!");
           console.log(res);
@@ -157,32 +158,39 @@ export default {
         });
     },
     unwish: function () {
-      rest.axios({
-        method: 'delete',
-        url: `/dabid/wish/${this.prdId}`,
-        headers: this.setToken(),
-      })
+      rest
+        .axios({
+          method: "delete",
+          url: `/dabid/wish/${this.prdId}`,
+          headers: this.setToken(),
+        })
         .then((res) => {
           console.log("unwish!");
           console.log(res);
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     getWishList: function () {
-      rest.axios({
-        method: "get",
-        url: "/dabid/wish/wishLive",
-        headers: this.setToken(),
-      })
+      rest
+        .axios({
+          method: "get",
+          url: "/dabid/wish/wishLive",
+          headers: this.setToken(),
+        })
         .then((res) => {
           this.wishlist = res.data;
-          console.log(this.wishlist)
+          console.log(this.wishlist);
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    checkWish: function () {
+      if (this.wishlist.includes()) {
+        console.log("있음");
+      }
     },
   },
   created: function () {

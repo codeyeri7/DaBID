@@ -133,7 +133,7 @@ export default {
     getHotLives: function () {
       rest.axios({
         method: 'get',
-        url: '/dabid/live',
+        url: '/dabid/live/best',
       })
       .then((res) => {
         console.log('받아온 인기 방송', res.data)

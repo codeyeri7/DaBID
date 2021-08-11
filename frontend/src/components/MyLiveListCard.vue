@@ -12,6 +12,7 @@
           style="padding: 40px"
           v-bind="attrs"
           v-on="on"
+          @click="checkPrdId()"
         >
           <!-- <v-card-title class="subtitle-style" style="margin-left:15px;">
             <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
@@ -29,7 +30,7 @@
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
-        <!-- <span v-if="this.prdId === this.wishlist.live.prdId"> -->
+        <!-- <span v-if="this.wishlist.includes(this.prdId)"> -->
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
@@ -151,6 +152,7 @@ export default {
         })
         .then((res) => {
           console.log("wish!!");
+          console.log(this.wishlist.includes(this.prdId))
           console.log(res);
         })
         .catch((err) => {
@@ -172,16 +174,15 @@ export default {
           console.log(err);
         });
     },
-    getWishList: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "/dabid/wish/wishLive",
-          headers: this.setToken(),
-        })
+    checkPrdId: function () {
+      rest.axios({
+        method: "get",
+        url: `"/dabid/wish/${this.prdId}"`,
+        headers: this.setToken(),
+      })
         .then((res) => {
-          this.wishlist = res.data;
-          console.log(this.wishlist);
+          this.check = res.data
+          console.log('OK!');
         })
         .catch((err) => {
           console.log(err);
@@ -193,13 +194,13 @@ export default {
       }
     },
   },
-  created: function () {
-    if (localStorage.getItem("jwt")) {
-      this.getWishList();
-    } else {
-      this.$router.push({ name: "Login" });
-    }
-  },
+  // created: function () {
+  //   if (localStorage.getItem("jwt")) {
+  //     this.checkPrdId();
+  //   } else {
+  //     this.$router.push({ name: "Login" });
+  //   }
+  // },
 };
 </script>
 

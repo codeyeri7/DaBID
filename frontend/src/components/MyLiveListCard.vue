@@ -36,7 +36,7 @@
               icon
               v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
-              @click="wish()"
+              @click="checkWish()"
             >
               <v-icon>mdi-heart</v-icon>
             </v-btn>
@@ -186,6 +186,11 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    checkWish: function () {
+      if (this.wishlist.includes()) {
+        console.log("있음");
+      }
     },
   },
   created: function () {

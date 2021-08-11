@@ -22,10 +22,18 @@ public class WishServiceImpl implements WishService{
 
 
     @Override
-    public List<WishList> getWishLives(String userId) {
-        User user = userService.getUserByUserId(userId);
+    public List<WishList> getWishLives(User user) {
         List<WishList> list =wishListRepository.findByUser(user).orElseGet(null);
         return list;
+    }
+
+    @Override
+    public boolean checkWishLive(User user, int prdId) {
+        Live live = liveService.getLiveByPrdId(prdId);
+        WishList wishList = wishListRepository.findByUserAndLive(user,live);
+
+        if(wishList!=null) return true;
+        else return false;
     }
 
     @Override

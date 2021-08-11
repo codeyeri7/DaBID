@@ -59,6 +59,10 @@ node {
 
 configurations {
     providedRuntime
+
+    compileOnly{
+        extendsFrom annotationProcessor
+    }
 }
 
 /*task npmInstall(type: NpmTask, overwrite: true) {
@@ -193,8 +197,8 @@ dependencies {
     compile("javax.annotation:javax.annotation-api:1.2")
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
 
-    implementation("org.projectlombok:lombok:1.18.20")
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor("org.projectlombok:lombok")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 

@@ -29,13 +29,12 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public void putWishLive(String userId, int prdId) {
+    public void putWishLive(User user, int prdId) {
         WishList wishList = new WishList();
         Live live = liveService.getLiveByPrdId(prdId);
-        User user = userService.getUserByUserId(userId);
         wishList.setLive(live);
         wishList.setUser(user);
-
+        System.out.println("추가"+wishList.getUser().getUserId()+" "+wishList.getLive().getPrdId());
         wishListRepository.save(wishList);
     }
 

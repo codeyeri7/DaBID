@@ -4,10 +4,17 @@ import Main from '../views/main.vue'
 import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
-import Session from '../views/Live/Session.vue'
-import Seller from '../views/Live/Seller.vue'
+// import Session from '../views/Live/Session.vue'
+import session from '../views/session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
-
+import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
+import MyWishList from '../views/LiveList/MyWishList.vue'
+import NoticeList from '../views/Notice/NoticeList.vue'
+import AllLiveList from '../views/LiveList/AllLiveList.vue'
+import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
+import Chathome from '../views/MyPage/Chathome.vue'
+import Chatroom from '../views/MyPage/Chatroom.vue'
+import Chatlist from '../views/MyPage/Chatlist.vue'
 
 Vue.use(VueRouter)
 
@@ -34,19 +41,54 @@ const routes = [
   },
   {
     path: '/session',
-    name: 'Session',
-    component: Session
-  },
-  {
-    path: '/Seller',
-    name: 'Seller',
-    component: Seller
+    name: 'session',
+    component: session
   },
   {
     path: '/MyLiveList',
     name: 'MyLiveList',
     component: MyLiveList
   },
+  {
+    path: '/update',
+    name: 'UpdateMyLiveList',
+    component: UpdateMyLiveList
+  },
+  {
+    path: '/notice',
+    name: 'NoticeList',
+    component: NoticeList
+  },
+  {
+    path: '/AllLiveList',
+    name: 'AllLiveList',
+    component: AllLiveList
+  },
+  {
+    path: '/ReviewCreate',
+    name: 'ReviewCreate',
+    component: ReviewCreate
+  },
+  {
+    path: '/MyWishList',
+    name: 'MyWishList',
+    component: MyWishList
+  },
+  {
+    path: '/Chathome',
+    name: 'Chathome',
+    component: Chathome
+  },
+  {
+    path: '/Chatroom',
+    name: 'Chatroom',
+    component: Chatroom
+  },
+  {
+    path: '/Chatlist',
+    name: 'Chatlist',
+    component: Chatlist
+  }
 ]
 
 const router = new VueRouter({

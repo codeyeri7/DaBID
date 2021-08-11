@@ -2,7 +2,10 @@ package com.ssafy.db.repository;
 
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.LiveStatus;
+import com.ssafy.db.entity.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,4 +18,8 @@ import java.util.Optional;
 public interface LiveRepository extends JpaRepository<Live,Integer> {
     Optional<Live> findByPrdId(int prdId);
     Optional<List<Live>> findTop2ByLiveStatusOrderByLiveDateAsc(LiveStatus liveStatus);
+
+    Optional<List<Live>> findByLiveTitleContainingOrPrdNameContaining(
+            String liveTitle, String prdName);
+    Optional<List<Live>> findByProductCategoryIn(List<ProductCategory> prdCategory);
 }

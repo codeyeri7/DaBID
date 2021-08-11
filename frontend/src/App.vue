@@ -13,7 +13,8 @@
         </RouterLink>
 
         <v-spacer></v-spacer>
-        <img src="@/assets/menu.png" alt="menubar" style="width:35px">
+        <!-- 우상단 더치트 링크 --> 
+      
         <!-- 지운 검색창 --> 
         <!-- <v-text-field
           hide-details
@@ -23,24 +24,23 @@
         ></v-text-field> -->
       </v-app-bar>
       <!-- 메인페이지가 routerview default -->
-      <v-content style="margin-bottom:30px">
+      <v-content>
         <RouterView></RouterView>
       </v-content>
     </v-app>
-    <div class="row">
+    <div v-if="isLogin" class="row" style="margin-top:60px">
       <footer
         app
         flat  
         light
-        v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/Home.png" width="40" style="margin-left:50px; margin-top:7px">
         </RouterLink>
-        <RouterLink :to="{ name: '' }">
+        <RouterLink :to="{ name: 'Chathome' }">
           <img src="@/assets/Chat.png" width="30" style="margin-left:35px;margin-top:7px">
         </RouterLink>
-        <RouterLink :to="{ name: 'MyLiveList' }">
+        <RouterLink :to="{ name: 'AllLiveList' }">
           <img src="@/assets/live.png" width="40" style="margin-left:35px;margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: 'MyPage' }">
@@ -68,6 +68,9 @@ export default {
       localStorage.removeItem('userName')
       this.$router.push({ name: 'Login' })
     },
+    onclick: function () {
+      window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account', '_blank')
+    },
   },
   async mounted() {
     try {
@@ -80,19 +83,27 @@ export default {
     catch (error) {
       console.log(error)
     }
-  }
+  },
 }
 </script>
 
-<style scope>
+<style>
 
-footer{ position:fixed; 
+footer{ 
+  position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:rgb(240, 223, 221); 
-  color: black;
+  background:rgb(100, 100, 100); 
+  color: rgb(255, 255, 255);
   border-radius: 30% 30% 0% 0%;
   }
+
+#eng-font {
+  font-family: 'Lora', serif;
+}
+#kor-font {
+  font-family: 'IBMPlexSansKR-Regular';
+}
 </style>

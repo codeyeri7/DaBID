@@ -8,10 +8,10 @@
               <img src="@/assets/loading.png" alt="loading" style="margin-left:113px;margin-top:60px;width:90px">
             </div>
             <div v-else>
-              <h5 style="margin-left:113px;margin-top:60px;font-family: 'PT Serif', serif;">Get your luxury</h5>
+              <h5 style="margin-left:113px;margin-top:60px;font-family: 'PT Serif', serif;">Get your Luxury</h5>
               <button @click="login()"><img src="@/assets/google_login.png" alt="google_login_img" style="width:80%"></button> 
             </div>
-            <h5 style="margin-top:160px;margin-left:130px;font-family: 'PT Serif', serif;">DaBID</h5>
+            <h5 style="margin-top:115px;margin-left:140px;font-family: 'PT Serif', serif;">DaBID</h5>
           </div>
       </v-container>
     </div>
@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import rest from "../../js/httpCommon.js";
+// import rest from "../../js/httpCommon.js";
+import axios from 'axios'
 export default {
   name: "Login",
   data () {
@@ -45,16 +46,15 @@ export default {
       },
       // 서버에 id_token 보내기 
       sendToken: function () {
-        rest.axios({
-          method: "post",
-        url: "/auth/login",
+        axios({
+        method: "post",
+        url: "https://localhost:8080/auth/login",
         data: {
           id_token: this.id_token
         }
       })
       .then((res) => {
         // console.log('server에서 온 응답', res.data)
-        localStorage.setItem('userId', res.data.userId)
         localStorage.setItem('userName', res.data.userName)
         localStorage.setItem('jwt', res.data.accessToken)
         // console.log(localStorage)
@@ -76,7 +76,8 @@ export default {
 
 #back {
   background-image: url('background.jpg'); 
-  background-position: center;
+  background-size: cover;
+  height: 100%;
 }
 
 </style>

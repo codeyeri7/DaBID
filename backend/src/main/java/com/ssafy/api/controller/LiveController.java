@@ -38,17 +38,13 @@ public class LiveController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> createLive(
-			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo){
+			@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo,
+			@ApiIgnore Authentication authentication){
 
-//		System.out.println(authentication.toString());
-//		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//		System.out.println(userDetails.toString());
-//		System.out.println(userDetails.getUsername());
-//		String userId = userDetails.getUsername();
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
 
-		User user = userService.getUserByUserId(registerInfo.getUserId());
-		System.out.println(registerInfo.getLiveDate());
-		System.out.println(registerInfo.getLiveTime());
+		User user = userService.getUserByUserId(userId);
 
 		try {
 			liveService.createLive(user, registerInfo);
@@ -66,14 +62,13 @@ public class LiveController {
 
 		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
 		Live live = liveService.getLiveByPrdId(prdId);
-
-//		try {
+		try {
 		liveService.updateLive(registerInfo, live);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 수정에 실패했습니다."));
 	}
 	@DeleteMapping("/{prdId}")
 	@ApiOperation(value = "라이브 삭제", notes = "상품 고유 아이디를 받아 등록된 라이브를 삭제한다.")
@@ -85,22 +80,43 @@ public class LiveController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 
+	@GetMapping("/{prdId}")
+	@ApiOperation(value="특정 라이브 조회", notes = "상품 고유 아이디를 통해 특정 라이브 조회")
+	public ResponseEntity<?> selectLive(@PathVariable @ApiParam(name="prdId") int prdId) {
+		Live live = liveService.getLiveByPrdId(prdId);
+		return ResponseEntity.status(200).body(live);
+	}
+
 	@GetMapping("/all")
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
 	public ResponseEntity<?> selectAllLives() {
-		List<Live> liveList = liveService.getRecentLives(0);
+		List<Live> liveList = liveService.getAllLives();
 		return ResponseEntity.status(200).body(liveList);
 	}
 
-	@GetMapping()
+	@GetMapping("/top2")
 	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
 	public ResponseEntity<?> selectTop2Lives() {
-		List<Live> liveList = liveService.getRecentLives(0);
-		System.out.println("첫번째다 : "+liveList.toString());
+		List<Live> liveList = liveService.getRecentLives(0); //방송예정 중 인기방송 2개만
 		liveList.addAll(liveService.getRecentLives(1));
-		System.out.println("두번째다 : "+liveList.toString());
 		liveList.addAll(liveService.getRecentLives(2));
-		System.out.println("세번째다 : "+liveList.toString());
+		return ResponseEntity.status(200).body(liveList);
+	}
+
+
+	@GetMapping()
+	@ApiOperation(value="라이브 검색", notes="라이브 검색")
+	public ResponseEntity<?> searchLive(@RequestParam(name="category", required = false) List<String> categories,
+										@RequestParam(name="keyword", required = false) String keyword) {
+
+		List<Live> liveList = liveService.searchLives(categories, keyword);
+		return ResponseEntity.status(200).body(liveList);
+	}
+
+	@GetMapping("/best")
+	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
+	public ResponseEntity<?> bestLives() {
+		List<Live> liveList = liveService.getRecentLives(0); //방송예정 중 인기방송 2개만
 		return ResponseEntity.status(200).body(liveList);
 	}
 }

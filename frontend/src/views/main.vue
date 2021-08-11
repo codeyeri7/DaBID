@@ -19,6 +19,8 @@
       </v-carousel-item>
     </v-carousel>
 
+    <button @click="goLive1">goLive1</button>
+    <!-- <button @click="goLive2">goLive2</button> -->
     <!-- card -->
     <div class="main-card">
       <v-card class="mx-auto" width="500">
@@ -29,37 +31,30 @@
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card class="section1" height="300px">
+              <v-card class="section1">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/GucciBag.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding: 40px"
                   @click="goLive2"
                 >
-                <!-- {{card}} -->
                   <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
         </v-container>
         <div>
-          <!-- <button class="btn btn-large btn-primary me-1" @click="goLive1">
-            방송 켜기
-          </button> -->
-          <!-- <button class="btn btn-large btn-primary ms-1" @click="goLive2">
-            방송 참여하기
-          </button> -->
         </div>
         <hr />
-
         <v-container fluid>
           <div>
             <span><b>방송 예정</b></span>
@@ -70,18 +65,19 @@
               <v-card class="section2">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/wallet.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding-left: 20px"
                 >
                    <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style">방송 예정</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -98,18 +94,19 @@
               <v-card class="section3">
                 <!-- Image -->
                 <v-img
-                  src="@/assets/prada.png"
+                  src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding-left: 25px"
                 >
                    <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">{{ card.liveTitle }}</v-card-title>
+                  <v-card-title class="subtitle-style">방송 종료</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title class="text-subtitle-1 my-1">{{ card.prdName }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4 my-1">시작가 | {{ card.prdPriceStart }}원</v-card-subtitle>
+                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -122,7 +119,7 @@
         <v-btn 
           x-small 
           class="mr-2" 
-          fab dark color="primary"
+          fab dark color="gray"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
@@ -136,6 +133,7 @@ import rest from "../js/httpCommon.js"
 
 export default {
   name: "Main",
+  
   data() {
     return {
       cards: null,
@@ -147,47 +145,89 @@ export default {
         token: "",
         userName: "",
         userId: "",
+        role: "",
       },
     };
   },
+  filters: {
+      comma: function (value) {
+          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+  },
   methods: {
+    
+    setToken: function () {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${jwtToken}`
+      }
+      return config
+    },
     // live 열기
     goLive1: function () {
-      rest
-        .axios({
-          method: "post",
-          url: `/dabid/session/3/test123`,
-        })
-        .then((res) => {
-          console.log("켜짐");
-          console.log(res.data);
-          console.log("Publisher입니다.");
-          this.sessionData.liveTitle = res.data.liveTitle;
-          this.sessionData.token = res.data.token;
-          this.sessionData.userName = res.data.userName;
-          this.sessionData.userId = res.data.userId;
-          console.log("session" + this.sessionData);
-          this.$router.push({ name: "Session", params: {liveTitle: this.sessionData.liveTitle, token: this.sessionData.token, userName: this.sessionData.userName, userId: this.sessionData.userId}});
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.$router.push({ name: "session" });
+      // rest
+      //   .axios({
+      //     method: "post",
+      //     url: `/dabid/session/10`,
+      //     headers: this.setToken()
+      //   })
+      //   .then((res) => {
+      //     console.log("켜짐");
+      //     console.log(res.data);
+      //     console.log(res.data.role + "입니다.");
+      //     this.sessionData.liveTitle = res.data.liveTitle;
+      //     this.sessionData.token = res.data.token;
+      //     this.sessionData.userName = res.data.userName;
+      //     this.sessionData.userId = res.data.userId;
+      //     this.sessionData.role = res.data.role;
+      //     console.log("token" + res.data.token);
+      //     console.log("session" + this.sessionData);
+          // this.$router.push({
+          //   name: "Session", 
+          //   params: {
+          //     liveTitle: this.sessionData.liveTitle,
+          //     token: this.sessionData.token,
+          //     userName: this.sessionData.userName,
+          //     userId: this.sessionData.userId,
+          //     role: this.sessionData.role,
+          //   }
+          // });
+        // })
+        // .catch((err) => {
+        //   console.log(err);
+        // });
     },
-    goLive2: function () {
-      rest
-      .axios({
-        method: "post",
-        url: "/dabid/session/3/test123",
-      })
-        .then((res) => {
-          console.log(res);
-          console.log("Subscriber입니다.");
-          this.$router.push({ name: "Session" });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // goLive2: function () {
+    //   rest
+    //   .axios({
+    //     method: "post",
+    //     url: "/dabid/session/2/P1628141880829",
+    //   })
+    //     .then((res) => {
+    //       this.sessionData.liveTitle = res.data.liveTitle;
+    //       this.sessionData.token = res.data.token;
+    //       this.sessionData.userName = res.data.userName;
+    //       this.sessionData.userId = res.data.userId;
+    //       this.sessionData.role = res.data.role;
+    //       console.log(res);
+    //       console.log(res.data.role + "입니다.");
+    //       this.$router.push({ 
+    //         name: "Session",
+    //         params: {
+    //           liveTitle: this.sessionData.liveTitle, 
+    //           token: this.sessionData.token, 
+    //           userName: this.sessionData.userName, 
+    //           userId: this.sessionData.userId,
+    //           role: this.sessionData.role
+    //         }
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+
     // live 정보
     getLive: function () {
       rest
@@ -234,6 +274,7 @@ export default {
 .subtitle-style {
   height: 20px;
   font-size: 3pt;
+  font-family: 'IBMPlexSansKR-Regular';
 }
 .custom-selector {
   font-size: 3em;

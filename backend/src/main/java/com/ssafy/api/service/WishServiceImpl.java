@@ -24,7 +24,8 @@ public class WishServiceImpl implements WishService{
     @Override
     public List<WishList> getWishLives(String userId) {
         User user = userService.getUserByUserId(userId);
-        return user.getWishList();
+        List<WishList> list =wishListRepository.findByUser(user).orElseGet(null);
+        return list;
     }
 
     @Override

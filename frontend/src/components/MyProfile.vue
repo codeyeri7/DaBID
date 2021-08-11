@@ -11,6 +11,7 @@
                 <div>
                   <img src="@/assets/profileImg.jpg" alt="profile image">
                   <span id="userName"><b>{{ userName }}</b></span>
+                  
                 </div>
               </v-card-title>
             </v-col>

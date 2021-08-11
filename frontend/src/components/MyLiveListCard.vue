@@ -34,6 +34,30 @@
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
+        <span v-if="clicked === false">
+          <v-col class="text-right">
+            <v-btn
+              icon
+              v-bind:class="{'red': clicked}"
+              v-on:click="clicked = !clicked"
+              @click="wish()"
+            >
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
+          </v-col>
+        </span>
+        <span v-else>
+          <v-col class="text-right">
+            <v-btn
+              icon
+              v-bind:class="{'red': clicked}"
+              v-on:click="clicked = !clicked"
+              @click="unwish()"
+            >
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
+          </v-col>
+        </span>
       </v-card-title>
       <v-card-text>
         <img :src= live.prdPhoto width="200px" class="mt-5">
@@ -82,17 +106,26 @@ export default {
   data: function () {
     return {
       prdId: this.live.prdId,
+      userId: this.live.user.userId,
       lives: [],
       show: false,
       dialog: false,
+      clicked: false,
     }
   },
   filters: {
-      comma: function (value) {
-          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
+    comma: function (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
+    setToken: function () {
+      const jwtToken = localStorage.getItem("jwt");
+      const config = {
+        Authorization: ` Bearer ${jwtToken}`,
+      };
+      return config;
+    },
     remove: function () {
       // this.prdId = this.live.prdId
       rest.axios({
@@ -106,8 +139,6 @@ export default {
         })
         .catch((err) => {
           console.log(err)
-          console.log(this.live)
-          console.log(this.prdId)
         })
     },
     refreshAll() {
@@ -115,11 +146,39 @@ export default {
       this.$router.go();
     },
     edit: function () {
-      this.$router.push({ name: 'UpdateMyLiveList'});
+      this.$router.push({ name: 'UpdateMyLiveList', params: { lives: `${this.prdId}`}})
+    },
+    wish: function () {
+      rest.axios({
+        method: 'post',
+        url: `/dabid/wish/${this.userId}/${this.prdId}`,
+        headers: this.setToken(),
+      })
+        .then((res) => {
+          console.log('wish!!')
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    unwish: function () {
+      rest.axios({
+        method: 'delete',
+        url: `/dabid/wish/${this.userId}/${this.prdId}`
+      })
+        .then((res) => {
+          console.log('unwish!')
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
 }
 </script>
 
 <style scoped>
+
 </style>

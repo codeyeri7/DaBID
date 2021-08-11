@@ -133,6 +133,7 @@ import rest from "../js/httpCommon.js"
 
 export default {
   name: "Main",
+  
   data() {
     return {
       cards: null,
@@ -164,37 +165,38 @@ export default {
     },
     // live 열기
     goLive1: function () {
-      rest
-        .axios({
-          method: "post",
-          url: `/dabid/session/10`,
-          headers: this.setToken()
-        })
-        .then((res) => {
-          console.log("켜짐");
-          console.log(res.data);
-          console.log(res.data.role + "입니다.");
-          this.sessionData.liveTitle = res.data.liveTitle;
-          this.sessionData.token = res.data.token;
-          this.sessionData.userName = res.data.userName;
-          this.sessionData.userId = res.data.userId;
-          this.sessionData.role = res.data.role;
-          console.log("token" + res.data.token);
-          console.log("session" + this.sessionData);
-          this.$router.push({
-            name: "Session", 
-            params: {
-              liveTitle: this.sessionData.liveTitle,
-              token: this.sessionData.token,
-              userName: this.sessionData.userName,
-              userId: this.sessionData.userId,
-              role: this.sessionData.role,
-            }
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.$router.push({ name: "session" });
+      // rest
+      //   .axios({
+      //     method: "post",
+      //     url: `/dabid/session/10`,
+      //     headers: this.setToken()
+      //   })
+      //   .then((res) => {
+      //     console.log("켜짐");
+      //     console.log(res.data);
+      //     console.log(res.data.role + "입니다.");
+      //     this.sessionData.liveTitle = res.data.liveTitle;
+      //     this.sessionData.token = res.data.token;
+      //     this.sessionData.userName = res.data.userName;
+      //     this.sessionData.userId = res.data.userId;
+      //     this.sessionData.role = res.data.role;
+      //     console.log("token" + res.data.token);
+      //     console.log("session" + this.sessionData);
+          // this.$router.push({
+          //   name: "Session", 
+          //   params: {
+          //     liveTitle: this.sessionData.liveTitle,
+          //     token: this.sessionData.token,
+          //     userName: this.sessionData.userName,
+          //     userId: this.sessionData.userId,
+          //     role: this.sessionData.role,
+          //   }
+          // });
+        // })
+        // .catch((err) => {
+        //   console.log(err);
+        // });
     },
     // goLive2: function () {
     //   rest
@@ -225,6 +227,7 @@ export default {
     //       console.log(err);
     //     });
     // },
+
     // live 정보
     getLive: function () {
       rest

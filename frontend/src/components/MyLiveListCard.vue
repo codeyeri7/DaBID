@@ -137,10 +137,16 @@ export default {
       // 새로고침
       this.$router.go();
     },
+    // edit: function () {
+    //   this.$router.push({
+    //     name: "UpdateMyLiveList",
+    //     params: { prdId: `${this.prdId}` },
+    //   });
+    // },
     edit: function () {
       this.$router.push({
         name: "UpdateMyLiveList",
-        params: { lives: `${this.prdId}` },
+        params: { prdId: `${this.prdId}` },
       });
     },
     wish: function () {

@@ -4,6 +4,7 @@ import com.ssafy.db.entity.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -13,4 +14,5 @@ import java.util.Optional;
 //JpaRepository<>안에는 엔티티 클래스 이름과 ID 필드 타입이 지정된다. 기본형의 경우 wrapper class
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory,Integer> {
     Optional<ProductCategory> findByPrdCategory(int prdCategory);
+    ProductCategory findByPrdCategoryName(String prdCategoryName);
 }

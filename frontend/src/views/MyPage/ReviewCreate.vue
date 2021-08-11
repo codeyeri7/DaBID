@@ -14,7 +14,6 @@
       <v-icon>mdi-thumb-up</v-icon>
     </v-btn>
     <v-btn
-      name="gener"
       icon
       v-bind:class="{'gray': !clicked2, 'red': clicked2}"
       v-on:click="clicked2 = !clicked2"

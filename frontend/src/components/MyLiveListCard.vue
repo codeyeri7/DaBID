@@ -97,6 +97,7 @@ export default {
     return {
       prdId: this.live.prdId,
       lives: [],
+      wishlist: [],
       show: false,
       dialog: false,
       clicked: false,

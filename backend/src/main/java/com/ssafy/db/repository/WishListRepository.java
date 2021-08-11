@@ -18,5 +18,5 @@ public interface WishListRepository extends JpaRepository<WishList,Integer> {
     Optional<WishList> findByUserAndLive(User user, Live live);
     int countByUserAndLive(User user, Live live);
     Optional<List<WishList>> findByUser(User user);
-    Optional<List<WishList>> findTop2ByLiveOrderByLive();
+//    Optional<List<WishList>> findTop2ByLiveOrderByLive();
 }

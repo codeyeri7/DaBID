@@ -37,12 +37,12 @@ public class WishServiceImpl implements WishService{
              else return true;
     }
 
-    @Override
-    public List<Live> getBestLives() {
-       List<WishList> list = wishListRepository.findTop2ByLiveOrderByLive().orElseGet(null);
-        System.out.println(list.get(0).getWishId());
-        return null;
-    }
+//    @Override
+//    public List<Live> getBestLives() {
+//       List<WishList> list = wishListRepository.findTop2ByLiveOrderByLive().orElseGet(null);
+//        System.out.println(list.get(0).getWishId());
+//        return null;
+//    }
 
     @Override
     public void putWishLive(User user, int prdId) {

@@ -11,5 +11,6 @@ public interface WishService {
     void putWishLive(User user, int prdId);
     void deleteWishLive(User user, int prdId);
     boolean checkWishLive(User user, int prdId);
+    List<Live> getBestLives();
 
 }

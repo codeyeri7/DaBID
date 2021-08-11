@@ -59,7 +59,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in will_live" :key="card.title" :cols="6">
-              <v-card class="section2" @click="goLive(card.prdId)">
+              <v-card class="section2">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -88,7 +88,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in end_live" :key="card.title" :cols="6">
-              <v-card class="section3" @click="goLive(card.prdId)">
+              <v-card class="section3">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"

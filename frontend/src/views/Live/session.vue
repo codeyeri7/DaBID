@@ -1,17 +1,21 @@
 <template>
-  <div>
+  <div class="container">
       <!-- openvidu --> 
     <div id="join" v-if="!session">
 			<div id="join-dialog" class="jumbotron vertical-center">
 				<h1>Live</h1>
 				<div class="form-group">
 					<div>
-						<label>참여자</label>
-						<h5>{{ userName }}</h5>
+						<label>Seller</label>
+						<h5>{{ liveInfo.user.userName }}</h5>
 					</div>
 					<div>
 						<label>Session</label>
 						<h5>{{ liveTitle }}</h5>
+					</div>
+					<div>
+						<label>Live Description</label>
+						<h5>{{ liveInfo.liveDesc }}</h5>
 					</div>
 					<p class="text-center">
 						<button class="btn btn-lg btn-success" @click="joinSession()">입장하기</button>
@@ -30,10 +34,10 @@
 				<user-video :stream-manager="mainStreamManager"/>
 			</div>
 			<!-- video 중복 --> 
-			<!-- <div id="video-container" class="col-md-6">
+			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-			</div> -->
+			</div>
 		</div>
   </div>
 </template>
@@ -81,7 +85,6 @@ export default {
 
 			// --- Init a session ---
 			this.session = this.OV.initSession();
-
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
@@ -108,7 +111,7 @@ export default {
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.liveTitle).then(token => {
-				this.session.connect(token, { clientData: this.UserName })
+				this.session.connect(token, { clientData: this.userName })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -203,10 +206,10 @@ export default {
           url:  `/dabid/live/${this.prdId}`,
         })
           .then((res) => {
-            console.log(res.data)
+            console.log('방송 정보', res.data)
             this.liveInfo = res.data
 			// 방송 제목 받아오기
-			// this.liveTitle = res.data.title
+			this.liveTitle = res.data.liveTitle
 			this.userName = localStorage.getItem('userName')
           })
           .catch((err) => {

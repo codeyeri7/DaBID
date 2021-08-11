@@ -4,6 +4,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.WishService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
 import io.swagger.annotations.*;
@@ -41,15 +42,16 @@ public class WishController {
 		return ResponseEntity.status(200).body(wishLiveList);
 	}
 
-	@GetMapping("/{prdId}}")
+	@GetMapping("/check/{prdId}")
 	@ApiOperation(value = "내가 찜한 라이브인지 판별", notes = "로그인한 유저가 찜한 라이브인지 아닌지 판별")
 	public ResponseEntity<?> checkWishLive(@PathVariable int prdId,@ApiIgnore Authentication authentication) {
+		System.out.println("여기들어와");
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
 
 		Boolean flg = false;
-		flg = wishService.checkWishLive(user, prdId);
+		flg = wishService.checkWishLive(user,prdId);
 		return ResponseEntity.status(200).body(flg);
 	}
 
@@ -84,6 +86,13 @@ public class WishController {
 
 		wishService.deleteWishLive(user,prdId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
+	}
+
+	@GetMapping("/best")
+	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
+	public ResponseEntity<?> bestLives() {
+		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
+		return ResponseEntity.status(200).body(liveList);
 	}
 
 }

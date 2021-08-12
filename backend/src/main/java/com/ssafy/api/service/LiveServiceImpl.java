@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,58 +115,55 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public List<Live> searchLives(List<String> categories, String keyword) {
-		List<Live> liveList = new ArrayList<>();
+	public List<Live> searchLives(List<String> categories, List<String> statuses, String keyword) {
+		// 검색 기준 모두 3개
+		// 카테고리 / 라이브 상태 / 키워드
 
-		if (categories != null) {
-			// 카테고리 필터링이 있다면
-			List<ProductCategory> prdCategories = new ArrayList<>();
-			for (String category : categories){
-				prdCategories.add(productCategoryRepository.findByPrdCategoryName(category));
-			}
-			liveList.addAll(liveRepository.findByProductCategoryIn(prdCategories).orElseGet(null));
+		// 카테고리 / 라이브 상태 / 키워드 모두 없을 때
+		List<Live> liveList = liveRepository.findAll();
 
-			// 검색 키워드도 있다면
-			if (keyword != null) {
-				liveList.retainAll(liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null));
-			}
-
-		} else if (keyword != null) {
-			// 카테고리 X
-			// 검색 키워드만 있다면
-			liveList.addAll(liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null));
-
-		} else {
-			return liveRepository.findAll();
+		// 카테고리로 라이브 검색
+		if (categories != null && !categories.isEmpty()) {
+			liveList.retainAll(this.searchLiveByCategory(categories));
 		}
 
-		return liveList;
+		// 라이브 상태로 라이브 검색
+		if (statuses != null && !statuses.isEmpty()) {
+			liveList.retainAll(this.searchLiveByLiveStatus(statuses));
+		}
 
-//		// 검색어가 없었다면
-//		if (categories == null && keyword == null) {
-//			// 전체 조회
-//			return liveRepository.findAll();
-//		}
-//
-//		// 카테고리 검색어만 있었다면
-//		if (categories != null && keyword == null) {
-//			return liveRepository.findByProductCategoryIn(prdCategories).orElseGet(null);
-//		}
-//
-//		// 키워드 검색어만 있었다면
-//		if (keyword != null && categories == null) {
-//			// 라이브 제목이나 상품 이름이 포함하고 있는지 검색
-//			return liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null);
-//		}
-//
-//		// 카테고리 & 키워드
-//		if (categories != null && keyword != null) {
-//			// 카테고리 검색
-//			liveList.addAll(liveRepository.findByProductCategoryIn(prdCategories).orElseGet(null));
-//
-//			// 키워드 검색과 교집합
-//			liveList.retainAll(liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null));
-//			return liveList;
-//		}
+		// 검색 키워드로 라이브 검색 (라이브 제목, 상품명)
+		if (keyword != null && !keyword.equals("")) {
+			liveList.retainAll(this.searchLiveByKeyword(keyword));
+		}
+
+		// 필터링되고 남은 live 반환
+		return liveList;
+	}
+
+	public List<Live> searchLiveByCategory(List<String> categories) {
+		// Front에서 String으로 받아온 카테고리로 ProductCategory 조회
+		List<ProductCategory> prdCategories = new ArrayList<>();
+		for (String category : categories){
+			prdCategories.add(productCategoryRepository.findByPrdCategoryName(category));
+		}
+		// 조회한 ProductCategory로 live 조회
+		return liveRepository.findByProductCategoryIn(prdCategories).orElseGet(null);
+	}
+
+	public List<Live> searchLiveByLiveStatus(List<String> statuses) {
+		// Front에서 String으로 받아온 라이브 상태로 LiveStatus 조회
+		List<LiveStatus> liveStatus = new ArrayList<>();
+		for (String status : statuses){
+			liveStatus.add(liveStatusRepository.findByLiveStatusName(status).orElseGet(null));
+		}
+		// 조회한 LiveStatus로 live 조회
+		return liveRepository.findByLiveStatusIn(liveStatus).orElseGet(null);
+	}
+
+	public List<Live> searchLiveByKeyword(String keyword) {
+		// Front에서 받아온 keyword로
+		// 라이브 제목, 상품명 like %keyword% 검색
+		return liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null);
 	}
 }

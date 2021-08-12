@@ -59,6 +59,10 @@ node {
 
 configurations {
     providedRuntime
+
+    compileOnly{
+        extendsFrom annotationProcessor
+    }
 }
 
 /*task npmInstall(type: NpmTask, overwrite: true) {
@@ -124,6 +128,11 @@ processResources {
 //[끝]
 
 dependencies {
+    //인텔리제이 자동 재빌드
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-mustache')
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     //openVidu API
     implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.19.0'
 
@@ -158,10 +167,14 @@ dependencies {
     //STOMP 웹소캣 서버 사이드 테스트를 위한 의존성 추가
     implementation("org.springframework.boot:spring-boot-starter-mustache")
     //STOMP 관련 프론트 라이브러리
+    implementation('org.webjars.bower:bootstrap:4.3.1')
+    implementation('org.webjars.bower:vue:2.5.16')
+    implementation('org.webjars.bower:axios:0.17.1')
     implementation('org.webjars.bower:jquery:3.3.1')
     implementation('org.webjars:sockjs-client:1.1.2')
     implementation('org.webjars:stomp-websocket:2.3.3-1')
     implementation('org.webjars:webjars-locator:0.30')
+    implementation('com.google.code.gson:gson:2.8.0')
     //WebRTC 클라이언트 의존성 추가
     implementation('org.webjars.bower:webrtc-adapter:7.4.0')
     //Kurento (미디어서버) 관련 의존성 추가
@@ -193,14 +206,12 @@ dependencies {
     compile("javax.annotation:javax.annotation-api:1.2")
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.2'
 
-    implementation("org.projectlombok:lombok:1.18.20")
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor("org.projectlombok:lombok")
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {

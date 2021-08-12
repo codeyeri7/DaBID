@@ -38,6 +38,37 @@
       <v-expansion-panel>
         <v-expansion-panel-header> Search </v-expansion-panel-header>
 
+<<<<<<< HEAD
+      <v-expansion-panel-content>
+        <v-col>
+          <v-autocomplete
+            v-model="values1"
+            :items="items1"
+            dense
+            chips
+            small-chips
+            label="카테고리"
+            multiple
+          ></v-autocomplete>
+          <v-autocomplete
+            v-model="values2"
+            :items="items2"
+            dense
+            chips
+            small-chips
+            label="방송 상태"
+            multiple
+          ></v-autocomplete>
+         <v-text-field
+          label="검색어"
+          v-model="keyword"
+        ></v-text-field>
+        <v-btn @click="search()">검색</v-btn>
+        </v-col>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
+=======
         <v-expansion-panel-content>
           <v-col>
             <v-autocomplete
@@ -64,6 +95,7 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
+>>>>>>> d963576a95ffa4916877653f1207fab4770aa7a1
 
     <!-- 하단 all live 카드 -->
     <div style="font-family: 'InfinitySans-RegularA1'">
@@ -81,11 +113,16 @@
               >
             </div>
             <v-row dense>
+<<<<<<< HEAD
+              <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
+              <div v-if="this.lives.length == 0">검색 결과가 없습니다.</div>
+=======
               <MyLiveListCard
                 v-for="(live, idx) in lives"
                 :key="idx"
                 :live="live"
               />
+>>>>>>> d963576a95ffa4916877653f1207fab4770aa7a1
             </v-row>
           </v-container>
         </v-card>
@@ -107,11 +144,20 @@ export default {
       lives: [],
 
       //검색 관련
+<<<<<<< HEAD
+      keyword: '',
+      values1: '',
+      values2: '',
+      items1: ['의류', '가방', '신발', '악세사리'],
+      items2: ['방송종료', '방송중', '방송예정']
+    }
+=======
       values1: "",
       values2: "",
       items1: ["의류", "가방", "신발", "악세사리"],
       items2: ["방송 종료", "방송 진행 중", "방송 예정"],
     };
+>>>>>>> d963576a95ffa4916877653f1207fab4770aa7a1
   },
   methods: {
     setToken: function () {
@@ -122,12 +168,20 @@ export default {
       return config;
     },
     getAllLiveList: function () {
+<<<<<<< HEAD
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live',
+        headers: this.setToken()
+      })
+=======
       rest
         .axios({
           method: "get",
           url: "/dabid/live/all",
           headers: this.setToken(),
         })
+>>>>>>> d963576a95ffa4916877653f1207fab4770aa7a1
         .then((res) => {
           this.lives = res.data;
           console.log("전체 라이브", this.lives);
@@ -137,6 +191,38 @@ export default {
         });
     },
     getHotLives: function () {
+<<<<<<< HEAD
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live/best',
+      })
+      .then((res) => {
+        console.log('받아온 인기 방송', res.data)
+        this.hot_lives = res.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+    search() {
+      console.log(this.values1)
+      rest.axios({
+        method: 'get',
+        url: '/dabid/live',
+        params: {
+          categories: this.values1 + '',
+          liveStatuses: this.values2 + '',
+          keyword: this.keyword,
+        },
+      })
+      .then((res) => {
+        this.lives = res.data
+        console.log('검색결과', this.lives)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+=======
       rest
         .axios({
           method: "get",
@@ -164,6 +250,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+>>>>>>> d963576a95ffa4916877653f1207fab4770aa7a1
     },
   },
   created: function () {

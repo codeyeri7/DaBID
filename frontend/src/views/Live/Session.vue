@@ -2,7 +2,7 @@
 	<div id="main-container" class="container">
 		<div id="join" v-if="!session">
 			<div id="join-dialog" class="jumbotron vertical-center">
-				<h1>Join a video session</h1>
+				<h1>Live</h1>
 				<div class="form-group">
 					<p>
 						<label>Participant</label>
@@ -21,7 +21,7 @@
 
 		<div id="session" v-if="session">
 			<div id="session-header">
-				<h1 id="session-title">{{ mySessionId }}</h1>
+				<h1 id="session-title">{{ liveInfo.liveTitle }}</h1>
 				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
 			</div>
 			<div id="main-video" class="col-md-6">
@@ -39,6 +39,7 @@
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../../components/UserVideo.vue';
+import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -60,8 +61,10 @@ export default {
 			publisher: undefined,
 			subscribers: [],
 
-			mySessionId: 'SessionA',
-			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			liveInfo: '',
+			prdId: '',
+			mySessionId: '',
+			myUserName: '',
 		}
 	},
 
@@ -207,6 +210,27 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+		getLiveInfo () {
+		rest.axios({
+          method: 'get',
+          url:  `/dabid/live/${this.prdId}`,
+        })
+          .then((res) => {
+            console.log('방송 정보', res.data)
+            this.liveInfo = res.data
+			// 방송 제목과  받아오기
+			this.mySessionId = this.prdId + ''
+			this.myUserName = localStorage.getItem('userName')
+          })
+          .catch((err) => {
+            console.log('라이브 정보 받아오기 오류: ' + err)
+          })
+		}
+	},
+	created: function () {
+		this.prdId = this.$route.params.prdId
+		console.log(this.prdId+ '번 방송입니다.')
+		this.getLiveInfo()
 	}
 }
 </script>

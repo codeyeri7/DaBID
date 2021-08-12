@@ -1,28 +1,29 @@
 <template>
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
-      <v-card height="300px" width="150px" class="section1">
-        <!-- Image -->
-        <v-img
-          :src="live.live.prdPhoto"
-          class="white--text align-center"
-          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-          height="200px"
-          width="200px"
-          style="padding: 40px"
-          v-bind="attrs"
-          v-on="on"
-          @click="checkPrdId()"
-        >
-        </v-img>
-        <!-- 카드 하단-->
-        <v-card-subtitle class="text-subtitle-4">{{
-          live.live.prdName
-        }}</v-card-subtitle>
-        <v-card-subtitle class="text-subtitle-4">
-          시작가 | {{ live.live.prdPriceStart | comma }}원
-        </v-card-subtitle>
-      </v-card>
+      <v-col :cols="6">
+        <v-card class="section1">
+          <!-- Image -->
+          <v-img
+            :src="live.live.prdPhoto"
+            class="white--text align-center"
+            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+            height="200px"
+            style="padding: 40px"
+            v-bind="attrs"
+            v-on="on"
+            @click="checkPrdId()"
+          >
+          </v-img>
+          <!-- 카드 하단-->
+          <v-card-subtitle class="text-subtitle-4 pt-2">{{
+            live.live.prdName | truncate(7, '...')
+          }}</v-card-subtitle>
+          <v-card-subtitle class="text-subtitle-4 pt-2">
+            시작가 | {{ live.live.prdPriceStart | comma }}원
+          </v-card-subtitle>
+        </v-card>
+      </v-col>
     </template>
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">

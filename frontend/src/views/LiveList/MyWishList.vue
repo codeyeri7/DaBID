@@ -1,10 +1,10 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1'">
     <div class="main-card">
-      <v-card class="mx-auto" width="500">
+      <v-card class="mx-auto">
         <v-container fluid>
           <div>
-            <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My Wish List</b></span>
+            <span style="font-family: 'PT Serif', serif;font-size:20px; padding-bottom:40px"><b>My Wish List</b></span>
           </div>
           <v-row dense>
             <MyWishLiveCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
@@ -14,8 +14,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import MyWishLiveCard from "../../components/MyWishLiveCard.vue";

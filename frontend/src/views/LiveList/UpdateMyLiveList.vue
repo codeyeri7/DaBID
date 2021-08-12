@@ -103,13 +103,6 @@ import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
 import dayjs from 'dayjs'
 
-
-// const liveDateTime = editlive.liveDate;
-// console.log(this.editlive)
-// console.log(editlive)
-// const liveYMD = liveDateTime.substr(0, 10);
-// const liveTime = liveDateTime.substr(12, 5);
-
 export default {
   name: 'UpdateMyLiveList',
   component: {
@@ -195,7 +188,7 @@ export default {
       const editlivedata = {
         prdName: editlive.prdName,
         prdNo: editlive.prdNo,
-        prdPhoto: editlive.prdPhoto,
+        prdPhoto: this.prdPhoto,
         prdCategory: this.items.indexOf(this.select),
         liveTitle: editlive.liveTitle,
         prdPriceStart: editlive.prdPriceStart,
@@ -204,8 +197,8 @@ export default {
         liveTime: this.time
       }
       console.log(editlivedata)
-      console.log(this.select)
-      console.log(this.items.indexOf(this.select))
+      console.log(editlive)
+      console.log(editlive.prdPhoto)
       rest.
         axios({
           method: 'put',

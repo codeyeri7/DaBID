@@ -18,35 +18,24 @@ public class QLiveStatus extends EntityPathBase<LiveStatus> {
 
     private static final long serialVersionUID = -482886336L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QLiveStatus liveStatus1 = new QLiveStatus("liveStatus1");
 
-    public final QLive live;
+    public final ListPath<Live, QLive> livelist = this.<Live, QLive>createList("livelist", Live.class, QLive.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> liveStatus = createNumber("liveStatus", Integer.class);
 
     public final StringPath liveStatusName = createString("liveStatusName");
 
     public QLiveStatus(String variable) {
-        this(LiveStatus.class, forVariable(variable), INITS);
+        super(LiveStatus.class, forVariable(variable));
     }
 
     public QLiveStatus(Path<? extends LiveStatus> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QLiveStatus(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QLiveStatus(PathMetadata metadata, PathInits inits) {
-        this(LiveStatus.class, metadata, inits);
-    }
-
-    public QLiveStatus(Class<? extends LiveStatus> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.live = inits.isInitialized("live") ? new QLive(forProperty("live"), inits.get("live")) : null;
+        super(LiveStatus.class, metadata);
     }
 
 }

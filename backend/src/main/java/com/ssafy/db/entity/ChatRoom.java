@@ -8,8 +8,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
 /**
  * 채팅방
  */
@@ -21,12 +19,12 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatRoomId;
 
-    @Column(name="prd_id",insertable=false, updatable=false)
-    private int prdId;
+//    @Column(name="prd_id",insertable=false, updatable=false)
+//    private int prdId;
 
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Chat> chatlist = new ArrayList<>();
-    //many를 담아주는 객체라서 List
+    // many를 담아주는 객체라서 List
 
     @OneToOne
     @JoinColumn(name="prd_id")

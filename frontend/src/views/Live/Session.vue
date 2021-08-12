@@ -7,7 +7,7 @@
 				<div class="form-group">
 					<div>
 						<label>Seller</label>
-						<h5>{{ liveInfo.user.userName }}</h5>
+						<h5>{{ userName }}</h5>
 					</div>
 					<div>
 						<label>Session</label>
@@ -50,7 +50,7 @@ import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://52.78.142.145:443";
+const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
@@ -208,9 +208,9 @@ export default {
           .then((res) => {
             console.log('방송 정보', res.data)
             this.liveInfo = res.data
-			// 방송 제목 받아오기
+			// 방송 제목과  받아오기
 			this.liveTitle = res.data.liveTitle
-			this.userName = localStorage.getItem('userName')
+			this.userName = this.liveInfo.user.userName
           })
           .catch((err) => {
             console.log('라이브 정보 받아오기 오류: ' + err)

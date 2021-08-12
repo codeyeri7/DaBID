@@ -9,7 +9,7 @@ import java.util.*;
 // import 생략....
 
 @Repository
-public class ChatRoomRepository {
+public class ChatRoomRepository{
 
     private Map<String, ChatRoom> chatRoomMap;
 
@@ -27,6 +27,10 @@ public class ChatRoomRepository {
 
     public ChatRoom findRoomById(String id) {
         return chatRoomMap.get(id);
+    }
+
+    public void deleteChatRoom(String id){
+        chatRoomMap.remove(id);
     }
 
     public ChatRoom createChatRoom(String name) {

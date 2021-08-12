@@ -19,8 +19,6 @@
       </v-carousel-item>
     </v-carousel>
 
-    <button @click="goLive1">goLive1</button>
-    <!-- <button @click="goLive2">goLive2</button> -->
     <!-- card -->
     <div class="main-card">
       <v-card class="mx-auto" width="500">
@@ -31,7 +29,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card class="section1">
+              <v-card class="section1" @click="goLive(card.prdId)">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -39,7 +37,6 @@
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="200px"
                   style="padding: 40px"
-                  @click="goLive2"
                 >
                   <!-- image 안 title -->
                   <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title>
@@ -140,13 +137,13 @@ export default {
       now_live: null,
       will_live: null,
       end_live: null,
-      sessionData: {
-        liveTitle: "",
-        token: "",
-        userName: "",
-        userId: "",
-        role: "",
-      },
+      // sessionData: {
+      //   liveTitle: "",
+      //   token: "",
+      //   userName: "",
+      //   userId: "",
+      //   role: "",
+      // },
     };
   },
   filters: {
@@ -164,69 +161,20 @@ export default {
       return config
     },
     // live 열기
-    goLive1: function () {
-      this.$router.push({ name: "session" });
-      // rest
-      //   .axios({
-      //     method: "post",
-      //     url: `/dabid/session/10`,
-      //     headers: this.setToken()
-      //   })
-      //   .then((res) => {
-      //     console.log("켜짐");
-      //     console.log(res.data);
-      //     console.log(res.data.role + "입니다.");
-      //     this.sessionData.liveTitle = res.data.liveTitle;
-      //     this.sessionData.token = res.data.token;
-      //     this.sessionData.userName = res.data.userName;
-      //     this.sessionData.userId = res.data.userId;
-      //     this.sessionData.role = res.data.role;
-      //     console.log("token" + res.data.token);
-      //     console.log("session" + this.sessionData);
-          // this.$router.push({
-          //   name: "Session", 
-          //   params: {
-          //     liveTitle: this.sessionData.liveTitle,
-          //     token: this.sessionData.token,
-          //     userName: this.sessionData.userName,
-          //     userId: this.sessionData.userId,
-          //     role: this.sessionData.role,
-          //   }
-          // });
-        // })
-        // .catch((err) => {
-        //   console.log(err);
-        // });
+    goLive: function (prdId) {
+      this.$router.push({
+            name: "session", 
+            params: {
+              prdId : prdId
+              // liveTitle: this.sessionData.liveTitle,
+              // token: this.sessionData.token,
+              // userName: this.sessionData.userName,
+              // userId: this.sessionData.userId,
+              // role: this.sessionData.role,
+            }
+          });
     },
-    // goLive2: function () {
-    //   rest
-    //   .axios({
-    //     method: "post",
-    //     url: "/dabid/session/2/P1628141880829",
-    //   })
-    //     .then((res) => {
-    //       this.sessionData.liveTitle = res.data.liveTitle;
-    //       this.sessionData.token = res.data.token;
-    //       this.sessionData.userName = res.data.userName;
-    //       this.sessionData.userId = res.data.userId;
-    //       this.sessionData.role = res.data.role;
-    //       console.log(res);
-    //       console.log(res.data.role + "입니다.");
-    //       this.$router.push({ 
-    //         name: "Session",
-    //         params: {
-    //           liveTitle: this.sessionData.liveTitle, 
-    //           token: this.sessionData.token, 
-    //           userName: this.sessionData.userName, 
-    //           userId: this.sessionData.userId,
-    //           role: this.sessionData.role
-    //         }
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    
 
     // live 정보
     getLive: function () {

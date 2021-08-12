@@ -2,6 +2,8 @@
   <div class="container">
     <v-container>
       <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
+      <h3>{{ editlive.liveDate.substr(0, 10) }}</h3>
+      <h3>{{ editlive.liveDate.substr(11, 5) }}</h3>
       <hr id="top-hr">
       <v-row>
         <v-col>
@@ -33,7 +35,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="editlive.liveDate"
+                  v-model.trim="editlive.liveDate"
                   label="방송 예정 날짜 (1주 이내)"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -43,7 +45,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="editlive.liveDate"
+                v-model="liveYMD"
                 @input="menu2 = false"
                 :min= "today"
                 :max= "sevenday"
@@ -58,7 +60,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="editlive.liveTime"
+                v-model.trim="editlive.liveDate"
                 label="방송 예정 시간"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
@@ -69,7 +71,7 @@
             </template>
             <v-time-picker
               v-if="modal2"
-              v-model="editlive.liveTime"
+              v-model="liveTime"
               full-width
             >
               <v-spacer></v-spacer>
@@ -104,11 +106,14 @@ import AWS from 'aws-sdk'
 import dayjs from 'dayjs'
 
 
+// const liveDateTime = editlive.liveDate;
+// console.log(this.editlive)
+// console.log(editlive)
+// const liveYMD = liveDateTime.substr(0, 10);
+// const liveTime = liveDateTime.substr(12, 5);
+
 export default {
   name: 'UpdateMyLiveList',
-  props: {
-    lives: Number,
-  },
   component: {
     dayjs
   },
@@ -116,28 +121,35 @@ export default {
     return {
       editlive: [],
       valid: true,
+      productName: '',
       nameRules: [
         v => !!v || '상품 명은 필수 항목 입니다. ',
         v => (v && v.length <= 20) || '상품 명은 20자 이상 입력할 수 없습니다.',
       ],
+      productNumber: '',
       productNumberRules: [
         v => !!v || '일련 번호(serial number)는 필수 항목 입니다.',
         v => /^[a-zA-Z0-9-]*$/ .test(v) || '일련 번호는 영문숫자만 입력 가능합니다.'
       ],
       select: null,
+      selectedIndex: '',
       items: [
         '의류',
         '가방',
         '신발',
         '악세사리',
-      ],      titleRules: [
+      ],
+      title: '',      
+      titleRules: [
          v => !!v || 'Live 제목은 필수 항목 입니다.',
          v => (v && v.length <= 20) || 'Live 제목은 20자 이상 입력할 수 없습니다.',
       ],
+      startPrice: '',
       startPriceRules: [
         v => !!v || '경매 시작가는 필수 항목 입니다.',
         v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
       ],
+      liveInfo: '',
       liveInfoRules: [
          v => (v && v.length <= 100) || '상세 정보는 100자 이상 입력할 수 없습니다.',
       ],
@@ -156,7 +168,9 @@ export default {
       file: null,
       albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
-      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
+      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc',
+      liveYMD: this.liveYMD,   
+      liveTime: '' 
     }
   },
   methods: {
@@ -168,15 +182,18 @@ export default {
       return config
     },
     getLive: function () {
-      const config = this.setToken()
-      const lives = this.$route.params.lives
+      const prdId = this.$route.params.prdId
       rest.axios({
         method: 'get',
-        url: `'/dabid/live/${lives}'`,
-        data: config,
+        url: `/dabid/live/${prdId}`,
+        headers: this.setToken()
       })
         .then((res) => {
           this.editlive = res.data
+          console.log(this.editlive)
+          console.log(this.editlive.liveDate.substr(0, 10))
+          console.log(this.editlive.liveDate.substr(11, 5))
+          console.log('과연?!')
         })
         .catch((err) => {
           console.log(err)
@@ -184,7 +201,7 @@ export default {
     },
     updateLive: function (editlive) {
       const config = this.setToken()
-      const lives = this.$route.params.lives
+      const prdId = this.$route.params.prdId
       const editlivedata = {
         prdName: editlive.prdName,
         prdNo: editlive.prdNo,
@@ -193,13 +210,13 @@ export default {
         liveTitle: editlive.liveTitle,
         prdPriceStart: editlive.prdPriceStart,
         liveDesc: editlive.liveDesc,
-        liveDate: editlive.liveDate,
+        liveYMD: editlive.liveDate,
         liveTime: editlive.liveTime
       }
-      rest.axios.put(`/dabid/live/${lives}`, editlivedata, config)
+      rest.axios.put(`/dabid/live/${prdId}`, editlivedata, config)
         .then((res) => {
           console.log(res)
-          this.$router.push({ name: 'MyLiveList', params: { lives: `${lives}` }})
+          this.$router.push({ name: 'MyLiveList', params: { prdId: `${prdId}` }})
         })
         .catch((err) => {
           console.log(err)
@@ -216,6 +233,8 @@ export default {
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
+      this.liveYMD = this.editlive.liveDate.substr(0, 10)
+      this.liveTime = this.editlive.liveDate.substr(12, 5)
     },
     upload() {
       AWS.config.update({
@@ -246,9 +265,23 @@ export default {
         console.log(this.prdPhoto)
       });
     },
+    // dateTime: function () {
+    //   // this.liveDateTime = this.editlive.liveDate
+    //   console.log(this.liveDateTime)
+    //   console.log('과연?!')
+      
+    // }
   },
   mounted() {
     this.calcDate()
+    // this.dateTime()
+  },
+  created: function () {
+    if (localStorage.getItem("jwt")) {
+      this.getLive();
+    } else {
+      this.$router.push({ name: "Login" });
+    }
   },
 }
 </script>

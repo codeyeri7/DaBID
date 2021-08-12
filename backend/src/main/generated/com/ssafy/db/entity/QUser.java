@@ -24,15 +24,19 @@ public class QUser extends EntityPathBase<User> {
 
     public final QAuth auth;
 
-    public final ListPath<Review, QReview> logs = this.<Review, QReview>createList("logs", Review.class, QReview.class, PathInits.DIRECT2);
+    public final ListPath<Live, QLive> liveList = this.<Live, QLive>createList("liveList", Live.class, QLive.class, PathInits.DIRECT2);
 
     public final QResult result;
+
+    public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final StringPath userId = createString("userId");
 
     public final StringPath userName = createString("userName");
 
-    public final StringPath userScore = createString("userScore");
+    public final NumberPath<Integer> userScore = createNumber("userScore", Integer.class);
+
+    public final ListPath<WishList, QWishList> WishList = this.<WishList, QWishList>createList("WishList", WishList.class, QWishList.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         this(User.class, forVariable(variable), INITS);

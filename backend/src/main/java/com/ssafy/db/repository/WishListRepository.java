@@ -15,6 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface WishListRepository extends JpaRepository<WishList,Integer> {
-    WishList findByUserAndLive(User user, Live live);
+    Optional<WishList> findByUserAndLive(User user, Live live);
+    int countByUserAndLive(User user, Live live);
     Optional<List<WishList>> findByUser(User user);
+
+    List<WishList> findAll();
 }

@@ -44,6 +44,10 @@ public class QLive extends EntityPathBase<Live> {
 
     public final QResult result;
 
+    public final QUser user;
+
+    public final ListPath<WishList, QWishList> WishList = this.<WishList, QWishList>createList("WishList", WishList.class, QWishList.class, PathInits.DIRECT2);
+
     public QLive(String variable) {
         this(Live.class, forVariable(variable), INITS);
     }
@@ -62,9 +66,10 @@ public class QLive extends EntityPathBase<Live> {
 
     public QLive(Class<? extends Live> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.liveStatus = inits.isInitialized("liveStatus") ? new QLiveStatus(forProperty("liveStatus"), inits.get("liveStatus")) : null;
-        this.productCategory = inits.isInitialized("productCategory") ? new QProductCategory(forProperty("productCategory"), inits.get("productCategory")) : null;
+        this.liveStatus = inits.isInitialized("liveStatus") ? new QLiveStatus(forProperty("liveStatus")) : null;
+        this.productCategory = inits.isInitialized("productCategory") ? new QProductCategory(forProperty("productCategory")) : null;
         this.result = inits.isInitialized("result") ? new QResult(forProperty("result"), inits.get("result")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

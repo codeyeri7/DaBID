@@ -6,6 +6,7 @@ import com.ssafy.db.entity.WishList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,5 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface WishListRepository extends JpaRepository<WishList,Integer> {
-    WishList findByUserAndLive(User user, Live live);
+    Optional<WishList> findByUserAndLive(User user, Live live);
+    int countByUserAndLive(User user, Live live);
+    Optional<List<WishList>> findByUser(User user);
+
+    List<WishList> findAll();
 }

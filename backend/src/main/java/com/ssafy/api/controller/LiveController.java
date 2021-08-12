@@ -6,7 +6,6 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
-import com.ssafy.db.entity.ProductCategory;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +79,13 @@ public class LiveController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 
+	@GetMapping("/{prdId}")
+	@ApiOperation(value="특정 라이브 조회", notes = "상품 고유 아이디를 통해 특정 라이브 조회")
+	public ResponseEntity<?> selectLive(@PathVariable @ApiParam(name="prdId") int prdId) {
+		Live live = liveService.getLiveByPrdId(prdId);
+		return ResponseEntity.status(200).body(live);
+	}
+
 	@GetMapping("/all")
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
 	public ResponseEntity<?> selectAllLives() {
@@ -87,12 +93,23 @@ public class LiveController {
 		return ResponseEntity.status(200).body(liveList);
 	}
 
-	@GetMapping()
+	@GetMapping("/top2")
 	@ApiOperation(value = "라이브 top2 조회", notes = "라이브 top2 조회")
 	public ResponseEntity<?> selectTop2Lives() {
 		List<Live> liveList = liveService.getRecentLives(0); //방송예정 중 인기방송 2개만
-//		liveList.addAll(liveService.getRecentLives(1));
-//		liveList.addAll(liveService.getRecentLives(2));
+		liveList.addAll(liveService.getRecentLives(1));
+		liveList.addAll(liveService.getRecentLives(2));
 		return ResponseEntity.status(200).body(liveList);
 	}
+
+
+	@GetMapping()
+	@ApiOperation(value="라이브 검색", notes="라이브 검색")
+	public ResponseEntity<?> searchLive(@RequestParam(name="category", required = false) List<String> categories,
+										@RequestParam(name="keyword", required = false) String keyword) {
+
+		List<Live> liveList = liveService.searchLives(categories, keyword);
+		return ResponseEntity.status(200).body(liveList);
+	}
+
 }

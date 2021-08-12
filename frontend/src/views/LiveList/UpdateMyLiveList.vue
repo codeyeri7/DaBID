@@ -1,16 +1,18 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Update new LIVE</h2>
+      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
+      <h3>{{ editlive.liveDate.substr(0, 10) }}</h3>
+      <h3>{{ editlive.liveDate.substr(11, 5) }}</h3>
       <hr id="top-hr">
       <v-row>
         <v-col>
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field  v-model.trim="this.live.prdId" label="상품명" :counter="20" :rules="nameRules" rows="5" required="required"></v-text-field>
-            <v-text-field v-model.trim="this.live.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" required="required"></v-text-field>
-            <v-select v-model="this.live.select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            
+            <v-text-field v-model.trim="editlive.prdName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="editlive.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
+            <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
+            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
               <v-btn @click="upload" color=primary flat>업로드</v-btn>
@@ -19,9 +21,9 @@
           
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
-            <v-text-field v-model.trim="this.live.title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
-            <v-text-field v-model.trim="this.live.liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
-            <v-text-field v-model.trim="this.live.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="editlive.liveTitle" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="editlive.liveDesc" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
+            <v-text-field v-model.trim="editlive.prdPriceStart" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
             
             <v-dialog
               ref="dialog"
@@ -33,7 +35,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="this.live.date"
+                  v-model.trim="editlive.liveDate"
                   label="방송 예정 날짜 (1주 이내)"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -43,7 +45,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
-                v-model="this.live.date"
+                v-model="liveYMD"
                 @input="menu2 = false"
                 :min= "today"
                 :max= "sevenday"
@@ -58,7 +60,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="this.live.time"
+                v-model.trim="editlive.liveDate"
                 label="방송 예정 시간"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
@@ -69,7 +71,7 @@
             </template>
             <v-time-picker
               v-if="modal2"
-              v-model="this.live.time"
+              v-model="liveTime"
               full-width
             >
               <v-spacer></v-spacer>
@@ -90,7 +92,7 @@
             </v-time-picker>
           </v-dialog>
           </div>
-            <v-btn @click="updateLive" x-small color="white" :disabled="!valid"
+            <v-btn @click="updateLive(editlive)" x-small color="white" :disabled="!valid"
           style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
@@ -103,14 +105,21 @@ import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
 import dayjs from 'dayjs'
 
+
+// const liveDateTime = editlive.liveDate;
+// console.log(this.editlive)
+// console.log(editlive)
+// const liveYMD = liveDateTime.substr(0, 10);
+// const liveTime = liveDateTime.substr(12, 5);
+
 export default {
   name: 'UpdateMyLiveList',
-  // props: {
-  //   live: Object
-  // },
-  data() {
+  component: {
+    dayjs
+  },
+  data: function () {
     return {
-      live: [],
+      editlive: [],
       valid: true,
       productName: '',
       nameRules: [
@@ -130,7 +139,7 @@ export default {
         '신발',
         '악세사리',
       ],
-      title: '',
+      title: '',      
       titleRules: [
          v => !!v || 'Live 제목은 필수 항목 입니다.',
          v => (v && v.length <= 20) || 'Live 제목은 20자 이상 입력할 수 없습니다.',
@@ -159,39 +168,59 @@ export default {
       file: null,
       albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
-      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc'
+      IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc',
+      liveYMD: this.liveYMD,   
+      liveTime: '' 
     }
   },
   methods: {
-    updateLive: function() {
-      const prdId = this.prdId
-      const liveData = {
-        userId: localStorage.getItem("userId"),
-        prdName: this.productName,
-        prdNo: this.productNumber,
-        prdPhoto: this.prdPhoto,
-        prdCategory: this.items.indexOf(this.select),
-        liveTitle: this.title,
-        prdPriceStart: this.startPrice,
-        liveDesc: this.liveInfo,
-        liveDate: this.date,
-        liveTime: this.time
+    setToken: function () {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${jwtToken}`
       }
-      if (liveData.liveTitle) {
-        rest.axios({
-        method: 'put',
+      return config
+    },
+    getLive: function () {
+      const prdId = this.$route.params.prdId
+      rest.axios({
+        method: 'get',
         url: `/dabid/live/${prdId}`,
-        data: liveData
+        headers: this.setToken()
       })
-          .then((res) => {
-            console.log(res)
-            this.$router.push({ name: 'MyLiveList' })
-          })
-          .catch((err) => {
-            console.log(err)
-            console.log(this.live)
-          })
+        .then((res) => {
+          this.editlive = res.data
+          console.log(this.editlive)
+          console.log(this.editlive.liveDate.substr(0, 10))
+          console.log(this.editlive.liveDate.substr(11, 5))
+          console.log('과연?!')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    updateLive: function (editlive) {
+      const config = this.setToken()
+      const prdId = this.$route.params.prdId
+      const editlivedata = {
+        prdName: editlive.prdName,
+        prdNo: editlive.prdNo,
+        prdPhoto: editlive.prdPhoto,
+        prdCategory: editlive.prdCategory,
+        liveTitle: editlive.liveTitle,
+        prdPriceStart: editlive.prdPriceStart,
+        liveDesc: editlive.liveDesc,
+        liveYMD: editlive.liveDate,
+        liveTime: editlive.liveTime
       }
+      rest.axios.put(`/dabid/live/${prdId}`, editlivedata, config)
+        .then((res) => {
+          console.log(res)
+          this.$router.push({ name: 'MyLiveList', params: { prdId: `${prdId}` }})
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     setDate() {
       this.date = this.date +" "+ this.time
@@ -204,6 +233,8 @@ export default {
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
+      this.liveYMD = this.editlive.liveDate.substr(0, 10)
+      this.liveTime = this.editlive.liveDate.substr(12, 5)
     },
     upload() {
       AWS.config.update({
@@ -233,21 +264,24 @@ export default {
         this.prdPhoto = data.Location
         console.log(this.prdPhoto)
       });
-    }
+    },
+    // dateTime: function () {
+    //   // this.liveDateTime = this.editlive.liveDate
+    //   console.log(this.liveDateTime)
+    //   console.log('과연?!')
+      
+    // }
   },
   mounted() {
     this.calcDate()
-    if (localStorage.getItem('jwt')) {
-      // 바로 정보 가져오기 
-      this.live = this.$route.params.live
-      // console.log(this.live)
+    // this.dateTime()
+  },
+  created: function () {
+    if (localStorage.getItem("jwt")) {
+      this.getLive();
     } else {
-      console.log('오류')
+      this.$router.push({ name: "Login" });
     }
   },
 }
 </script>
-
-<style>
-
-</style>

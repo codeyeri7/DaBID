@@ -66,48 +66,64 @@ package com.ssafy.api.controller;
 
 // import 생략...
 
+import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.repository.ChatRoomRepository;
 import com.ssafy.db.vo.ChatRoom;
-import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+/**
+ * 채팅 관련 요청 처리를 위한 컨트롤러 정의.
+ */
+@Api(value="Chat API", tags={"Chat"})
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/dabid/chat")
 public class ChatRoomController {
+    @Autowired
+    ChatRoomRepository chatRoomRepository;
 
-    private final ChatRoomRepository chatRoomRepository;
 
-    // 채팅 리스트 화면
-    @GetMapping("/room")
-    public String rooms(Model model) {
-        return "/chat/room";
-    }
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
-    @ResponseBody
-    public List<ChatRoom> room() {
-        return chatRoomRepository.findAllRoom();
+    @ApiOperation(value = "전체 채팅 조회", notes = "전체 채팅 조회")
+    public ResponseEntity<?> room(){
+        List<ChatRoom> chatRoom = chatRoomRepository.findAllRoom();
+        return ResponseEntity.status(200).body(chatRoom);
     }
+
     // 채팅방 생성
     @PostMapping("/room")
-    @ResponseBody
+    @ApiOperation(value = "채팅방 생성", notes = "채팅방 생성.")
     public ChatRoom createRoom(@RequestParam String name) {
         return chatRoomRepository.createChatRoom(name);
     }
-    // 채팅방 입장 화면
-    @GetMapping("/room/enter/{roomId}")
-    public String roomDetail(Model model, @PathVariable String roomId) {
-        model.addAttribute("roomId", roomId);
-        return "/chat/roomdetail";
-    }
+//    // 채팅방 입장 화면
+//    @GetMapping("/room/enter/{roomId}")
+//    @ApiOperation(value = "채팅방 입장 화면", notes = "채팅방 입장 화면.")
+//    public String roomDetail(Model model, @PathVariable String roomId) {
+//        model.addAttribute("roomId", roomId);
+//        return "/chat/roomdetail";
+//    }
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
-    @ResponseBody
-    public ChatRoom roomInfo(@PathVariable String roomId) {
-        return chatRoomRepository.findRoomById(roomId);
+    @ApiOperation(value = "특정 채팅방 조회", notes = "특정 채팅방 조회.")
+    public ResponseEntity<?> roomInfo(@PathVariable String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);
+        if(chatRoom.equals(null))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(400,"채팅방이 존재하지 않습니다."));
+        return ResponseEntity.status(200).body(chatRoom);
+    }
+
+    // 특정 채팅방 삭제
+    @DeleteMapping("/room/{roomId}")
+    @ApiOperation(value = "특정 채팅방 삭제", notes = "특정 채팅방 삭제.")
+    public ResponseEntity<?> deleteRoom(@PathVariable String roomId) {
+        chatRoomRepository.deleteChatRoom(roomId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "채팅방이 삭제되었습니다."));
     }
 }

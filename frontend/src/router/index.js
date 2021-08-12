@@ -12,7 +12,7 @@ import MyWishList from '../views/LiveList/MyWishList.vue'
 import NoticeList from '../views/Notice/NoticeList.vue'
 import AllLiveList from '../views/LiveList/AllLiveList.vue'
 import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
-import Chathome from '../views/MyPage/Chathome.vue'
+import ReviewList from '../views/MyPage/ReviewList.vue'
 import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
 
@@ -75,11 +75,6 @@ const routes = [
     component: MyWishList
   },
   {
-    path: '/Chathome',
-    name: 'Chathome',
-    component: Chathome
-  },
-  {
     path: '/Chatroom',
     name: 'Chatroom',
     component: Chatroom
@@ -88,6 +83,11 @@ const routes = [
     path: '/Chatlist',
     name: 'Chatlist',
     component: Chatlist
+  },
+  {
+    path: '/ReviewList',
+    name: 'ReviewList',
+    component: ReviewList
   }
 ]
 

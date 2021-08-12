@@ -60,7 +60,8 @@ public class LiveController {
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 수정한다.")
 	public ResponseEntity<?> updateLive(@PathVariable @ApiParam(name="prdId") int prdId,
 		@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo) {
-
+		System.out.println(registerInfo.getPrdCategory());
+		System.out.println(registerInfo.getPrdPhoto());
 		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
 		Live live = liveService.getLiveByPrdId(prdId);
 		try {

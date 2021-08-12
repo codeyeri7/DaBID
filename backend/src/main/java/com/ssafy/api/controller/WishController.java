@@ -88,11 +88,11 @@ public class WishController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 
-	@GetMapping("/best")
-	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
-	public ResponseEntity<?> bestLives() {
-		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
-		return ResponseEntity.status(200).body(liveList);
-	}
+//	@GetMapping("/best")
+//	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
+//	public ResponseEntity<?> bestLives() {
+//		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
+//		return ResponseEntity.status(200).body(liveList);
+//	}
 
 }

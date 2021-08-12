@@ -2,6 +2,8 @@
   <div class="container">
     <v-container>
       <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
+      <h3>{{ editlive.liveDate.substr(0, 10) }}</h3>
+      <h3>{{ editlive.liveDate.substr(11, 5) }}</h3>
       <hr id="top-hr">
       <v-row>
         <v-col>
@@ -33,7 +35,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="liveYMD"
+                  v-model.trim="editlive.liveDate"
                   label="방송 예정 날짜 (1주 이내)"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -58,7 +60,7 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="liveTime"
+                v-model.trim="editlive.liveDate"
                 label="방송 예정 시간"
                 prepend-icon="mdi-clock-time-four-outline"
                 readonly
@@ -103,9 +105,12 @@ import rest from "../../js/httpCommon.js"
 import AWS from 'aws-sdk'
 import dayjs from 'dayjs'
 
-// const liveDateTime = this.editlive.liveDate
-// const liveYMD = this.liveDateTime.substr(0, 10)
-// const liveTime = this.liveDateTime.substr(12, 5)
+
+// const liveDateTime = editlive.liveDate;
+// console.log(this.editlive)
+// console.log(editlive)
+// const liveYMD = liveDateTime.substr(0, 10);
+// const liveTime = liveDateTime.substr(12, 5);
 
 export default {
   name: 'UpdateMyLiveList',
@@ -116,7 +121,6 @@ export default {
     return {
       editlive: [],
       valid: true,
-      // productName: this.getLive.prdName,
       productName: '',
       nameRules: [
         v => !!v || '상품 명은 필수 항목 입니다. ',
@@ -165,8 +169,8 @@ export default {
       albumBucketName:'dabid-s3',
       bucketRegion:'ap-northeast-2',
       IdentityPoolId: 'ap-northeast-2:afe1aff1-9c00-4010-b7f0-9d205081f0dc',
-      // liveYMD: this.editlive.liveDate.substr(0, 10),
-      // liveTime: this.liveTime.substr(12, 5)
+      liveYMD: this.liveYMD,   
+      liveTime: '' 
     }
   },
   methods: {
@@ -177,25 +181,6 @@ export default {
       }
       return config
     },
-    // getLive: function () {
-    //   // const config = this.setToken()
-    //   const prdId = this.$route.params.prdId
-    //   console.log(prdId)
-    //   rest.axios({
-    //     method: 'get',
-    //     url: `'/dabid/live/${prdId}'`,
-    //     headers: this.setToken(),
-    //   })
-    //     .then((res) => {
-    //       this.editlive = res.data
-    //       console.log(this.editlive)
-    //       console.log(res)
-    //       console.log(res.data)
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // },
     getLive: function () {
       const prdId = this.$route.params.prdId
       rest.axios({
@@ -206,6 +191,9 @@ export default {
         .then((res) => {
           this.editlive = res.data
           console.log(this.editlive)
+          console.log(this.editlive.liveDate.substr(0, 10))
+          console.log(this.editlive.liveDate.substr(11, 5))
+          console.log('과연?!')
         })
         .catch((err) => {
           console.log(err)
@@ -245,6 +233,8 @@ export default {
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
+      this.liveYMD = this.editlive.liveDate.substr(0, 10)
+      this.liveTime = this.editlive.liveDate.substr(12, 5)
     },
     upload() {
       AWS.config.update({
@@ -275,9 +265,16 @@ export default {
         console.log(this.prdPhoto)
       });
     },
+    // dateTime: function () {
+    //   // this.liveDateTime = this.editlive.liveDate
+    //   console.log(this.liveDateTime)
+    //   console.log('과연?!')
+      
+    // }
   },
   mounted() {
     this.calcDate()
+    // this.dateTime()
   },
   created: function () {
     if (localStorage.getItem("jwt")) {

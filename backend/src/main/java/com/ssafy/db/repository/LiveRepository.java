@@ -22,4 +22,6 @@ public interface LiveRepository extends JpaRepository<Live,Integer> {
     Optional<List<Live>> findByLiveTitleContainingOrPrdNameContaining(
             String liveTitle, String prdName);
     Optional<List<Live>> findByProductCategoryIn(List<ProductCategory> prdCategory);
+    Optional<List<Live>> findByLiveStatusIn(List<LiveStatus> liveStatuses);
+
 }

@@ -16,8 +16,6 @@ import java.util.List;
 public class WishServiceImpl implements WishService{
 
     @Autowired
-    UserService userService;
-    @Autowired
     LiveService liveService;
 
     @Autowired
@@ -36,7 +34,7 @@ public class WishServiceImpl implements WishService{
             int check = wishListRepository.countByUserAndLive(user,live);
 
             //찜했으면 true, 찜한 거 아니면 false
-             if(wishListRepository.countByUserAndLive(user,live)==0) return false;
+             if(check==0) return false;
              else return true;
     }
 

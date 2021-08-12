@@ -14,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 /**
  * 라이브 관련 요청 처리를 위한 컨트롤러 정의.
@@ -105,10 +107,11 @@ public class LiveController {
 
 	@GetMapping()
 	@ApiOperation(value="라이브 검색", notes="라이브 검색")
-	public ResponseEntity<?> searchLive(@RequestParam(name="category", required = false) List<String> categories,
+	public ResponseEntity<?> searchLive(@RequestParam(name="categories", required = false) List<String> categories,
+										@RequestParam(name="liveStatuses", required = false) List<String> liveStatuses,
 										@RequestParam(name="keyword", required = false) String keyword) {
 
-		List<Live> liveList = liveService.searchLives(categories, keyword);
+		List<Live> liveList = liveService.searchLives(categories, liveStatuses, keyword);
 		return ResponseEntity.status(200).body(liveList);
 	}
 

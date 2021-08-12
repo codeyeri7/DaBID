@@ -14,4 +14,5 @@ import java.util.Optional;
 //JpaRepository<>안에는 엔티티 클래스 이름과 ID 필드 타입이 지정된다. 기본형의 경우 wrapper class
 public interface LiveStatusRepository extends JpaRepository<LiveStatus,Integer> {
     Optional<LiveStatus> findByLiveStatus(int liveStatus);
+    Optional<LiveStatus> findByLiveStatusName(String liveStatusName);
 }

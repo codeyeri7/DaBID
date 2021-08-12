@@ -147,12 +147,11 @@ export default {
     };
   },
   filters: {
-      comma: function (value) {
-          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
+    comma: function (value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
-    
     setToken: function () {
       const jwtToken = localStorage.getItem('jwt')
       const config = {
@@ -163,19 +162,17 @@ export default {
     // live 열기
     goLive: function (prdId) {
       this.$router.push({
-            name: "session", 
-            params: {
-              prdId : prdId
-              // liveTitle: this.sessionData.liveTitle,
-              // token: this.sessionData.token,
-              // userName: this.sessionData.userName,
-              // userId: this.sessionData.userId,
-              // role: this.sessionData.role,
-            }
-          });
+        name: "session", 
+        params: {
+          prdId : prdId
+          // liveTitle: this.sessionData.liveTitle,
+          // token: this.sessionData.token,
+          // userName: this.sessionData.userName,
+          // userId: this.sessionData.userId,
+          // role: this.sessionData.role,
+        }
+      });
     },
-    
-
     // live 정보
     getLive: function () {
       rest

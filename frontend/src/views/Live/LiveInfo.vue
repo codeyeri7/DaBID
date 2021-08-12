@@ -193,24 +193,23 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      if (live.liveTitle) {
-        rest.axios({
+      rest.
+        axios({
           method: 'post',
           url: '/dabid/live/',
           data: live,
           headers: this.setToken()
         })
-          .then((res) => {
-            console.log(this.date)
-            console.log(this.time)
-            console.log(this.$refs.form)
-            console.log(res)
-            this.$router.push({ name: 'MyLiveList' })
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
+        .then((res) => {
+          console.log(this.date)
+          console.log(this.time)
+          console.log(this.$refs.form)
+          console.log(res)
+          this.$router.push({ name: 'MyLiveList' })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     setDate() {
       this.date = this.date +" "+ this.time

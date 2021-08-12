@@ -27,7 +27,7 @@ public class QSession extends EntityPathBase<Session> {
 
     public final StringPath sessionToken = createString("sessionToken");
 
-    public final ComparablePath<Character> userId = createComparable("userId", Character.class);
+    public final StringPath userId = createString("userId");
 
     public QSession(String variable) {
         super(Session.class, forVariable(variable));

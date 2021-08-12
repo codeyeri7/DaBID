@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { OpenVidu } from 'openvidu-browsfer';
+import { OpenVidu } from 'openvidu-browser';
 import UserVideo from "../../components/UserVideo.vue"
 import axios from 'axios';
 import rest from "../../js/httpCommon.js"

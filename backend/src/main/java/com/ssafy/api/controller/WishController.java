@@ -7,11 +7,13 @@ import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -88,11 +90,11 @@ public class WishController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "삭제 성공"));
 	}
 
-//	@GetMapping("/best")
-//	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
-//	public ResponseEntity<?> bestLives() {
-//		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
-//		return ResponseEntity.status(200).body(liveList);
-//	}
+	@GetMapping("/best")
+	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
+	public ResponseEntity<?> bestLives() {
+		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
+		return ResponseEntity.status(200).body(liveList);
+	}
 
 }

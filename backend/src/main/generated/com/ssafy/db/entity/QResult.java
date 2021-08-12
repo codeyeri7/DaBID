@@ -28,6 +28,8 @@ public class QResult extends EntityPathBase<Result> {
 
     public final NumberPath<Integer> prdId = createNumber("prdId", Integer.class);
 
+    public final StringPath resBuyerId = createString("resBuyerId");
+
     public final NumberPath<Integer> resPriceEnd = createNumber("resPriceEnd", Integer.class);
 
     public final QUser user;

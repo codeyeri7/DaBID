@@ -4,21 +4,10 @@
       <v-card class="mx-auto" width="500">
         <v-container fluid>
           <div>
-            <span
-              style="
-                font-family: 'PT Serif', serif;
-                font-size: 20px;
-                margin-bottom: 20px;
-              "
-              ><b>My Wish List</b></span
-            >
+            <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My Wish List</b></span>
           </div>
           <v-row dense>
-            <MyLiveListCard
-              v-for="(live, idx) in lives"
-              :key="idx"
-              :live="live"
-            />
+            <MyWishLiveCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
           </v-row>
         </v-container>
       </v-card>
@@ -26,14 +15,16 @@
   </div>
 </template>
 
+
+
 <script>
-import MyLiveListCard from "../../components/MyLiveListCard.vue";
+import MyWishLiveCard from "../../components/MyWishLiveCard.vue";
 import rest from "../../js/httpCommon.js";
 
 export default {
   name: "MyWishList",
   components: {
-    MyLiveListCard,
+    MyWishLiveCard,
   },
   data: function () {
     return {

@@ -201,6 +201,8 @@ export default {
           headers: this.setToken()
         })
           .then((res) => {
+            console.log(this.date)
+            console.log(this.time)
             console.log(this.$refs.form)
             console.log(res)
             this.$router.push({ name: 'MyLiveList' })

@@ -1,4 +1,4 @@
-//package com.ssafy.api.controller;
+package com.ssafy.api.controller;
 //
 //import com.ssafy.api.service.ChatService;
 //import com.ssafy.db.entity.Chat;
@@ -48,3 +48,25 @@
 //
 //
 ////}
+
+import com.ssafy.db.vo.ChatMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.stereotype.Controller;
+
+// import 생략...
+
+@RequiredArgsConstructor
+@Controller
+public class ChatController {
+
+    private final SimpMessageSendingOperations messagingTemplate;
+
+    @MessageMapping("/chat/message")
+    public void message(ChatMessage message) {
+        if (ChatMessage.MessageType.JOIN.equals(message.getType()))
+            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+    }
+}

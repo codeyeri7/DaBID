@@ -24,7 +24,7 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final ListPath<Chat, QChat> chatlist = this.<Chat, QChat>createList("chatlist", Chat.class, QChat.class, PathInits.DIRECT2);
 
-    public final NumberPath<Integer> chatroomId = createNumber("chatroomId", Integer.class);
+    public final NumberPath<Integer> chatRoomId = createNumber("chatRoomId", Integer.class);
 
     public final QResult result;
 

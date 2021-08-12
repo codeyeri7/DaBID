@@ -50,7 +50,7 @@ import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://52.78.142.145:443";
+const OPENVIDU_SERVER_URL = "https://ec2-52-78-142-145.ap-northeast-2.compute.amazonaws.com:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {

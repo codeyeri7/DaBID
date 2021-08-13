@@ -55,6 +55,7 @@ public class LiveController {
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "라이브 생성에 실패했습니다."));
 	}
+
 	@PutMapping("/{prdId}")
 	@ApiOperation(value = "라이브 수정",
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 수정한다.")

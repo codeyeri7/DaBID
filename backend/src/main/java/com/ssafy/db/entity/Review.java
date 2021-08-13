@@ -24,5 +24,6 @@ public class Review {
     String reviewWriter;
     @Column(length = 100)
     String reviewContent;
+    @Column(name = "reviewDate", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Timestamp reviewDate;
 }

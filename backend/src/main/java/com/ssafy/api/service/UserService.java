@@ -2,10 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePatchReq;
-import com.ssafy.db.entity.Live;
-import com.ssafy.db.entity.Session;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.WishList;
+import com.ssafy.db.entity.*;
 
 import java.util.List;
 
@@ -18,6 +15,9 @@ public interface UserService {
 	User getUserByUserId(String userId);
 	void deleteUser(String userId);
 	boolean checkUser(String userId);
+
+	List<Review> checkReview(String userId);
+	void writeReview(int prdId, String reviewWriter, int addScore, String content);
 
 	List<Live> getMyLives(String userId);
 }

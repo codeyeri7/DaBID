@@ -48,6 +48,15 @@
           >
             Check your reviews
           </button>
+
+          <button
+            id="review-btn"
+            class="btn"
+            type="button"
+            @click="writeReviews()"
+          >
+            write your reviews
+          </button>
         </div>
         <v-divider dark></v-divider>
       </v-card>
@@ -68,6 +77,8 @@ export default {
       person: null,
       userName: "",
       userScore: "",
+
+      reviews: [],
     };
   },
   methods: {
@@ -98,20 +109,23 @@ export default {
     },
     //review list로 페이지 전환
     checkReviews: function () {
+      //남이 나에게 써준 리뷰
       rest
         .axios({
           method: "get",
-          url: "/dabid/users/writeReview",
-          headers: this.setToken(),
+          url: `/dabid/users/checkReview/${this.person.userId}`,
         })
         .then((res) => {
-          this.person = res.data;
-          console.log(res.data);
-          this.$router.push({ name: "ReviewList" });
+          this.reviews = res.data;
+          console.log(this.reviews);
+          //this.$router.push({ name: "ReviewCreate" });
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    writeReviews: function () {
+      this.$router.push({ name: "ReviewCreate" });
     },
   },
   created: function () {

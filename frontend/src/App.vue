@@ -14,6 +14,7 @@
 
         <v-spacer></v-spacer>
         <!-- 우상단 더치트 링크 --> 
+        
       
         <!-- 지운 검색창 --> 
         <!-- <v-text-field
@@ -37,7 +38,7 @@
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/Home.png" width="40" style="margin-left:50px; margin-top:7px">
         </RouterLink>
-        <RouterLink :to="{ name: 'Chathome' }">
+        <RouterLink :to="{ name: 'Chatlist' }">
           <img src="@/assets/Chat.png" width="30" style="margin-left:35px;margin-top:7px">
         </RouterLink>
         <RouterLink :to="{ name: 'AllLiveList' }">

@@ -70,7 +70,8 @@ public class LiveServiceImpl implements LiveService {
 		live.setLiveDesc(liveInfo.getLiveDesc());
 
 		String liveDate = liveInfo.getLiveDate() + " " + liveInfo.getLiveTime() + ":00";
-		System.out.println("");
+		System.out.println(liveInfo.getPrdPhoto());
+		System.out.println(liveInfo.getPrdCategory());
 		Timestamp timestamp = Timestamp.valueOf(liveDate);
 		live.setLiveDate(timestamp);
 

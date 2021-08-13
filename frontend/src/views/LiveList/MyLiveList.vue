@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
     <div class="main-card">
-      <v-card class="mx-auto" width="500">
+      <v-card class="mx-auto">
         <v-tabs
           v-model="tabs"
           color="deep-purple accent-4"

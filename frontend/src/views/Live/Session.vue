@@ -1,90 +1,81 @@
 <template>
-  <div class="container">
-      <!-- openvidu --> 
-    <div id="join" v-if="!session">
+	<div id="main-container" class="container">
+		<div id="join" v-if="!session">
 			<div id="join-dialog" class="jumbotron vertical-center">
 				<h1>Live</h1>
 				<div class="form-group">
-					<div>
-						<label>Seller</label>
-						<h5>{{ userName }}</h5>
-					</div>
-					<div>
+					<p>
+						<label>Participant</label>
+						<input v-model="myUserName" class="form-control" type="text" required>
+					</p>
+					<p>
 						<label>Session</label>
-						<h5>{{ liveTitle }}</h5>
-					</div>
-					<div>
-						<label>Live Description</label>
-						<h5>{{ liveInfo.liveDesc }}</h5>
-					</div>
+						<input v-model="mySessionId" class="form-control" type="text" required>
+					</p>
 					<p class="text-center">
-						<button class="btn btn-lg btn-success" @click="joinSession()">입장하기</button>
+						<button class="btn btn-lg btn-success" @click="joinSession()">Join!</button>
 					</p>
 				</div>
 			</div>
 		</div>
 
-		<!-- session live 화면 --> 
 		<div id="session" v-if="session">
 			<div id="session-header">
-				<h1 id="session-title">{{ liveTitle }}</h1>
-				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave live">
+				<h1 id="session-title">{{ liveInfo.liveTitle }}</h1>
+				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
 			</div>
 			<div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
 			</div>
-			<!-- video 중복 --> 
 			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
 		</div>
-  </div>
+	</div>
 </template>
 
 <script>
-import { OpenVidu } from 'openvidu-browser';
-import UserVideo from "../../components/UserVideo.vue"
 import axios from 'axios';
+import { OpenVidu } from 'openvidu-browser';
+import UserVideo from '../../components/UserVideo.vue';
 import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://ec2-52-78-142-145.ap-northeast-2.compute.amazonaws.com:443";
+const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-    name: 'session',
-    components: {
+	name: 'App',
+
+	components: {
 		UserVideo,
 	},
-    data() {
-        return {
-            // OpenVidu objects
-            OV: undefined,
-            session: undefined,
-            publisher: undefined, // Local
-            subscribers: [], // Remotes
 
-            // liveInfo 받아오고 title, userName만 저장 
-			liveInfo: null,
-            liveTitle: '',
-            userName: '',
+	data () {
+		return {
+			OV: undefined,
+			session: undefined,
+			mainStreamManager: undefined,
+			publisher: undefined,
+			subscribers: [],
+
+			liveInfo: '',
 			prdId: '',
+			mySessionId: '',
+			myUserName: '',
+		}
+	},
 
-            // Main video of the page, will be 'publisher' or one of the 'subscribers',
-            // updated by click event in UserVideoComponent children
-            mainStreamManager: undefined,
-        }
-    },
-    methods: {
-         // openvidu
-    joinSession () {
+	methods: {
+		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
 			// --- Init a session ---
 			this.session = this.OV.initSession();
+
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
@@ -110,8 +101,8 @@ export default {
 
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
-			this.getToken(this.liveTitle).then(token => {
-				this.session.connect(token, { clientData: this.userName })
+			this.getToken(this.mySessionId).then(token => {
+				this.session.connect(token, { clientData: this.myUserName })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -141,7 +132,8 @@ export default {
 
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
-    leaveSession () {
+
+		leaveSession () {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
 			if (this.session) this.session.disconnect();
 
@@ -153,14 +145,30 @@ export default {
 
 			window.removeEventListener('beforeunload', this.leaveSession);
 		},
-	updateMainVideoStreamManager (stream) {
-		if (this.mainStreamManager === stream) return;
-		this.mainStreamManager = stream;
-	},
-    getToken (liveTitle) {
-			return this.createSession(liveTitle).then(sessionId => this.createToken(sessionId));
+
+		updateMainVideoStreamManager (stream) {
+			if (this.mainStreamManager === stream) return;
+			this.mainStreamManager = stream;
 		},
-    createSession (sessionId) {
+
+		/**
+		 * --------------------------
+		 * SERVER-SIDE RESPONSIBILITY
+		 * --------------------------
+		 * These methods retrieve the mandatory user token from OpenVidu Server.
+		 * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
+		 * the API REST, openvidu-java-client or openvidu-node-client):
+		 *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+		 *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
+		 *   3) The Connection.token must be consumed in Session.connect() method
+		 */
+
+		getToken (mySessionId) {
+			return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
+		},
+
+		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
+		createSession (sessionId) {
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
@@ -186,7 +194,9 @@ export default {
 					});
 			});
 		},
-    createToken (sessionId) {
+
+		// See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
+		createToken (sessionId) {
 			return new Promise((resolve, reject) => {
 				axios
 					.post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
@@ -200,7 +210,7 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
-	getLiveInfo () {
+		getLiveInfo () {
 		rest.axios({
           method: 'get',
           url:  `/dabid/live/${this.prdId}`,
@@ -209,14 +219,14 @@ export default {
             console.log('방송 정보', res.data)
             this.liveInfo = res.data
 			// 방송 제목과  받아오기
-			this.liveTitle = res.data.liveTitle
-			this.userName = this.liveInfo.user.userName
+			this.mySessionId = this.prdId + ''
+			this.myUserName = localStorage.getItem('userName')
           })
           .catch((err) => {
             console.log('라이브 정보 받아오기 오류: ' + err)
           })
 		}
-    },
+	},
 	created: function () {
 		this.prdId = this.$route.params.prdId
 		console.log(this.prdId+ '번 방송입니다.')
@@ -224,7 +234,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-
-</style>

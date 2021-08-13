@@ -24,11 +24,7 @@
 <script>
 import axios from 'axios'
 import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client' 
-
-var sock = new SockJS("/ws-stomp");
-var ws = Stomp.over(sock);
-var reconnect = 0;
+import Stomp from 'webstomp-client'
 
 export default {
   data() {
@@ -37,44 +33,64 @@ export default {
       room: {},
       sender: '',
       message: '',
-      messages: []
+      messages: [],
+      stompClient: undefined
     }
   },
   created() {
-    this.roomId = localStorage.getItem('wschat.roomId');
-    this.sender = localStorage.getItem('wschat.sender');
+    this.roomId = this.$route.params.roomId;
+    this.sender = this.$route.params.sender;
     this.findRoom();
+    this.connect();
   },
   methods: {
     findRoom: function() {
-        axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+      axios.get('https://localhost:8080/dabid/chat/room/'+this.roomId).then(response => { this.room = response.data; });
     },
     sendMessage: function() {
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));
-        this.message = '';
+      let chat =  {
+        "type": 'TALK',
+        "roomId": this.roomId,
+        "sender": this.sender,
+        "message": this.message
+      };
+      this.stompClient.send("/pub/chat/message/", JSON.stringify(chat), {});
+      this.message = '';
     },
-    recvMessage: function(recv) {
-        this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+    // recvMessage: function(recv) {
+      // unshift: 배열 앞에 새로운 값 추가
+      // this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+      // this.messages.push({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+    // },
+    connect() {
+      const endPoint = "/ws-stomp";
+      let sock = new SockJS(endPoint);
+      let stompClient = Stomp.over(sock);
+      console.log(stompClient);
+      // let reconnect = 0;
+      // pub/sub event
+      stompClient.connect({}, function(frame) {
+        console.log('Connected: ', frame);
+        stompClient.subscribe("/sub/chat/room/", (res) => {
+          var recv = JSON.parse(res.body);
+          this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
+          // this.recvMessage(recv);
+        });
+        // stompClient.send("/pub/chat/message/", JSON.stringify({'type':'ENTER', 'roomId':this.roomId, 'sender':this.sender}), {});
+      }.bind(this), function(error) {
+        console.log("소켓 연결 실패", error)
+        // if(reconnect++ <= 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     sock = new SockJS("/ws-stomp");
+        //     ws = Stomp.over(sock);
+        //     this.connect();
+        //   },10*1000);
+        // }
+      });
+      this.stompClient = stompClient;
     }
   },
-  connect() {
-    // pub/sub event
-    ws.connect({}, function(frame) {
-      ws.subscribe("/sub/chat/room/"+ vm.$data.roomId, function(message) {
-          var recv = JSON.parse(message.body);
-          vm.recvMessage(recv);
-      });
-      ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));
-    }, function(error) {
-      if(reconnect++ <= 5) {
-        setTimeout(function() {
-          console.log("connection reconnect");
-          sock = new SockJS("/ws-stomp");
-          ws = Stomp.over(sock);
-          this.connect();
-        },10*1000);
-      }
-    });
-  }
 }
+
 </script>

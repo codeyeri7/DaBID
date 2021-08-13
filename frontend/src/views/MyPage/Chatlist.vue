@@ -37,16 +37,16 @@ export default {
   },
   methods: {
     findAllRoom: function() {
-      axios.get('/dabid/chat/rooms').then(response => { this.chatrooms = response.data; });
+      axios.get('https://localhost:8080/dabid/chat/rooms').then(response => { this.chatrooms = response.data; });
     },
     createRoom: function() {
       if("" === this.room_name) {
         alert("방 제목을 입력해 주십시요.");
         return;
       } else {
-          var params = new URLSearchParams();
-          params.append("name",this.room_name);
-          axios.post('/dabid/chat/room', params)
+          // var params = new URLSearchParams();
+          // params.append("name",this.room_name);
+          axios.post('https://localhost:8080/dabid/chat/room/' + this.room_name)
           .then(
             response => {
               alert(response.data.name+"방 개설에 성공하였습니다.")
@@ -60,9 +60,16 @@ export default {
     enterRoom: function(roomId) {
       var sender = prompt('대화명을 입력해 주세요.');
       if(sender != "") {
-        localStorage.setItem('wschat.sender',sender);
-        localStorage.setItem('wschat.roomId',roomId);
-        location.href="/chat/room/enter/"+roomId;
+        // localStorage.setItem('wschat.sender',sender);
+        // localStorage.setItem('wschat.roomId',roomId);
+        // location.href="/chat/room/enter/"+roomId;
+        this.$router.push({
+          name: "Chatroom",
+          params: {
+            sender: sender,
+            roomId: roomId,
+          }
+        })
       }
     }
   }

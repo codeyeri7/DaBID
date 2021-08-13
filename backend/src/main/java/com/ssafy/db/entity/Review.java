@@ -2,6 +2,8 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,9 +18,12 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    User user;
+    private User user;
 
+    @Column(length = 14)
     String reviewWriter;
+    @Column(length = 100)
     String reviewContent;
+    @Column(name = "reviewDate", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     Timestamp reviewDate;
 }

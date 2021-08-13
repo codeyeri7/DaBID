@@ -10,17 +10,36 @@ import lombok.Setter;
 /**
  * 유저 로그인 API ([POST] /api/v1/auth) 요청에 대한 응답값 정의.
  */
+//@Getter
+//@Setter
+//@ApiModel("UserLoginPostResponse")
+//public class UserLoginPostRes extends BaseResponseBody{
+//	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
+//	String accessToken;
+//
+//	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken) {
+//		UserLoginPostRes res = new UserLoginPostRes();
+//		res.setStatusCode(statusCode);
+//		res.setMessage(message);
+//		res.setAccessToken(accessToken);
+//		return res;
+//	}
+//}
+
+
 @Getter
 @Setter
 @ApiModel("UserLoginPostResponse")
-public class UserLoginPostRes extends BaseResponseBody{
+public class UserLoginPostRes {
+	String userId;
 	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
 	String accessToken;
-	
-	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken) {
+	String userName;
+
+	public static UserLoginPostRes of(String userId, String userName, String accessToken) {
 		UserLoginPostRes res = new UserLoginPostRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
+		res.setUserId(userId);
+		res.setUserName(userName);
 		res.setAccessToken(accessToken);
 		return res;
 	}

@@ -1,13 +1,23 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserUpdatePatchReq;
-import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.AuthRepository;
+import com.ssafy.db.repository.LiveRepository;
+import com.ssafy.db.repository.ReviewRepository;
+import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.repository.UserRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -16,23 +26,27 @@ import com.ssafy.db.repository.UserRepository;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
-	
+	@Autowired
+	ReviewRepository reviewRepository;
+	@Autowired
+	LiveRepository liveRepository;
+
 //	@Autowired
 ////	UserRepositorySupport userRepositorySupport;
 //
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
+//	@Autowired
+//	PasswordEncoder passwordEncoder;
+
 	@Override
-	public User createUser(UserRegisterPostReq userRegisterInfo) {
+	public List<Live> getMyLives(String userId) {
+		User user = getUserByUserId(userId);
+		return user.getLiveList();
+	}
+
+	@Override
+	public User createUser(String userName) {
 		User user = new User();
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-//		user.setDepartment(userRegisterInfo.getDepartment());
-//		user.setName(userRegisterInfo.getName());
-//		user.setPosition(userRegisterInfo.getPosition());
-//		user.setUserId(userRegisterInfo.getUserId());
-//
-//		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
+		user.setUserName(userName);
 
 		return userRepository.save(user);
 	}
@@ -63,6 +77,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<Review> checkReview(String userId) {
+		User user = getUserByUserId(userId);
+		List<Review> reviewList = reviewRepository.findByUser(user).orElse(null);
+		return reviewList;
+	}
+
+	@Override
+	public void writeReview(int prdId, String reviewWriter, int addScore, String content){
+		Live live = liveRepository.findByPrdId(prdId).orElse(null);
+		User user = live.getUser();
+
+		//리뷰작성
+		Review review = new Review();
+		review.setUser(user);
+		review.setReviewWriter(reviewWriter);
+		review.setReviewContent(content);
+		reviewRepository.save(review);
+
+		//평점 변경
+		user.setUserScore(user.getUserScore()+addScore);
+	}
+
+	@Override
 	public User getUserByUserId(String userId) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
 		//User user = userRepositorySupport.findUserByUserId(userId).get();
@@ -70,4 +107,5 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserId(userId).orElse(null);
 		return user;
 	}
+
 }

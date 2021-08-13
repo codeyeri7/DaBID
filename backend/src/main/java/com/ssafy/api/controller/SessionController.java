@@ -1,8 +1,11 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.response.LiveRes;
+import com.ssafy.api.service.LiveService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import io.openvidu.java.client.*;
 import io.swagger.annotations.*;
@@ -27,6 +30,9 @@ public class SessionController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	LiveService liveService;
+
 	/**
 	 * 라이브 세션 참여/떠나기 관련 Controller
 	 */
@@ -45,12 +51,13 @@ public class SessionController {
 	private String SECRET;
 
 	public SessionController(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
+		System.out.println("ddd"+secret+" "+openviduUrl);
 		this.SECRET = secret;
 		this.OPENVIDU_URL = openviduUrl;
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 	}
 
-	@PostMapping("/session/{prdId}/{userId}")
+	@PostMapping("/session/{prdId}")
 	@ApiOperation(value = "세션 생성 혹은 참가",
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 생성, 세션 생성 혹은 참가.")
 	@ApiResponses({
@@ -59,18 +66,21 @@ public class SessionController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<?> joinSession(@PathVariable @ApiParam(name="prdId") int prdId,
-							  @PathVariable String userId) {
+										 @ApiIgnore Authentication authentication) {
+
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
 
 		// 여기부터
 		User user = userService.getUserByUserId(userId);	// userId로 user 검색
 		String userName = user.getUserName();
-		String liveTitle = "testLive";
-		OpenViduRole role;
-		if (userId.equals("1")) {
-			role = OpenViduRole.PUBLISHER;
-		} else {
-			role = OpenViduRole.SUBSCRIBER;
-		}
+		//String liveTitle = "testLive";
+//		OpenViduRole role;
+//		if (userId.equals("test123")) {
+//			role = OpenViduRole.SUBSCRIBER;
+//		} else {
+//			role = OpenViduRole.PUBLISHER;
+//		}
 		// 여기까지 테스트를 위한 코드
 
 //		// 1. Authentication에서 가져오기
@@ -83,22 +93,25 @@ public class SessionController {
 //		String userName  = user.getUserName();
 ////		System.out.println("Getting sessionId and token | {sessionName}={" + sessionName + "}");
 //
-//		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
-//		Live live =  liveService.getLiveByPrdId(prdId);
-//		// live테이블에서 라이브 제목 얻기
-//		String liveTitle = live.getLiveTitle();
-//
-//		// 세션 참가자 역할 (PUBLISHER or SUBSCRIBER)
-//		OpenViduRole role;
-//		// 라이브 테이블의 판매자 고유 아이디 조회
-//		if (userId.equals(live.getPrdSellerId())) {
-//			// 판매자일 경우
-//			role = OpenViduRole.PUBLISHER;
-//
-//		} else {
-//			// 구매자일 경우
-//			role = OpenViduRole.SUBSCRIBER;
-//		}
+		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
+		Live live =  liveService.getLiveByPrdId(prdId);
+		// live테이블에서 라이브 제목 얻기
+		String liveTitle = live.getLiveTitle();
+
+		// 세션 참가자 역할 (PUBLISHER or SUBSCRIBER)
+		OpenViduRole role;
+		String userRole;
+		// 라이브 테이블의 판매자 고유 아이디 조회
+		if (userId.equals(live.getUser().getUserId())) {
+			// 판매자일 경우
+			role = OpenViduRole.PUBLISHER;
+			userRole = "PUBLISHER";
+
+		} else {
+			// 구매자일 경우
+			role = OpenViduRole.SUBSCRIBER;
+			userRole = "SUBSCRIBER";
+		}
 
 		// 화상미팅에 연결할 때 다른 유저들에게 전송되는 데이터 (optional) - JSON 형식
 		String serverData = "{\"serverData\": \"" + userId + "\"}";
@@ -118,9 +131,10 @@ public class SessionController {
 				this.mapSessionNamesTokens.get(liveTitle).put(token, role);
 
 				// LiveRes에 정보들 입력하기(라이브 제목, 토큰, 사용자이름, 사용자 아이디)
-				return ResponseEntity.status(200).body(LiveRes.of(liveTitle, token, userName, userId));
+				return ResponseEntity.status(200).body(LiveRes.of(liveTitle, token, userName, userId, userRole));
 
 			} catch (Exception e) {
+				this.mapSessions.remove(liveTitle);
 				return ResponseEntity.status(200).body(BaseResponseBody.of(400, "세션은 있고 오류 발생"));
 			}
 		} else {
@@ -128,7 +142,9 @@ public class SessionController {
 //			System.out.println("New session " + liveTitle);
 			try {
 				// OpenVidu 세션 생성
+				System.out.println(liveTitle+" "+userName+" "+userId);
 				Session session = this.openVidu.createSession();
+
 				// 위에서 생성한 connectionProperties로 새로운 토큰 생성
 				String token = session.createConnection(connectionProperties).getToken();
 
@@ -138,9 +154,10 @@ public class SessionController {
 				this.mapSessionNamesTokens.get(liveTitle).put(token, role);
 
 				// LiveRes에 정보들 입력하기(라이브 제목, 토큰, 사용자이름, 사용자 아이디)
-				return ResponseEntity.status(200).body(LiveRes.of(liveTitle, token, userName, userId));
+				return ResponseEntity.status(200).body(LiveRes.of(liveTitle, token, userName, userId, userRole));
 
 			} catch (Exception e) {
+				System.out.println(e.getMessage());
 				return ResponseEntity.status(200).body(BaseResponseBody.of(400, "세션 없고 오류 발생"));
 			}
 		}
@@ -192,4 +209,4 @@ public class SessionController {
 //		}
 //	}
 
-}
+}//

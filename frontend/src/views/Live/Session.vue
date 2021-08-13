@@ -1,42 +1,167 @@
 <template>
-  <div id="live">
-				<div id="live-header">
-					<h1 th:text="${liveTitle}" id="live-title"></h1>
-					<form action="/leave-live" method="post">
-						<input type="hidden" name="live-name" th:value="${liveTitle}">
-						<input type="hidden" name="token" th:value="${token}">
-						<button id="buttonLeavelive" class="btn btn-large btn-danger" type="submit" onclick="leavelive()">
-							Leave live</button>
-					</form>
+	<div id="main-container" class="container">
+		<div id="join" v-if="!session">
+			<div id="join-dialog" class="jumbotron vertical-center">
+				<h1>Live 입장하기</h1>
+				<div class="form-group">
+					<p>
+						<label id="eng-font">Live Title</label>
+						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
+					</p>
+					<p>
+						<label id="eng-font">Live Info</label>
+						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
+					</p>
+					<hr>
+					<p class="text-center">
+						<button class="btn btn-lg btn-success" id="eng-font" @click="joinSession()">Join!</button>
+						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다.</h5>
+					</p>
 				</div>
-				<div class="container">
-					
-				</div>
-				<div id="main-video" class="col-md-6">
-					<p class="userName"></p>
-					<p class="userId"></p>
-					<video autoplay="autoplay" playsinline="true"></video>
-				</div>
-				<div id="video-container" class="col-md-6"></div>
 			</div>
+		</div>
+
+		<div id="session" v-if="session">
+			<div id="session-header">
+				<v-card
+					class="mx-auto"
+					max-height="150"
+					outlined
+				>
+					<v-list-item three-line>
+					<v-list-item-content>
+						<div class="text-overline mb-2">
+						{{ liveInfo.productCategory.prdCategoryName }}
+						</div>
+						<v-list-item-title class="text-h6 mb-1">
+						{{ liveInfo.liveTitle }}
+						</v-list-item-title>
+						<v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
+					</v-list-item-content>
+
+					<v-list-item-avatar
+						tile
+						size="70"
+						@click="goProfile()"
+					><img src="@/assets/profileImg.jpg" alt="profile image"/></v-list-item-avatar>
+					</v-list-item>
+				</v-card>
+			</div>
+				<div style="margin-left: 1.2rem">
+					<span id="currentPrice">현재가: {{ currentPrice | comma }}</span>
+					<!-- leave session --> 
+					<img class="btn" @click="leaveSession" src="@/assets/leave.png" alt="leave Session" style="width:20%; margin-left: 5.5rem">	
+				</div>
+			
+			<div id="main-video" class="col-md-6">
+				<user-video :stream-manager="mainStreamManager"/>
+			</div>
+			<!-- <div id="video-container" class="col-md-6">
+				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+			</div> -->
+			
+			<div class="chat">
+				<div>
+					<p v-for="(chat, idx) in chatList" :key="idx" v-text="chat"></p>
+				</div>
+
+				<input type="text" size="20" v-model="chatMsg" placeholder="질문을 남겨주세요">
+				<button class="btn btn-primary" @click="sendMsg()" @keyup.enter="submit">전송</button>
+				<br>
+				<input type="text" size="20" v-model="bid" placeholder="금액을 입력하세요">
+				<span>원</span>
+				<button class="btn btn-danger" @click="bidding()">입찰</button>
+			</div>
+		</div>
+	</div>
 </template>
 
-<script th:inline="javascript">
+<script>
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
+import UserVideo from '../../components/UserVideo.vue';
+import rest from "../../js/httpCommon.js"
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-	data() {
-		return {
-			receivedData: '',
-		};
+	name: 'App',
+
+	components: {
+		UserVideo,
 	},
-	methods:{
+
+	data () {
+		return {
+			OV: undefined,
+			session: undefined,
+			mainStreamManager: undefined,
+			publisher: undefined,
+			subscribers: [],
+
+			liveInfo: '',
+			prdId: '',
+			mySessionId: '',
+			myUserName: '',
+
+			chatMsg: '',
+			chatList: [],
+
+			bid: '',
+			currentPrice: 0,
+		}
+	},
+
+	methods: {
+		filters: {
+			comma: function (value) {
+				return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+		},
+		sendMsg() {
+			return new Promise((resolve, reject) => {
+				axios({
+					method: "post",
+					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
+					auth: {
+						username: 'OPENVIDUAPP',
+						password: OPENVIDU_SERVER_SECRET,
+					},
+					data: {
+						session: this.mySessionId,
+						data: this.chatMsg,
+						type: "CHAT",
+					}
+				})
+				.then(response => response.data)
+				.then(data => resolve(data.token))
+				.catch(error => reject(error.response));
+			});
+		},
+		bidding() {
+			return new Promise((resolve, reject) => {
+				axios({
+					method: "post",
+					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
+					auth: {
+						username: 'OPENVIDUAPP',
+						password: OPENVIDU_SERVER_SECRET,
+					},
+					data: {
+						session: this.mySessionId,
+						data: this.bid,
+						type: "BID",
+					}
+				})
+				.then(response => response.data)
+				.then(data => resolve(data.token))
+				.catch(error => reject(error.response));
+			});
+		},
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
@@ -70,6 +195,27 @@ export default {
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.mySessionId).then(token => {
+
+				// // Receiver of the message (usually before calling 'session.connect')
+				// this.session.on('signal:my-chat', (event) => {
+				// 	console.log(event.data); // Message
+				// 	console.log(event.from); // Connection object of the sender
+				// 	console.log(event.type); // The type of message ("my-chat")
+				// });
+
+				// Receiver of all messages (usually before calling 'session.connect')
+				this.session.on('signal', (event) => {
+					console.log(event.type + ": ")
+					console.log(event.data); // Message
+					if (event.type === "signal:BID") {
+						this.currentPrice = event.data;
+					} else {
+						this.chatList.push(event.data);
+					}
+					// console.log(event.from); // Connection object of the sender
+					// console.log(event.type); // The type of message
+				});
+
 				this.session.connect(token, { clientData: this.myUserName })
 					.then(() => {
 
@@ -110,8 +256,8 @@ export default {
 			this.publisher = undefined;
 			this.subscribers = [];
 			this.OV = undefined;
-
 			window.removeEventListener('beforeunload', this.leaveSession);
+			this.$router.push({ name: "Main" });
 		},
 
 		updateMainVideoStreamManager (stream) {
@@ -178,10 +324,45 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},
+		getLiveInfo () {
+			rest.axios({
+			method: 'get',
+			url:  `/dabid/live/${this.prdId}`,
+			})
+			.then((res) => {
+				console.log('방송 정보', res.data)
+				this.liveInfo = res.data
+				// 방송 제목과  받아오기
+				this.mySessionId = this.prdId + ''
+				this.myUserName = localStorage.getItem('userName')
+			})
+			.catch((err) => {
+				console.log('라이브 정보 받아오기 오류: ' + err)
+			})
+		},
+		goProfile () {
+			this.$router.push({ name: "MyPage" });
+		}
+	},
+	created: function () {
+		this.prdId = this.$route.params.prdId
+		console.log(this.prdId+ '번 방송입니다.')
+		this.getLiveInfo()
 	}
 }
-
 </script>
+<style scoped>
+.form-group {
+	margin-top :2rem;
+	margin-left: 1rem;
+}
+#currentPrice {
+	font-size: 1rem;
+	color: red;
+	font-weight: bold;
+	width: 50%;
+	margin-top: 2rem;
+	text-align: center;
+}
 
-<style>
 </style>

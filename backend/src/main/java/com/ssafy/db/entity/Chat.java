@@ -16,11 +16,18 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatId;
+
     private Timestamp chatDate;
+
+    @Column(length = 200)
     private String chatContent;
+
     private String chatFrom;
+//
+//    @Column(name = "chat_room_id",insertable=false, updatable=false)
+//    private int chatRoomId;
 
     @ManyToOne // 다대일 관계의 연관 관계
-    @JoinColumn(name = "chatroom_id") // ChatRoom entity의 PK인 chatroom_id과 참조관계 mapping
+    @JoinColumn(name = "chat_room_id") // ChatRoom entity의 PK인 chatroom_id과 참조관계 mapping
     private ChatRoom chatRoom;
 }

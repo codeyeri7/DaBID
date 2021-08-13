@@ -1,12 +1,12 @@
 <template>
 <div v-if="streamManager">
 	<ov-video :stream-manager="streamManager"/>
-	<div><p>{{ clientData }}</p></div>
+	<!-- <div><p>{{ clientData }}</p></div> -->
 </div>
 </template>
 
 <script>
-import OvVideo from './OvVideo';
+import OvVideo from './OvVideo.vue';
 
 export default {
 	name: 'UserVideo',

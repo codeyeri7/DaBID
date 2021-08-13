@@ -3,6 +3,7 @@
     <img src="" alt="" />
     <v-text>live.prdName</v-text>
     <v-text>낙찰가</v-text>
+    <v-text>{{ this.live }}</v-text>
     <v-divider></v-divider>
     <v-text>Q1. 라이브는 문제없이 진행됐나요?</v-text>
     <v-btn
@@ -90,10 +91,8 @@ import rest from "../../js/httpCommon.js";
 export default {
   data() {
     return {
-      //prdId : this.prdId
-      prdId: 9,
+      live: [],
       content: "",
-      userscore: 4,
       clicked1: false,
       clicked2: false,
       clicked3: false,
@@ -103,7 +102,29 @@ export default {
     };
   },
   methods: {
-    createReview() {
+    setToken: function () {
+      const jwtToken = localStorage.getItem("jwt");
+      const config = {
+        Authorization: `Bearer ${jwtToken}`,
+      };
+      return config;
+    },
+    getLive: function () {
+      const prdId = this.$route.params.prdId
+      rest.axios({
+        method: 'get',
+        url: `/dabid/live/${prdId}`,
+        headers: this.setToken()
+      })
+        .then((res) => {
+          this.live = res.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    createReview: function () {
+      const config = this.setToken()
       const review = {
         //userId: localStorage.getItem("userId"),
         userId: "P1628213340945",
@@ -114,21 +135,22 @@ export default {
       console.log(this.userscore);
       if (this.userscore > 0 || this.userscore < 0) {
         console.log("등록시작"),
-          console.log(this.review),
-          rest
-            .axios({
-              method: "post",
-              //url: `/dabid/users/${this.prdId}`,
-              url: "/dabid/users/writeReview/",
-              data: review,
-            })
-            .then((res) => {
-              console.log(res);
-              // this.$router.push({ name: "ReviewList" });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+        console.log(this.review),
+        rest
+          .axios({
+            method: "post",
+            //url: `/dabid/users/${this.prdId}`,
+            url: "/dabid/users/writeReview/",
+            data: review,
+            headers: config
+          })
+          .then((res) => {
+            console.log(res);
+            // this.$router.push({ name: "ReviewList" });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     //  if로 점수 추가할 때 참고하기...
@@ -139,6 +161,7 @@ export default {
         this.clicked5 == true
       ) {
         this.userscore += 1;
+        console.log(this.userscore)
       }
       if (
         this.clicked2 == true ||

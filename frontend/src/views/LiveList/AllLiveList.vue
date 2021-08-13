@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <h2 style="margin-left:30px">Top 2</h2>
     <!-- top2 carousel -->
     <v-row style="width: 90%; margin: auto; margin-bottom: 7%">
       <v-card
@@ -71,7 +72,7 @@
     <!-- 하단 all live 카드 -->
     <div style="font-family: 'InfinitySans-RegularA1'">
       <div class="main-card">
-        <v-card class="mx-auto" width="500">
+        <div class="mx-auto" width="500">
           <v-container fluid>
             <div>
               <span
@@ -88,7 +89,7 @@
               <div v-if="this.lives.length == 0">검색 결과가 없습니다.</div>
             </v-row>
           </v-container>
-        </v-card>
+        </div>
       </div>
     </div>
   </div>

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h2 style="margin-left: 40px; font-family: 'Lora', serif">
+    <!-- <h2 style="margin-left: 40px; font-family: 'Lora', serif">
       {{ person.userName }}'s Profile
-    </h2>
+    </h2> -->
 
-    <MyProfile />
+    <MyProfile/>
     <v-card class="mx-auto" max-width="300">
       <v-list>
         <v-list-item-group v-model="model">

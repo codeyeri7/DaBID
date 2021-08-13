@@ -1,7 +1,7 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
     <div class="main-card">
-      <v-card class="mx-auto">
+      <div class="mx-auto">
         <v-tabs
           v-model="tabs"
           color="deep-purple accent-4"
@@ -33,7 +33,7 @@
             </v-tab-item>
           </v-tabs-items>
         </v-tabs>
-      </v-card>
+      </div>
     </div>
   </div>
 </template>

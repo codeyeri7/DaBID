@@ -13,6 +13,54 @@
                 <span id="userName"
                   ><b>{{ userName }}</b></span
                 >
+                <v-dialog
+                  v-model="dialog"
+                  persistent
+                  max-width="600px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      icon
+                      color="black"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-container>
+                      <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
+                      <div style="font-family: 'IBMPlexSansKR-Regular';">
+                        <v-text-field
+                          v-model="person.userId"
+                          laber="User Id"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="person.userName"
+                          laber="User Name"
+                          required
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="person.userScore"
+                          laber="User Score"
+                          required
+                        ></v-text-field>
+                      </div>
+                    </v-container>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="nameUpdate()"
+                      >
+                        Save
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </div>
             </v-card-title>
           </v-col>
@@ -74,11 +122,11 @@ export default {
   },
   data: function () {
     return {
-      person: null,
+      person: [],
       userName: "",
       userScore: "",
-
       reviews: [],
+      nameChange: []
     };
   },
   methods: {
@@ -101,6 +149,7 @@ export default {
           this.userName = res.data.userName;
           this.userScore = res.data.userScore;
           console.log(res);
+          console.log(this.person)
           // this.$router.push({ name: "ReviewList" });
         })
         .catch((err) => {
@@ -126,6 +175,29 @@ export default {
     },
     writeReviews: function () {
       this.$router.push({ name: "ReviewCreate" });
+    },
+    nameUpdate: function () {
+      console.log(this.person)
+      const config = this.setToken()
+      rest.
+        axios({
+          method: 'patch',
+          url: `/dabid/users/${this.person.userName}`,
+          headers: config
+        })
+        .then((res) => {
+          this.nameChange = res.data
+          console.log('OK',this.nameChange)
+          console.log(res)
+          // this.refreshAll();
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    refreshAll: function () {
+      // 새로고침
+      this.$router.go();
     },
   },
   created: function () {

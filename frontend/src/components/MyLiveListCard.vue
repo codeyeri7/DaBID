@@ -137,8 +137,8 @@ export default {
             console.log('삭제 성공')
           })
           .catch((err) => {
-          console.log(err)
-        })
+            console.log(err)
+          })
       } else {
         alert('본인이 작성한 글만 삭제 가능합니다!')
       }

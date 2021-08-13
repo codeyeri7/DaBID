@@ -2,13 +2,13 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card class="section1">
+        <v-card height="300" tile :elevation="0">
           <!-- Image -->
           <v-img
             :src="live.live.prdPhoto"
             class="white--text align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="200px"
+            height="180px"
             style="padding: 40px"
             v-bind="attrs"
             v-on="on"
@@ -16,12 +16,11 @@
           >
           </v-img>
           <!-- 카드 하단-->
-          <v-card-subtitle class="text-subtitle-4 pt-2">{{
-            live.live.prdName | truncate(7, '...')
-          }}</v-card-subtitle>
-          <v-card-subtitle class="text-subtitle-4 pt-2">
-            시작가 | {{ live.live.prdPriceStart | comma }}원
-          </v-card-subtitle>
+          <div class="card-content" id="kor-font">
+              <v-card-title id="card-title">{{ live.live.prdName  | truncate(8, '...') }}</v-card-title><br>
+              <v-card-subtitle class="py-0">시작가 | {{ live.live.prdPriceStart | comma }}원</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.live.liveDate | truncate(10, '.') }}</v-card-subtitle>
+            </div>
         </v-card>
       </v-col>
     </template>

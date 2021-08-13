@@ -1,6 +1,6 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
-    <!-- carousel -->
+    <!-- carousel-->
     <v-carousel
       :continuous="false"
       :show-arrows="false"

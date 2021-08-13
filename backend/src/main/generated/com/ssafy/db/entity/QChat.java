@@ -32,8 +32,6 @@ public class QChat extends EntityPathBase<Chat> {
 
     public final QChatRoom chatRoom;
 
-    public final NumberPath<Integer> chatRoomId = createNumber("chatRoomId", Integer.class);
-
     public QChat(String variable) {
         this(Chat.class, forVariable(variable), INITS);
     }

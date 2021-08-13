@@ -16,7 +16,6 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer { //WebSo
     public void configureMessageBroker(MessageBrokerRegistry registry) { //MessageBrokerRegistry : 메세지 브로커 옵션을 설정한다
         registry.enableSimpleBroker("/sub"); // subscribe : /sub로 시작하는 목적지를 가진 메세지가 메세지브로커로 라우팅한다,topic으로 시작되는 메시지가 메세지브로커로 라우팅됨
         registry.setApplicationDestinationPrefixes("/pub"); // publish : destination이 /pub으로 된 메세지를 @Controller의 @MessageMapping으로 라우팅한다,message-handling methods로 라우팅됨
-
     }
 
     @Override

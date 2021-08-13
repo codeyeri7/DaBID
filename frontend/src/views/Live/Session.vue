@@ -22,6 +22,7 @@
 		<div id="session" v-if="session">
 			<div id="session-header">
 				<h1 id="session-title">{{ liveInfo.liveTitle }}</h1>
+				<p>현재가: {{ currentPrice }}</p>
 				<input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session">
 			</div>
 			<div id="main-video" class="col-md-6">
@@ -31,6 +32,16 @@
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
 				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
+			
+			<div>
+				<p v-for="(chat, idx) in chatList" :key="idx" v-text="chat"></p>
+			</div>
+
+			<input type="text" v-model="chatMsg">
+			<button @click="sendMsg()">전송</button>
+			
+			<input type="text" v-model="bid">
+			<button @click="bidding()">입찰</button>
 		</div>
 	</div>
 </template>
@@ -65,10 +76,56 @@ export default {
 			prdId: '',
 			mySessionId: '',
 			myUserName: '',
+
+			chatMsg: '',
+			chatList: [],
+
+			bid: '',
+			currentPrice: 0,
 		}
 	},
 
 	methods: {
+		sendMsg() {
+			return new Promise((resolve, reject) => {
+				axios({
+					method: "post",
+					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
+					auth: {
+						username: 'OPENVIDUAPP',
+						password: OPENVIDU_SERVER_SECRET,
+					},
+					data: {
+						session: this.mySessionId,
+						data: this.chatMsg,
+						type: "CHAT",
+					}
+				})
+				.then(response => response.data)
+				.then(data => resolve(data.token))
+				.catch(error => reject(error.response));
+			});
+		},
+		bidding() {
+			return new Promise((resolve, reject) => {
+				axios({
+					method: "post",
+					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
+					auth: {
+						username: 'OPENVIDUAPP',
+						password: OPENVIDU_SERVER_SECRET,
+					},
+					data: {
+						session: this.mySessionId,
+						data: this.bid,
+						type: "BID",
+					}
+				})
+				.then(response => response.data)
+				.then(data => resolve(data.token))
+				.catch(error => reject(error.response));
+			});
+		},
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
@@ -102,6 +159,27 @@ export default {
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.mySessionId).then(token => {
+
+				// // Receiver of the message (usually before calling 'session.connect')
+				// this.session.on('signal:my-chat', (event) => {
+				// 	console.log(event.data); // Message
+				// 	console.log(event.from); // Connection object of the sender
+				// 	console.log(event.type); // The type of message ("my-chat")
+				// });
+
+				// Receiver of all messages (usually before calling 'session.connect')
+				this.session.on('signal', (event) => {
+					console.log(event.type + ": ")
+					console.log(event.data); // Message
+					if (event.type === "signal:BID") {
+						this.currentPrice = event.data;
+					} else {
+						this.chatList.push(event.data);
+					}
+					// console.log(event.from); // Connection object of the sender
+					// console.log(event.type); // The type of message
+				});
+
 				this.session.connect(token, { clientData: this.myUserName })
 					.then(() => {
 
@@ -211,20 +289,20 @@ export default {
 			});
 		},
 		getLiveInfo () {
-		rest.axios({
-          method: 'get',
-          url:  `/dabid/live/${this.prdId}`,
-        })
-          .then((res) => {
-            console.log('방송 정보', res.data)
-            this.liveInfo = res.data
-			// 방송 제목과  받아오기
-			this.mySessionId = this.prdId + ''
-			this.myUserName = localStorage.getItem('userName')
-          })
-          .catch((err) => {
-            console.log('라이브 정보 받아오기 오류: ' + err)
-          })
+			rest.axios({
+			method: 'get',
+			url:  `/dabid/live/${this.prdId}`,
+			})
+			.then((res) => {
+				console.log('방송 정보', res.data)
+				this.liveInfo = res.data
+				// 방송 제목과  받아오기
+				this.mySessionId = this.prdId + ''
+				this.myUserName = localStorage.getItem('userName')
+			})
+			.catch((err) => {
+				console.log('라이브 정보 받아오기 오류: ' + err)
+			})
 		}
 	},
 	created: function () {

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card class="section1">
+        <v-card class="section1" height="300px" tile>
           <!-- Image -->
           <v-img
             :src="live.prdPhoto"
@@ -15,9 +15,6 @@
             v-on="on"
             @click="checkPrdId()"
           >
-            <!-- <v-card-title class="subtitle-style" style="margin-left:15px;">
-              <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
-            </v-card-title> -->
           </v-img>
           <!-- 카드 하단-->
           <div>
@@ -34,7 +31,6 @@
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
-        <!-- <span v-if="this.wishlist.includes(this.prdId)"> -->
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn

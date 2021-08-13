@@ -21,8 +21,8 @@
           <!-- v-bind:buffer-value="userScore" -->
           <v-progress-linear
             v-model="userScore"
-            color="deep-orange darken-1"
-            background-color="deep-orange lighten-3"
+            color="primary"
+            background-color="primary"
             height="15"
           ></v-progress-linear>
           <br />
@@ -34,11 +34,11 @@
         </div>
         <div id="review">
           <span>
-            <img
+            <!-- <img
               src="@/assets/positive-vote.png"
               alt="rating_click_img"
               style="width: 16%"
-            />
+            /> -->
           </span>
           <button
             id="review-btn"
@@ -163,7 +163,7 @@ export default {
   margin-left: 2rem;
   background-color: rgb(212, 212, 212);
   margin-right: 2rem;
-  border-radius: 30px;
+  /* border-radius: 30px; */
 }
 #hrline {
   height: 1px;

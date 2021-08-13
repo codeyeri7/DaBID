@@ -7,16 +7,16 @@
 					<p>
 						<label id="eng-font">Live Title</label>
 						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
-					</p>
+					<p>
 					<p>
 						<label id="eng-font">Live Info</label>
 						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
-					</p>
+					<p>
 					<hr>
 					<p class="text-center">
 						<button class="btn btn-lg btn-success" id="eng-font" @click="joinSession()">Join!</button>
 						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다.</h5>
-					</p>
+					<p>
 				</div>
 			</div>
 		</div>
@@ -48,31 +48,52 @@
 				</v-card>
 			</div>
 				<div style="margin-left: 1.2rem">
-					<span id="currentPrice">현재가: {{ currentPrice | comma }}</span>
-					<!-- leave session --> 
-					<img class="btn" @click="leaveSession" src="@/assets/leave.png" alt="leave Session" style="width:20%; margin-left: 5.5rem">	
+					<span id="currentPrice kor-font">현재가: {{ currentPrice | comma }}</span>
 				</div>
 			
+			<!-- 본인 화면 --> 
 			<div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
 			</div>
-			<!-- <div id="video-container" class="col-md-6">
+			<!-- 무슨 화면 -->
+			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-			</div> -->
+				<!-- <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> -->
+			</div>
 			
 			<div class="chat">
-				<div>
-					<p v-for="(chat, idx) in chatList" :key="idx" v-text="chat"></p>
+				<div class="chat-list">
+					<p v-for="(chat, idx) in chatList" :key="idx">
+						<span>{{ myUserName }} | </span>
+						<v-text>{{chat}}</v-text>
+						</p>
 				</div>
 
-				<input type="text" size="20" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요">
-				<button class="btn btn-primary" @click="sendMsg()">전송</button>
+				<v-row style="width: 80%; margin-left:1.5rem">
+					<v-text-field type="text" style="width:60%" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요"></v-text-field>
+					<button class="btn btn-primary" @click="sendMsg()" style="height:2rem">전송</button>
+				</v-row>
 				<br>
-				<input type="text" size="20" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요">
-				<span>원</span>
-				<button class="btn btn-danger" @click="bidding()">입찰</button>
+				<v-row style="width: 80%; margin-left:1.5rem">
+					<v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요"></v-text-field>
+					<h4 style="text-align:center">원</h4>
+					<button class="btn btn-danger" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</button>
+				</v-row>
 			</div>
+
+		<!-- session 닫히는 태그 --> 	
+		</div>
+
+		<div class="fixedbutton" style="float: right">
+			<RouterLink :to="{ name: 'Main' }">
+				<v-btn 
+				class="ma-2"
+				color="orange darken-2"
+				dark
+				>
+				<v-icon dark left>mdi-arrow-left</v-icon> Back
+				</v-btn>
+			</RouterLink>
 		</div>
 	</div>
 </template>
@@ -113,6 +134,9 @@ export default {
 
 			bid: '',
 			currentPrice: 0,
+			PriceRules: [
+			v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
+      ],
 		}
 	},
 
@@ -257,7 +281,6 @@ export default {
 			this.subscribers = [];
 			this.OV = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-			this.$router.push({ name: "Main" });
 		},
 
 		updateMainVideoStreamManager (stream) {
@@ -364,5 +387,13 @@ export default {
 	margin-top: 2rem;
 	text-align: center;
 }
-
+#main-container {
+	padding-bottom: 0;
+}
+.chat-list {
+	height: 7rem;
+	border-radius: 30px;
+	border: 0.2rem solid;
+	margin-bottom: 1.5rem
+}
 </style>

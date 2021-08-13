@@ -2,6 +2,7 @@
   <div>
     <v-app>
       <v-app-bar
+      id="menu-bar"
         app
         flat
         color="white"  
@@ -13,16 +14,7 @@
         </RouterLink>
 
         <v-spacer></v-spacer>
-        <!-- 우상단 더치트 링크 --> 
-        
-      
-        <!-- 지운 검색창 --> 
-        <!-- <v-text-field
-          hide-details
-          prepend-icon="mdi-magnify"
-          single-line
-          placeholder="Search"
-        ></v-text-field> -->
+       
       </v-app-bar>
       <!-- 메인페이지가 routerview default -->
       <v-content>
@@ -91,15 +83,17 @@ export default {
 <style>
 
 footer{ 
+  border-top: 1px solid #BC4434;
   position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:rgb(100, 100, 100); 
-  color: rgb(255, 255, 255);
-  border-radius: 30% 30% 0% 0%;
+  background:rgb(255, 255, 255); 
   }
+/* #menu-bar {
+  border-bottom: 1px solid #BC4434;
+} */
 
 #eng-font {
   font-family: 'Lora', serif;

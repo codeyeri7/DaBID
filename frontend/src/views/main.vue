@@ -1,6 +1,6 @@
 <template>
   <div style="font-family: 'InfinitySans-RegularA1';">
-    <!-- carousel -->
+    <!-- carousel-->
     <v-carousel
       :continuous="false"
       :show-arrows="false"
@@ -9,19 +9,19 @@
       height="230"
     >
       <v-carousel-item>
-        <img src="@/assets/Banner3.png" width="370">
+        <img src="@/assets/Banner3.png" width="100%" height="100%">
       </v-carousel-item>
       <v-carousel-item>
-        <img src="@/assets/Banner2.png" width="370">
+        <img src="@/assets/Banner2.png" width="100%" height="100%">
       </v-carousel-item>
       <v-carousel-item>
-        <img src="@/assets/Banner1.png" width="370">
+        <img src="@/assets/Banner1.png" width="100%" height="100%">
       </v-carousel-item>
     </v-carousel>
 
     <!-- card -->
     <div class="main-card">
-      <v-card class="mx-auto" width="500">
+      <div class="mx-auto">
         <v-container fluid>
           <div>
             <span><b>방송중인 상품</b></span>
@@ -29,7 +29,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card class="section1" @click="goLive(card.prdId)">
+              <v-card class="section1" @click="goLive(card.prdId)" tile :elevation="0">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -42,16 +42,17 @@
                   <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
-                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
+                <div id="card-content">
+                  <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
+                  <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
+                  <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
+                </div>
               </v-card>
             </v-col>
           </v-row>
         </v-container>
         <div>
         </div>
-        <hr />
         <v-container fluid>
           <div>
             <span><b>방송 예정</b></span>
@@ -59,7 +60,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in will_live" :key="card.title" :cols="6">
-              <v-card class="section2">
+              <v-card class="section2" tile>
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -79,7 +80,6 @@
             </v-col>
           </v-row>
         </v-container>
-        <hr />
 
         <v-container fluid>
           <div>
@@ -88,7 +88,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in end_live" :key="card.title" :cols="6">
-              <v-card class="section3">
+              <v-card class="section3" tile>
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -108,7 +108,7 @@
             </v-col>
           </v-row>
         </v-container>
-      </v-card>
+      </div>
     </div>
     <!-- 상품 등록 버튼 -->
     <div class="fixedbutton" style="float: right">
@@ -223,5 +223,8 @@ export default {
 }
 .custom-selector {
   font-size: 3em;
+}
+#card-content {
+  background-color: rgb(252, 240, 236);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
+      <!-- <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2> -->
       <hr id="top-hr">
       <v-form
         ref="form"

@@ -74,7 +74,7 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue" text @click="edit()"> edit </v-btn>
+        <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
         <v-btn color="red" text @click="remove()"> delete </v-btn>
         <v-btn color="primary" text @click="dialog = false"> close </v-btn>
       </v-card-actions>
@@ -95,7 +95,6 @@ export default {
       prdId: this.live.prdId,
       lives: [],
       wishlist: [],
-      show: false,
       dialog: false,
       clicked: false,
       me: null
@@ -129,8 +128,8 @@ export default {
             console.log('삭제 성공')
           })
           .catch((err) => {
-          console.log(err)
-        })
+            console.log(err)
+          })
       } else {
         alert('본인이 작성한 글만 삭제 가능합니다!')
       }

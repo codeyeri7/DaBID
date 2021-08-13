@@ -94,9 +94,9 @@ public class UserController {
 	public ResponseEntity<? extends BaseResponseBody> update(
 			@PathVariable("userId") String userId,
 			@RequestBody @ApiParam(value="회원정보 수정", required = true) UserUpdatePatchReq updateInfo) {
-
+		System.out.println(updateInfo.getName());
+		System.out.println(updateInfo);
 		User user = userService.updateUser(userId, updateInfo);
-
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 

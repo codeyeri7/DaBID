@@ -1,17 +1,18 @@
 <template>
-  <div class="container">
-    <h2 style="margin-left:30px">Top 2</h2>
+  <div>
+    <h2 id="eng-font" style="margin-left:10px">Top 2</h2>
     <!-- top2 carousel -->
-    <v-row style="width: 90%; margin: auto; margin-bottom: 7%">
-      <v-card
-        class="mx-auto"
-        color="#455A64"
-        dark
-        width="50%"
-        v-for="(hot_live, idx) in hot_lives"
-        :key="idx"
-        :hot_live="hot_live"
-      >
+    <div class="mx-auto">
+        <v-container fluid>
+          <v-row dense>
+            <v-col v-for="hot_live in hot_lives"
+            :key="hot_live.liveTitle" :cols="6">
+            <v-card
+              color="#292938"
+              tile :elevation="0"
+              dark
+              height="190"
+            >
         <v-card-title>
           <v-list-item-avatar color="white">
             <v-img
@@ -27,12 +28,15 @@
           <h5>{{ hot_live.user.userName }}</h5>
         </v-card-title>
 
-        <v-card-text id="kor-font">
-          {{ hot_live.liveTitle | truncate(9, "...") }} <br />
-          <span> <b>시작가</b> </span> | {{ hot_live.prdPriceStart }}
+        <v-card-text id="kor-font" style="color:white">
+          <span> <b>시작가</b> </span> {{ hot_live.prdPriceStart | comma }}원 <br>
+          {{ hot_live.liveDate | truncate(10, '*') }}<br />
         </v-card-text>
       </v-card>
+      </v-col>
     </v-row>
+    </v-container>
+    </div>
 
     <!-- 검색 카테고리 창 -->
     <v-expansion-panels id="panel">
@@ -63,26 +67,21 @@
           label="검색어"
           v-model="keyword"
         ></v-text-field>
-        <v-btn @click="search()">검색</v-btn>
+        <v-btn dark  color="#292938" @click="search()">검색</v-btn>
         </v-col>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 
     <!-- 하단 all live 카드 -->
-    <div style="font-family: 'InfinitySans-RegularA1'">
+    <div id="kor-font">
       <div class="main-card">
-        <div class="mx-auto" width="500">
+        <div class="mx-auto">
           <v-container fluid>
             <div>
-              <span
-                style="
-                  font-family: 'PT Serif', serif;
-                  font-size: 20px;
-                  margin-bottom: 20px;
-                "
-                ><b>All Live</b></span
-              >
+              <span id="eng-font" style="font-size: 20px;margin-bottom: 20px;">
+                <b>All Live</b>
+              </span>
             </div>
             <v-row dense>
               <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
@@ -113,6 +112,11 @@ export default {
       values2: '',
       items1: ['의류', '가방', '신발', '악세사리'],
       items2: ['방송종료', '방송중', '방송예정']
+    }
+  },
+  filters: {
+  comma: function (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   methods: {
@@ -183,7 +187,8 @@ export default {
 </script>
 
 <style scoped>
-.mx-auto {
-  border-radius: 30px;
+#panel {
+  width: 95%;
+  margin: auto;
 }
 </style>

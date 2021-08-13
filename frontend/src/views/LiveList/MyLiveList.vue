@@ -1,11 +1,11 @@
 <template>
-  <div style="font-family: 'InfinitySans-RegularA1';">
+  <div id="kor-font">
     <div class="main-card">
       <div class="mx-auto">
         <v-tabs
           v-model="tabs"
-          color="deep-purple accent-4"
           right
+          id="tabs"
         >
           <v-tab>방송예정</v-tab>
           <v-tab>방송종료</v-tab>
@@ -14,7 +14,7 @@
             <v-tab-item>
               <v-container fluid>
                 <div>
-                  <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My Live List - 방송예정</b></span>
+                  <span id="eng-font" style="font-size:20px;"><b>My will Live List</b></span>
                 </div>
                 <v-row dense>
                   <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
@@ -24,9 +24,9 @@
             <v-tab-item>
               <v-container fluid>
                 <div>
-                  <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My Live List - 방송종료</b></span>
+                  <span style="font-family: 'PT Serif', serif;font-size:20px; margin-bottom:20px"><b>My end Live List</b></span>
                 </div>
-                <v-row dense>
+                <v-row dense class="mt-2">
                   <MyLiveListEnd v-for="(live, idx) in lives" :key="idx" :live="live"/>
                 </v-row>
               </v-container>

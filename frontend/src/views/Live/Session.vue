@@ -66,10 +66,10 @@
 					<p v-for="(chat, idx) in chatList" :key="idx" v-text="chat"></p>
 				</div>
 
-				<input type="text" size="20" v-model="chatMsg" placeholder="질문을 남겨주세요">
-				<button class="btn btn-primary" @click="sendMsg()" @keyup.enter="submit">전송</button>
+				<input type="text" size="20" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요">
+				<button class="btn btn-primary" @click="sendMsg()">전송</button>
 				<br>
-				<input type="text" size="20" v-model="bid" placeholder="금액을 입력하세요">
+				<input type="text" size="20" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요">
 				<span>원</span>
 				<button class="btn btn-danger" @click="bidding()">입찰</button>
 			</div>

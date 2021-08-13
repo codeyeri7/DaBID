@@ -58,6 +58,13 @@
                       >
                         Save
                       </v-btn>
+                      <v-btn
+                        color="primary"
+                        text
+                        @click="dialog = false"
+                      >
+                        Close
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -122,6 +129,7 @@ export default {
   },
   data: function () {
     return {
+      dialog: false,
       person: [],
       userName: "",
       userScore: "",

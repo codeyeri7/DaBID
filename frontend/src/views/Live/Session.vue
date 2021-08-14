@@ -16,7 +16,7 @@
 					<p class="text-center">
 						<button class="btn btn-lg btn-success" id="eng-font" @click="joinSession()">Join!</button>
 						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다.</h5>
-					<p>
+					</p>
 				</div>
 			</div>
 		</div>

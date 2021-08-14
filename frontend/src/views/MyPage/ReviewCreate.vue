@@ -1,67 +1,74 @@
 <template>
-  <div>
-    <img src="" alt="" />
+  <div class="container" id="kor-font">
+    <h4>거래 정보</h4>
+    <!-- <img src="" alt="" />
     <v-text>live.prdName</v-text>
     <v-text>낙찰가</v-text>
-    <v-text>{{ this.live }}</v-text>
+    <v-text>{{ this.live }}</v-text> -->
+    <h3>리뷰 작성</h3>
     <v-divider></v-divider>
+    <h5>라이브 품질</h5>
     <v-text>Q1. 라이브는 문제없이 진행됐나요?</v-text>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked1, red: clicked1 }"
       v-on:click="clicked1 = !clicked1"
       :disabled="clicked2 === true"
     >
-      <v-icon>mdi-thumb-up</v-icon>
+      <v-icon v-if="clicked1" style="color:red">mdi-thumb-up</v-icon>
+      <v-icon v-if="!clicked1">mdi-thumb-up</v-icon>
     </v-btn>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked2, red: clicked2 }"
       v-on:click="clicked2 = !clicked2"
       :disabled="clicked1 === true"
     >
-      <v-icon>mdi-thumb-down</v-icon>
+      <v-icon v-if="clicked2" style="color:red">mdi-thumb-down</v-icon>
+      <v-icon v-if="!clicked2">mdi-thumb-down</v-icon>
     </v-btn>
     <v-divider></v-divider>
-    <v-text>Q2. 물건을 잘 받으셨나요?</v-text>
+    <h5>거래 과정</h5>
+    <v-text>Q2. 물건을 잘 수령하셨나요?</v-text>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked3, red: clicked3 }"
       v-on:click="clicked3 = !clicked3"
       :disabled="clicked4 === true"
     >
-      <v-icon>mdi-thumb-up</v-icon>
+      <v-icon v-if="clicked3" style="color:red">mdi-thumb-up</v-icon>
+      <v-icon v-if="!clicked3">mdi-thumb-up</v-icon>
     </v-btn>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked4, red: clicked4 }"
       v-on:click="clicked4 = !clicked4"
       :disabled="clicked3 === true"
     >
-      <v-icon>mdi-thumb-down</v-icon>
+      <v-icon v-if="clicked4" style="color:red">mdi-thumb-down</v-icon>
+      <v-icon v-if="!clicked4">mdi-thumb-down</v-icon>
+
     </v-btn>
     <v-divider></v-divider>
+    <h5>제품 신뢰도</h5>
     <v-text>Q3. 안내된 품질과 동일한가요?</v-text>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked5, red: clicked5 }"
       v-on:click="clicked5 = !clicked5"
       :disabled="clicked6 === true"
     >
-      <v-icon>mdi-thumb-up</v-icon>
+      <v-icon v-if="clicked5" style="color:red">mdi-thumb-up</v-icon>
+      <v-icon v-if="!clicked5">mdi-thumb-up</v-icon>
+
     </v-btn>
     <v-btn
       icon
-      v-bind:class="{ gray: !clicked6, red: clicked6 }"
       v-on:click="clicked6 = !clicked6"
       :disabled="clicked5 === true"
     >
-      <v-icon>mdi-thumb-down</v-icon>
+      <v-icon v-if="clicked6" style="color:red">mdi-thumb-down</v-icon>
+      <v-icon v-if="!clicked6">mdi-thumb-down</v-icon>
     </v-btn>
     <v-divider></v-divider>
     <v-textarea
       v-model="content"
-      label="Message"
+      label="한 줄 리뷰"
       counter
       maxlength="120"
       full-width
@@ -69,17 +76,10 @@
     ></v-textarea>
     <v-btn
       @click="createReview()"
-      x-small
-      color="white"
-      style="
-        margin-left: 120px;
-        margin-top: 20px;
-        margin-bottom: 10px;
-        padding: 17px;
-        font-size: 17px;
-        color: black;
-        font-family: 'IBMPlexSansKR-Regular';
-      "
+      dark
+      color="primary"
+      class="submit-buttom"
+      id="kor-font"
       >등록</v-btn
     >
   </div>
@@ -183,11 +183,21 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .gray {
   background-color: gray;
 }
 .red {
   background-color: red;
+}
+.container {
+  width: 90%;
+}
+.submit-buttom {
+  display:flex; 
+  justify-content:center;
+  font-size: 1.1rem;
+  background-color: #292938;
+  margin: auto;
 }
 </style>

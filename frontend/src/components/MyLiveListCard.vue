@@ -26,12 +26,11 @@
     </template>
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
-        <h3 class="text-center">{{ live.liveTitle }}</h3>
+        <h4>{{ live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="wish()"
             >
@@ -43,11 +42,11 @@
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="unwish()"
             >
-              <v-icon>mdi-heart</v-icon>
+            <!-- v-bind:class="{ red: clicked }" -->
+              <v-icon style="color:red">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
@@ -65,7 +64,7 @@
           경매 시작가 : {{ live.prdPriceStart }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.liveDate }}
+          라이브 일시 : {{ live.liveDate}}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
           설명 : {{ live.liveDesc }}
@@ -195,7 +194,7 @@ export default {
           console.log(err);
         });
     },
-  },
+  }, 
 };
 </script>
 
@@ -211,3 +210,5 @@ export default {
   color:black;
 }
 </style>
+
+

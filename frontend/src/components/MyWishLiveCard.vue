@@ -26,12 +26,11 @@
     </template>
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
-        <h3 class="text-center">{{ live.live.liveTitle }}</h3>
+        <h4>{{ live.live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="wish()"
             >
@@ -43,11 +42,10 @@
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="unwish()"
             >
-              <v-icon>mdi-heart</v-icon>
+              <v-icon style="color:red">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>

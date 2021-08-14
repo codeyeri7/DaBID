@@ -9,7 +9,7 @@
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO.png" width="45" class="pt-2">
+          <img src="@/assets/LOGO.png" width="42" class="pt-2">
         </RouterLink>
 
         <!-- <v-spacer></v-spacer> -->

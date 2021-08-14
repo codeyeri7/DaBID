@@ -1,121 +1,96 @@
 <template>
-  <div class="room">
-    <h1>{{title}}</h1>
-    <hr />
-    <div v-for="(m, idx) in msg" :key="idx">
-      <div v-bind:class="m.style">
-      <h5 style="margin:3px">
-        {{m.senderNickname}}
-        </h5>
-      {{m.content}}
+  <div class="container" id="app" v-cloak>
+    <div>
+      <h2>{{room.name}}</h2>
+    </div>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label class="input-group-text">내용</label>
+      </div>
+      <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
+      <div class="input-group-append">
+          <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
       </div>
     </div>
-    <hr />
-    <input type="text" v-model="content" placeholder="보낼 메세지" size="100" />
-    <button @click="sendMessage()"> SEND</button>
+    <ul class="list-group">
+      <li class="list-group-item" v-for="(message, idx) in messages" :key="idx" :message="message">
+        <a>{{message.sender}} - {{message.message}}</a>
+      </li>
+    </ul>
+    <div></div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
+
 export default {
-  name: "Room",
-    data: () => {
+  data() {
     return {
-      id: -1,
-      nickname: '',
-      title:'',
-      roomid:-1,
-      idx:0,
-      msg:[],
-      content:"",
-      stompClient:null
+      roomId: '',
+      room: {},
+      sender: '',
+      message: '',
+      messages: [],
+      stompClient: undefined
     }
   },
-  created(){
-    this.id = this.$route.params.id
-    this.roomid = this.$route.params.roomid
-    this.nickname = this.$route.params.nickname
-     if (this.id == -1 || typeof this.id === "undefined") {
-       this.$router.push({ name: "Home" });
-    }
-     if (this.roomid == -1 || typeof this.roomid === "undefined") {
-       this.$router.push({ name: "Home" });
-    }
-  // 방 제목 가져오기
-    axios({
-        method:'get',
-        url:'/api/chat/room/'+this.roomid,
-        baseURL:'http://localhost:8080/'
-      }).then(res=>{
-        this.title = res.data
-      }, err=>{
-        console.log(err)
-        this.$router.push({ name: "Home" });
-      })
-  // 채팅방 내용 불러오기
-       axios({
-         method:'get',
-        url:'/api/chat/room/message/'+this.roomid+"?page="+this.idx,
-        baseURL:'http://localhost:8080/'
-      }).then(res=>{
-        this.msg = []
-        for(let i=res.data.length-1; i>-1; i--){
-          let m={
-            'senderNickname':res.data[i].senderNickname,
-            'content':res.data[i].content,
-            'style': res.data[i].senderId == this.id ? 'myMsg':'otherMsg'
-          }
-          this.msg.push(m)
-        }
-      }, err=>{
-        console.log(err)
-        alert("error : 새로고침하세요")
-      })
-    // socket 연결
-     let socket = new SockJS('http://localhost:8080/ws')
-    this.stompClient = Stomp.over(socket)
-    this.stompClient.connect({}, frame=>{
-      console.log("success", frame)
-      this.stompClient.subscribe("/sub/"+this.roomid, res=>{
-        let jsonBody = JSON.parse(res.body)
-             let m={
-            'senderNickname':jsonBody.senderNickname,
-            'content': jsonBody.content,
-            'style': jsonBody.senderId == this.id ? 'myMsg':'otherMsg'
-          }
-          this.msg.push(m)
-      })
-    }, err=>{
-console.log("fail", err)
-    })
+  created() {
+    this.roomId = this.$route.params.roomId;
+    this.sender = this.$route.params.sender;
+    this.findRoom();
+    this.connect();
   },
-  methods:{
-    sendMessage(){
-     if(this.content.trim() !='' && this.stompClient!=null) {
-        let chatMessage = {
-          'content': this.content,
-          'chatroomId' : this.roomid,
-          'senderNickname':this.nickname,
-          'senderId': this.id,
-          'id':"0"
-        }
-        this.stompClient.send("/pub/message", JSON.stringify(chatMessage),{})
-   
-        this.content=''
+  methods: {
+    findRoom: function() {
+      axios.get('https://localhost:8080/dabid/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+    },
+    sendMessage: function() {
+      let chat =  {
+        "type": 'TALK',
+        "roomId": this.roomId,
+        "sender": this.sender,
+        "message": this.message
+      };
+      this.stompClient.send("/pub/chat/message/", JSON.stringify(chat), {});
+      this.message = '';
+    },
+    // recvMessage: function(recv) {
+      // unshift: 배열 앞에 새로운 값 추가
+      // this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+      // this.messages.push({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+    // },
+    connect() {
+      const endPoint = "/ws-stomp";
+      let sock = new SockJS(endPoint);
+      let stompClient = Stomp.over(sock);
+      console.log(stompClient);
+      // let reconnect = 0;
+      // pub/sub event
+      stompClient.connect({}, function(frame) {
+        console.log('Connected: ', frame);
+        stompClient.subscribe("/sub/chat/room/", (res) => {
+          var recv = JSON.parse(res.body);
+          this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
+          // this.recvMessage(recv);
+        });
+        // stompClient.send("/pub/chat/message/", JSON.stringify({'type':'ENTER', 'roomId':this.roomId, 'sender':this.sender}), {});
+      }.bind(this), function(error) {
+        console.log("소켓 연결 실패", error)
+        // if(reconnect++ <= 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     sock = new SockJS("/ws-stomp");
+        //     ws = Stomp.over(sock);
+        //     this.connect();
+        //   },10*1000);
+        // }
+      });
+      this.stompClient = stompClient;
     }
-    }
-  }
-};
+  },
+}
+
 </script>
-<style scoped>
-.myMsg{
-text-align: right;
-color : gray;
-}
-.otherMsg{
-  text-align: left;
-}
-</style>

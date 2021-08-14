@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
-      <hr id="top-hr">
+      
       <v-form
         ref="form"
         v-model="valid"
@@ -15,12 +14,12 @@
               <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
               <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
               <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
-              <div>
+              <h5 id="kor-font" style="color:gray">
+                사진 업로드
+              </h5>
                 <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-                <v-btn @click="upload" color=primary flat>업로드</v-btn>
-              </div>
             </div>
-            
+            <hr id="top-hr">
             <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
             <div style="font-family: 'IBMPlexSansKR-Regular';">
               <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
@@ -94,8 +93,33 @@
               </v-time-picker>
             </v-dialog>
             </div>
-              <v-btn @click="createLive" x-small color="white" :disabled="!valid"
-            style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
+            <v-row
+              align="center"
+              justify="space-around"
+            >
+            <v-btn
+                tile
+                @click="goBack"
+                class="mt-5"
+              >
+                <v-icon left>
+                  mdi-cancel
+                </v-icon>
+                Cancel
+              </v-btn>
+              <v-btn
+                tile
+                color="primary"
+                @click="createLive"
+                :disabled="!valid"
+                class="mt-5"
+              >
+                <v-icon left>
+                  mdi-pencil
+                </v-icon>
+                Make Live
+              </v-btn>
+            </v-row>
           </v-col>
         </v-row>
       </v-form>
@@ -178,6 +202,9 @@ export default {
       }
       return config
     },
+    goBack () {
+      this.$router.push({ name: 'Main' })
+    },
     createLive() {
       // 유효성 검사 후 버튼 활성화
       this.$refs.form.validate()
@@ -193,22 +220,23 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      if (live.liveTitle) {
-        rest.axios({
+      rest.
+        axios({
           method: 'post',
           url: '/dabid/live/',
           data: live,
           headers: this.setToken()
         })
-          .then((res) => {
-            console.log(this.$refs.form)
-            console.log(res)
-            this.$router.push({ name: 'MyLiveList' })
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
+        .then((res) => {
+          console.log(this.date)
+          console.log(this.time)
+          console.log(this.$refs.form)
+          console.log(res)
+          this.$router.push({ name: 'MyLiveList' })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     setDate() {
       this.date = this.date +" "+ this.time
@@ -218,6 +246,7 @@ export default {
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
       console.log(this.file, '파일이 잘 업로드 되었습니다.')
+      this.upload()
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
@@ -256,22 +285,14 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-    font-family: 'IBMPlexSansKR-Regular';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/IBMPlexSansKR-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
 #top-hr{
+  margin-top: 1rem;
   height:1px;
-  background:#bbb;
-  background-image: -webkit-linear-gradient(left, #eee, #777, #eee);
+  background:rgb(0, 0, 0);
+  background-image: -webkit-linear-gradient(left, #eee, rgb(19, 18, 18), #eee);
 }
 
 #check-img:hover{
   color:red
 }
-
-
-
 </style>

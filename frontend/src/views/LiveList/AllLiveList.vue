@@ -1,42 +1,48 @@
 <template>
-  <div class="container">
+  <div>
+    <h3 id="eng-font" style="margin-left:10px">Top 2</h3>
     <!-- top2 carousel -->
-    <v-row style="width: 90%; margin: auto; margin-bottom: 7%">
-      <v-card
-        class="mx-auto"
-        color="#455A64"
-        dark
-        width="50%"
-        v-for="(hot_live, idx) in hot_lives"
-        :key="idx"
-        :hot_live="hot_live"
-      >
+    <div class="mx-auto">
+        <v-container fluid>
+          <v-row dense>
+            <v-col v-for="hot_live in hot_lives"
+            :key="hot_live.liveTitle" :cols="6">
+            <v-card
+              color="secondary"
+              tile :elevation="0"
+              light
+              height="190"
+            >
         <v-card-title>
-          <v-list-item-avatar color="white">
+          <v-list-item-avatar>
             <v-img
               class="elevation-6"
               alt="profile image"
-              src="https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Kurt&hairColor=Red&facialHairType=Blank&clotheType=ShirtVNeck&clotheColor=Blue03&eyeType=Hearts&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light"
+              src="@/assets/best-seller.png"
             ></v-img>
           </v-list-item-avatar>
           <div>
-            <v-icon class="mr-1"> mdi-heart </v-icon>
+            <v-icon class="mr-1" style="color:red;"> mdi-heart </v-icon>
             <span class="subheading mr-2">28</span>
           </div>
           <h5>{{ hot_live.user.userName }}</h5>
         </v-card-title>
 
         <v-card-text id="kor-font">
-          {{ hot_live.liveTitle | truncate(9, "...") }} <br />
-          <span> <b>시작가</b> </span> | {{ hot_live.prdPriceStart }}
+          <p><b>{{ hot_live.liveTitle | truncate(9, '..') }}</b></p>
+          <p>₩ {{ hot_live.prdPriceStart | comma }} </p>
+          {{ hot_live.liveDate | truncate(10, '*') }}
         </v-card-text>
       </v-card>
+      </v-col>
     </v-row>
+    </v-container>
+    </div>
 
     <!-- 검색 카테고리 창 -->
     <v-expansion-panels id="panel">
       <v-expansion-panel>
-        <v-expansion-panel-header> Search </v-expansion-panel-header>
+        <v-expansion-panel-header id="eng-font"> Search </v-expansion-panel-header>
 
       <v-expansion-panel-content>
         <v-col>
@@ -62,33 +68,31 @@
           label="검색어"
           v-model="keyword"
         ></v-text-field>
-        <v-btn @click="search()">검색</v-btn>
+        <div class="search-button" id="kor-font">
+          <v-btn light color="secondary" @click="reset" style="color:black">초기화</v-btn>
+          <v-btn dark color="primary" @click="search">검색</v-btn>
+        </div>
         </v-col>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
 
     <!-- 하단 all live 카드 -->
-    <div style="font-family: 'InfinitySans-RegularA1'">
+    <div id="kor-font">
       <div class="main-card">
-        <v-card class="mx-auto" width="500">
+        <div class="mx-auto">
           <v-container fluid>
             <div>
-              <span
-                style="
-                  font-family: 'PT Serif', serif;
-                  font-size: 20px;
-                  margin-bottom: 20px;
-                "
-                ><b>All Live</b></span
-              >
+              <span id="eng-font" style="font-size: 20px;margin-bottom: 20px;">
+                <b>All Live</b>
+              </span>
             </div>
             <v-row dense>
               <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
               <div v-if="this.lives.length == 0">검색 결과가 없습니다.</div>
             </v-row>
           </v-container>
-        </v-card>
+        </div>
       </div>
     </div>
   </div>
@@ -112,6 +116,11 @@ export default {
       values2: '',
       items1: ['의류', '가방', '신발', '악세사리'],
       items2: ['방송종료', '방송중', '방송예정']
+    }
+  },
+  filters: {
+  comma: function (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   },
   methods: {
@@ -169,6 +178,11 @@ export default {
         console.log(err)
       })
     },
+    reset() {
+      this.values1 = '',
+      this.values2 = '',
+      this.keyword = ''
+    }
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
@@ -182,7 +196,22 @@ export default {
 </script>
 
 <style scoped>
-.mx-auto {
-  border-radius: 30px;
+
+#panel {
+  width: 95%;
+  margin: auto;
+}
+.search-button {
+  display:flex; 
+  justify-content:space-around;
+}
+p {
+  margin: 0
+}
+h5 {
+  margin: 0
+}
+h3 {
+  margin-bottom : 2px
 }
 </style>

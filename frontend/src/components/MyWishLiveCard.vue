@@ -5,7 +5,7 @@
         <v-card height="300" tile :elevation="0">
           <!-- Image -->
           <v-img
-            :src="live.prdPhoto"
+            :src="live.live.prdPhoto"
             class="white--text align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="180px"
@@ -17,16 +17,16 @@
           </v-img>
           <!-- 카드 하단-->
           <div class="card-content" id="kor-font">
-              <v-card-title id="card-title">{{ live.prdName  | truncate(8, '...') }}</v-card-title><br>
-              <v-card-subtitle class="py-0">시작가 | {{ live.prdPriceStart | comma }}원</v-card-subtitle>
-              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.liveDate | truncate(10, '.') }}</v-card-subtitle>
+              <v-card-title id="card-title">{{ live.live.prdName  | truncate(8, '...') }}</v-card-title><br>
+              <v-card-subtitle class="py-0">시작가 | {{ live.live.prdPriceStart | comma }}원</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.live.liveDate | truncate(10, '.') }}</v-card-subtitle>
             </div>
         </v-card>
       </v-col>
     </template>
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
-        <h4>{{ live.liveTitle }}</h4>
+        <h4>{{ live.live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
@@ -45,36 +45,33 @@
               v-on:click="clicked = !clicked"
               @click="unwish()"
             >
-            <!-- v-bind:class="{ red: clicked }" -->
               <v-icon style="color:red">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
       </v-card-title>
       <v-card-text>
-        <img :src="live.prdPhoto" width="200px" class="mt-5" />
+        <img :src="live.live.prdPhoto" width="200px" class="mt-5" />
         <hr />
         <h5 style="margin-bottom: 10px" class="title-font">
-          상품명 : {{ live.prdName }}
+          상품명 : {{ live.live.prdName }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          상품 일련번호 : {{ live.prdNo }}
+          상품 일련번호 : {{ live.live.prdNo }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          경매 시작가 : {{ live.prdPriceStart }}
+          경매 시작가 : {{ live.live.prdPriceStart }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.liveDate}}
+          라이브 일시 : {{ live.live.liveDate }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          설명 : {{ live.liveDesc }}
+          설명 : {{ live.live.liveDesc }}
         </h5>
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
-        <v-btn color="red" text @click="remove()"> delete </v-btn>
         <v-btn color="primary" text @click="dialog = false"> close </v-btn>
       </v-card-actions>
     </v-card>
@@ -91,12 +88,12 @@ export default {
   },
   data: function () {
     return {
-      prdId: this.live.prdId,
+      prdId: this.live.live.prdId,
       lives: [],
       wishlist: [],
+      show: false,
       dialog: false,
       clicked: false,
-      me: null
     };
   },
   filters: {
@@ -111,42 +108,6 @@ export default {
         Authorization: ` Bearer ${jwtToken}`,
       };
       return config;
-    },
-    remove: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
-        rest
-          .axios({
-            method: "delete",
-            url: `/dabid/live/${this.prdId}`,
-            headers: this.setToken()
-          })
-          .then((res) => {
-            this.refreshAll();
-            console.log(res)
-            console.log('삭제 성공')
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      } else {
-        alert('본인이 작성한 글만 삭제 가능합니다!')
-      }
-    },
-    refreshAll: function () {
-      // 새로고침
-      this.$router.go();
-    },
-    edit: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
-        this.$router.push({
-          name: "UpdateMyLiveList",
-          params: { prdId: `${this.prdId}` },
-        });
-      } else {
-        alert("본인이 작성한 글만 수정 가능합니다!")
-      }
     },
     wish: function () {
       rest
@@ -194,21 +155,9 @@ export default {
           console.log(err);
         });
     },
-  }, 
+  },
 };
 </script>
 
 <style scoped>
-#card-content {
-  background-color: #FDF4F4;
-  opacity: 0.8;
-}
-#card-title {
-  font-size: 1rem;
-  padding-bottom: 0;
-  padding-top: 0;
-  color:black;
-}
 </style>
-
-

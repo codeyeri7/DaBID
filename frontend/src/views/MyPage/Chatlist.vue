@@ -44,8 +44,13 @@ export default {
         alert("방 제목을 입력해 주십시요.");
         return;
       } else {
+<<<<<<< HEAD
           var params = new URLSearchParams();
           params.append("name",this.room_name);
+=======
+          // var params = new URLSearchParams();
+          // params.append("name",this.room_name);
+>>>>>>> 3edf162ad598e44241221035386bc6c3f0622d3d
           axios.post('https://localhost:8080/dabid/chat/room/' + this.room_name)
           .then(
             response => {

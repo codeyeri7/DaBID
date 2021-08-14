@@ -1,7 +1,10 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.LiveRegisterPostReq;
+import com.ssafy.api.request.ReviewPostReq;
 import com.ssafy.api.request.UserUpdatePatchReq;
 import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.Review;
 import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -91,9 +94,9 @@ public class UserController {
 	public ResponseEntity<? extends BaseResponseBody> update(
 			@PathVariable("userId") String userId,
 			@RequestBody @ApiParam(value="회원정보 수정", required = true) UserUpdatePatchReq updateInfo) {
-
+		System.out.println(updateInfo.getName());
+		System.out.println(updateInfo);
 		User user = userService.updateUser(userId, updateInfo);
-
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -130,5 +133,49 @@ public class UserController {
 
 		return ResponseEntity.status(200).body(user);
 	}
+
+	//=============================== 리뷰 관련 ===============================
+
+	@PostMapping("/writeReview")
+	@ApiOperation(value = "리뷰 작성", notes = "선택한 라이브 방송 리뷰 남기기")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 400, message = "에러 발생"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> createReview(
+			 @RequestBody @ApiParam(value="작성자, 리뷰 남길 라이브 prdId, 평점", required = true) ReviewPostReq reviewPostReq){
+
+		int prdId = reviewPostReq.getPrdId(); //리뷰 남길 라이브
+		String reviewWriter = reviewPostReq.getUserId(); //작성자
+		int addScore = reviewPostReq.getAddScore(); //리뷰 평점
+		String content = reviewPostReq.getContent(); //리뷰 내용
+		System.out.println("ddd"+prdId+" "+reviewWriter+" "+addScore+" "+content);
+
+		try {
+			userService.writeReview(prdId, reviewWriter, addScore, content);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(400, "리뷰 작성에 실패했습니다."));
+	}
+
+	@GetMapping("/checkReview/{userId}")
+	@ApiOperation(value = "해당회원에게 쓴 리뷰확인", notes = "파라미터로 userId를 받아 해당 회원에게 쓴 리뷰 확인")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 409, message = "해당 user에게 남긴 리뷰가 없습니다."),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<?> checkReview(@PathVariable("userId") String userId){
+		List<Review> reviewList = userService.checkReview(userId);
+
+		if(reviewList.size()==0) return ResponseEntity.status(409).body(null);
+		else return ResponseEntity.status(200).body(reviewList);
+	}
+
+
 
 }

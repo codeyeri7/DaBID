@@ -1,12 +1,12 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserUpdatePatchReq;
-import com.ssafy.db.entity.Auth;
-import com.ssafy.db.entity.Live;
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.WishList;
+import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.AuthRepository;
+import com.ssafy.db.repository.LiveRepository;
+import com.ssafy.db.repository.ReviewRepository;
 import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
-	
+	@Autowired
+	ReviewRepository reviewRepository;
+	@Autowired
+	LiveRepository liveRepository;
+
 //	@Autowired
 ////	UserRepositorySupport userRepositorySupport;
 //
@@ -70,6 +74,29 @@ public class UserServiceImpl implements UserService {
 //			return false;
 //		}
 		return true;
+	}
+
+	@Override
+	public List<Review> checkReview(String userId) {
+		User user = getUserByUserId(userId);
+		List<Review> reviewList = reviewRepository.findByUser(user).orElse(null);
+		return reviewList;
+	}
+
+	@Override
+	public void writeReview(int prdId, String reviewWriter, int addScore, String content){
+		Live live = liveRepository.findByPrdId(prdId).orElse(null);
+		User user = live.getUser();
+
+		//리뷰작성
+		Review review = new Review();
+		review.setUser(user);
+		review.setReviewWriter(reviewWriter);
+		review.setReviewContent(content);
+		reviewRepository.save(review);
+
+		//평점 변경
+		user.setUserScore(user.getUserScore()+addScore);
 	}
 
 	@Override

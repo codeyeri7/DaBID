@@ -2,16 +2,16 @@
   <div class="container" id="back">
     <div>
       <v-container align-center>
-        <img src="@/assets/LOGO.png" width="150px" class="mb-5" style="margin-top: 120px; margin-left:90px"><br>
+        <img src="@/assets/LOGO.png" width="150px" class="mb-5 logo" style="margin-top: 120px;"><br>
           <div class="card-body">
             <div v-if="isLogin">
               <img src="@/assets/loading.png" alt="loading" style="margin-left:113px;margin-top:60px;width:90px">
             </div>
-            <div v-else>
-              <h5 style="margin-left:113px;margin-top:60px;font-family: 'PT Serif', serif;">Get your Luxury</h5>
-              <button @click="login()"><img src="@/assets/google_login.png" alt="google_login_img" style="width:80%"></button> 
+            <div v-else class="login-body">
+              <h4 style="margin-top:60px;" id="eng-font"><b>Get your Luxury</b></h4>
+              <img src="@/assets/google_login.png" alt="google_login_img" @click="login" style="width:70%">
             </div>
-            <h5 style="margin-top:115px;margin-left:140px;font-family: 'PT Serif', serif;">DaBID</h5>
+            <h5 style="margin-top:115px;" class="dabid" id="eng-font">DaBID</h5>
           </div>
       </v-container>
     </div>
@@ -71,14 +71,18 @@ export default {
 }
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+<style scoped>
+
 
 #back {
   background-image: url('background.jpg'); 
   background-size: cover;
   height: 100%;
 }
-
+.dabid {
+  font-size: 1rem;
+}
+.container {
+  text-align: center;
+}
 </style>

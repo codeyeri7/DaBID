@@ -97,10 +97,10 @@ public class ChatRoomController {
     }
 
     // 채팅방 생성
-    @PostMapping("/room/{roomName}")
+    @PostMapping("/room/{prdId}")
     @ApiOperation(value = "채팅방 생성", notes = "채팅방 생성.")
-    public ChatRoom createRoom(@PathVariable String roomName) {
-        return chatRoomRepository.createChatRoom(roomName);
+    public ChatRoom createRoom(@PathVariable int prdId) {
+        return chatRoomRepository.createChatRoom(prdId);
     }
 //    // 채팅방 입장 화면
 //    @GetMapping("/room/enter/{roomId}")

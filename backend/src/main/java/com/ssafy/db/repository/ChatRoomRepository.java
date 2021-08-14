@@ -11,7 +11,7 @@ import java.util.*;
 @Repository
 public class ChatRoomRepository{
 
-    private Map<String, ChatRoom> chatRoomMap;
+    private Map<Integer, ChatRoom> chatRoomMap;
 
     @PostConstruct
     private void init() {
@@ -33,8 +33,8 @@ public class ChatRoomRepository{
         chatRoomMap.remove(id);
     }
 
-    public ChatRoom createChatRoom(String name) {
-        ChatRoom chatRoom = ChatRoom.create(name);
+    public ChatRoom createChatRoom(int prdId) {
+        ChatRoom chatRoom = ChatRoom.create(prdId);
         chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }

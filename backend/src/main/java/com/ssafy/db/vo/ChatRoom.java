@@ -3,18 +3,14 @@ package com.ssafy.db.vo;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 public class ChatRoom {
-    private String roomId;
-    private String name;
+    private int roomId;
 
-    public static ChatRoom create(String name) {
+    public static ChatRoom create(int prdId) {
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
+        chatRoom.roomId = prdId;
         return chatRoom;
     }
 }

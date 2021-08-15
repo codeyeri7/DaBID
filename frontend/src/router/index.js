@@ -4,7 +4,6 @@ import Main from '../views/main.vue'
 import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
-// import Session from '../views/Live/Session.vue'
 import session from '../views/Live/Session.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
@@ -15,6 +14,8 @@ import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
 import ReviewList from '../views/MyPage/ReviewList.vue'
 import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
+import TheCheat from '../views/MyPage/TheCheat.vue'
+import Notice from '../views/Notice/NoticeList.vue'
 
 Vue.use(VueRouter)
 
@@ -88,6 +89,16 @@ const routes = [
     path: '/ReviewList',
     name: 'ReviewList',
     component: ReviewList
+  },
+  {
+    path: '/TheCheat',
+    name: 'TheCheat',
+    component: TheCheat
+  },
+  {
+    path: '/Notice',
+    name: 'Notice',
+    component: Notice
   }
 ]
 
@@ -95,6 +106,7 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+  // 여기 빨간 줄 무시하셔도 됩니당..!
   scrollBehavior (to, from, savedPosition) {
     return { x: 0, y: 0 }
   }

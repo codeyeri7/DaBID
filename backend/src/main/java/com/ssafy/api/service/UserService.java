@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface UserService {
 	User createUser(String userName);
-	User updateUser(String userId, UserUpdatePatchReq updateInfo);
+	User updateUser(String userId, String userName);
 	User getUserByUserId(String userId);
 	void deleteUser(String userId);
 	boolean checkUser(String userId);

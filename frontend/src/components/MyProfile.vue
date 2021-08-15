@@ -34,7 +34,7 @@
                       <h3 style="font-size:15px; font-weight:bold" id="kor-font">닉네임 변경</h3>
                       <div>
                         <v-text-field
-                          v-model="person.userName"
+                          v-model="userName"
                           laber="User Name"
                           required
                           id="kor-font"
@@ -177,7 +177,10 @@ export default {
       rest.
         axios({
           method: 'patch',
-          url: `/dabid/users/${this.person.userName}`,
+          url: `/dabid/users/`,
+          data: {
+            userName: this.userName,
+          },
           headers: config
         })
         .then((res) => {

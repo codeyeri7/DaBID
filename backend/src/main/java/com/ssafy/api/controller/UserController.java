@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -47,56 +48,22 @@ public class UserController {
 		return ResponseEntity.status(200).body(myLiveList);
 	}
 
-	@PostMapping()
-	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.") 
-    @ApiResponses({
-        @ApiResponse(code = 201, message = "성공"),
-        @ApiResponse(code = 401, message = "인증 실패"),
-        @ApiResponse(code = 404, message = "사용자 없음"),
-        @ApiResponse(code = 500, message = "서버 오류")
-    })
-	public ResponseEntity<? extends BaseResponseBody> register(
-			//심재원 , 1234 ,  SSAFy
-			@RequestBody @ApiParam(value="회원가입 등록", required = true) UserRegisterPostReq registerInfo) {
-		
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
-//		User user = userService.createUser(registerInfo);
-
-		return ResponseEntity.status(201).body(BaseResponseBody.of(201, "Success"));
-	}
-
-	@GetMapping("/{userId}")
-	@ApiOperation(value = "존재하는 회원 확인", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
+	@PatchMapping()
+	@ApiOperation(value = "회원 수정", notes = "사용자의 <strong>이름</strong>을 수정한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 409, message = "이미 존재하는 사용자 ID입니다. "),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> check(
-			@PathVariable("userId") String userId){
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
-		boolean isDup = userService.checkUser(userId);
+	public ResponseEntity<? extends BaseResponseBody> updateNickName(
+			@RequestBody @ApiParam(value="회원정보 수정", required = true) Map<String, String> map,
+			@ApiIgnore Authentication authentication) {
 
-		if(isDup) return ResponseEntity.status(409).body(BaseResponseBody.of(409, "이미 존재하는 사용자 ID 입니다. "));
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		String userName = map.get("userName");
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
 
-	}
+		userService.updateUser(userId, userName);
 
-	@PatchMapping("/{userId}")
-	@ApiOperation(value = "회원 수정", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<? extends BaseResponseBody> update(
-			@PathVariable("userId") String userId,
-			@RequestBody @ApiParam(value="회원정보 수정", required = true) UserUpdatePatchReq updateInfo) {
-		System.out.println(updateInfo.getName());
-		System.out.println(updateInfo);
-		User user = userService.updateUser(userId, updateInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 

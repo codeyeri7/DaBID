@@ -1,22 +1,26 @@
 <template>
+<!--buyer화면 --> 
 	<div id="main-container" class="container">
 		<div id="join" v-if="!session">
 			<div id="join-dialog" class="jumbotron vertical-center">
-				<h1>Live 입장하기</h1>
+				<h2>Live 입장하기</h2>
 				<div class="form-group">
 					<p>
 						<label id="eng-font">Live Title</label>
 						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
-					</p>
+					<p>
+						<hr>
 					<p>
 						<label id="eng-font">Live Info</label>
 						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
-					</p>
+						<h5 id="kor-font"> 시작가 {{ liveInfo.prdPriceStart | comma }}</h5>
+
+					<p>
 					<hr>
 					<p class="text-center">
-						<v-btn class="btn btn-lg" elevation="0" color="primary" id="eng-font" @click="joinSession()">Join!</v-btn>
-						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다.</h5>
-					</p>
+						<button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
+					<p>
 				</div>
 			</div>
 		</div>
@@ -27,6 +31,7 @@
 					class="mx-auto"
 					max-height="150"
 					outlined
+					id="kor-font"
 				>
 					<v-list-item three-line>
 					<v-list-item-content>
@@ -48,7 +53,8 @@
 				</v-card>
 			</div>
 				<div style="margin-left: 1.2rem">
-					<span id="currentPrice kor-font">현재가: {{ currentPrice | comma }}</span>
+					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
+					<p style="color:red">연속 베팅은 불가능합ㄴ디ㅏ. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
 				</div>
 			
 			<!-- 본인 화면 --> 
@@ -64,8 +70,8 @@
 			<div class="chat">
 				<div class="chat-list">
 					<p v-for="(chat, idx) in chatList" :key="idx">
-						<span>{{ myUserName }} | </span>
-						<v-text>{{chat}}</v-text>
+						<span>{{ myUserName }}: </span>
+						<v-text>{{ chat }}</v-text>
 						</p>
 				</div>
 
@@ -79,6 +85,7 @@
 					<h4 style="text-align:center">원</h4>
 					<v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn>
 				</v-row>
+				<h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5>
 			</div>
 
 		<!-- session 닫히는 태그 --> 	
@@ -86,14 +93,14 @@
 
 		<div class="fixedbutton" style="float: right">
 			<RouterLink :to="{ name: 'Main' }">
-				<v-btn 
-          class="ma-2 black--text"
-          color="secondary"
-          elevation="0"
-          @click="leaveSession()"
-				>
-				<v-icon left>mdi-arrow-left</v-icon> Back
-				</v-btn>
+        <v-btn 
+          class="ma-2"
+          dark
+          color="#FCE4EC"
+          id="eng-font"
+        >
+          <v-icon light left>mdi-arrow-left</v-icon> Back
+        </v-btn>
 			</RouterLink>
 		</div>
 	</div>
@@ -140,13 +147,12 @@ export default {
       ],
 		}
 	},
-
+	filters: {
+		comma: function (value) {
+			return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+	},
 	methods: {
-		filters: {
-			comma: function (value) {
-				return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-			}
-		},
 		sendMsg() {
 			return new Promise((resolve, reject) => {
 				axios({
@@ -387,6 +393,7 @@ export default {
 	width: 50%;
 	margin-top: 2rem;
 	text-align: center;
+	font-family: "InfinitySans-RegularA1";
 }
 #main-container {
 	padding-bottom: 0;

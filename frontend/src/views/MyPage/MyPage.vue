@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!-- <h2 style="margin-left: 40px; font-family: 'Lora', serif">
-      {{ person.userName }}'s Profile
-    </h2> -->
-
     <MyProfile/>
     <v-card class="mx-auto" max-width="300">
       <v-btn>
@@ -14,7 +10,7 @@
           width="50px"
           height="50px"
           @click="menuActionClick(item.action)"
-        ></img>
+        >
       </v-btn>
     </v-card>
     <div class="fixedbutton" style="float: right">
@@ -27,26 +23,26 @@
               style="width: 35px"
               v-bind="attrs"
               v-on="on"
-            />
+            >
           </template>
 
-          <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
+          <v-card class="ap-card">
+            <v-card-title class="text-h5"
+            style="color:#ebe2de; background-color: #292938">
               Accident Policy
             </v-card-title>
 
-            <v-card-text style="margin-top: 2.5rem">
-              다비드는 원활한 거래 연결을 위해 더치트 계좌 조회 서비스를
-              지원합니다.
-              <hr />
-              <v-btn @click="onClick()">위험 계좌조회 더치트 바로가기</v-btn>
+            <v-card-text class="card-text" style="margin-top: 2.5rem" id="kor-font">
+              다비드는 원활한 거래 연결을 위해<br>
+              더치트 계좌 조회 서비스를 지원합니다.
+              <v-btn tile class="mt-4 link-button" onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') ">위험 계좌조회 더치트 바로가기</v-btn>
             </v-card-text>
 
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="brown darken-2" text @click="dialog = false">
+              <v-btn text @click="dialog = false" id="kor-font">
                 확인
               </v-btn>
             </v-card-actions>
@@ -169,10 +165,9 @@ export default {
 </script>
 
 <style scoped>
-.btn {
-  font-family: "PT Serif";
+.card-text {
+  display: flex;
+  flex-direction: column;
 }
-#item-text {
-  font-family: "PT Serif", serif;
-}
+
 </style>

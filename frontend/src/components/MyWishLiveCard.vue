@@ -2,13 +2,13 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card class="section1">
+        <v-card height="300" tile :elevation="0">
           <!-- Image -->
           <v-img
             :src="live.live.prdPhoto"
             class="white--text align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="200px"
+            height="180px"
             style="padding: 40px"
             v-bind="attrs"
             v-on="on"
@@ -16,23 +16,21 @@
           >
           </v-img>
           <!-- 카드 하단-->
-          <v-card-subtitle class="text-subtitle-4 pt-2">{{
-            live.live.prdName | truncate(7, '...')
-          }}</v-card-subtitle>
-          <v-card-subtitle class="text-subtitle-4 pt-2">
-            시작가 | {{ live.live.prdPriceStart | comma }}원
-          </v-card-subtitle>
+          <div class="card-content" id="kor-font">
+              <v-card-title id="card-title">{{ live.live.prdName  | truncate(8, '...') }}</v-card-title><br>
+              <v-card-subtitle class="py-0">시작가 | {{ live.live.prdPriceStart | comma }}원</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.live.liveDate.slice(0,10) }}</v-card-subtitle>
+            </div>
         </v-card>
       </v-col>
     </template>
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
-        <h3 class="text-center">{{ live.live.liveTitle }}</h3>
+        <h4>{{ live.live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="wish()"
             >
@@ -44,11 +42,10 @@
           <v-col class="text-right">
             <v-btn
               icon
-              v-bind:class="{ red: clicked }"
               v-on:click="clicked = !clicked"
               @click="unwish()"
             >
-              <v-icon>mdi-heart</v-icon>
+              <v-icon style="color:red">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
@@ -63,10 +60,10 @@
           상품 일련번호 : {{ live.live.prdNo }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          경매 시작가 : {{ live.live.prdPriceStart }}
+          경매 시작가 : {{ live.live.prdPriceStart | comma }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.live.liveDate }}
+          라이브 일시 : {{ live.live.liveDate.slice(0,10) }} {{ live.live.liveDate.slice(11, 16)}}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
           설명 : {{ live.live.liveDesc }}

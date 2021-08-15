@@ -17,7 +17,7 @@
               <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
               <div>
                 <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-                <v-btn @click="upload" color=primary flat>업로드</v-btn>
+                <v-btn class="black--text" elevation="0" @click="upload" color="secondary" flat>업로드</v-btn>
               </div>
             </div>
             
@@ -94,7 +94,7 @@
               </v-time-picker>
             </v-dialog>
             </div>
-              <v-btn @click="createLive" x-small color="white" :disabled="!valid"
+              <v-btn class="white--text" elevation="0" @click="createLive" x-small color="primary" :disabled="!valid"
             style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
           </v-col>
         </v-row>

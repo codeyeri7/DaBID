@@ -6,25 +6,16 @@
 
     <MyProfile/>
     <v-card class="mx-auto" max-width="300">
-      <v-list>
-        <v-list-item-group v-model="model">
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            @click="menuActionClick(item.action)"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon" style="color: #ff7043"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title
-                v-text="item.text"
-                id="item-text"
-              ></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+      <v-btn>
+        <img
+          v-for="item in items"
+          :key="item"
+          :src="item.src"
+          width="50px"
+          height="50px"
+          @click="menuActionClick(item.action)"
+        ></img>
+      </v-btn>
     </v-card>
     <div class="fixedbutton" style="float: right">
       <div class="text-center mr-5">
@@ -82,22 +73,37 @@ export default {
       person: null,
       items: [
         {
-          icon: "mdi-monitor",
+          src: require("@/assets/mylive.png"),
           text: "My B-live",
           action: "goMyLive",
         },
         {
-          icon: "mdi-star",
+          src: require("@/assets/mywish.png"),
           text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          icon: "mdi-send",
+          src: require("@/assets/mychat.png"),
           text: "Chat List",
           action: "goChat",
         },
         {
-          icon: "mdi-logout",
+          src: require("@/assets/myreview.png"),
+          text: "Review List",
+          action: "goReview",
+        },
+        {
+          src: require("@/assets/mynotice.png"),
+          text: "Notice",
+          action: "goNotice",
+        },
+        {
+          src: require("@/assets/myhelp.png"),
+          text: "Help",
+          action: "goHelp",
+        },
+        {
+          src: require("@/assets/mylogout.png"),
           text: "Logout",
           action: "logout",
         },

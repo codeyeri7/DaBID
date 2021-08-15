@@ -116,7 +116,7 @@
         <v-btn 
           x-small 
           class="mr-2" 
-          fab dark color="gray"
+          fab color="primary"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
@@ -136,14 +136,7 @@ export default {
       cards: null,
       now_live: null,
       will_live: null,
-      end_live: null,
-      // sessionData: {
-      //   liveTitle: "",
-      //   token: "",
-      //   userName: "",
-      //   userId: "",
-      //   role: "",
-      // },
+      end_live: null
     };
   },
   filters: {
@@ -165,11 +158,6 @@ export default {
         name: "session", 
         params: {
           prdId : prdId
-          // liveTitle: this.sessionData.liveTitle,
-          // token: this.sessionData.token,
-          // userName: this.sessionData.userName,
-          // userId: this.sessionData.userId,
-          // role: this.sessionData.role,
         }
       });
     },

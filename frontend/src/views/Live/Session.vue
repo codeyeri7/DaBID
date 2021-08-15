@@ -7,16 +7,16 @@
 					<p>
 						<label id="eng-font">Live Title</label>
 						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
-					<p>
+					</p>
 					<p>
 						<label id="eng-font">Live Info</label>
 						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
-					<p>
+					</p>
 					<hr>
 					<p class="text-center">
-						<button class="btn btn-lg btn-success" id="eng-font" @click="joinSession()">Join!</button>
+						<v-btn class="btn btn-lg" elevation="0" color="primary" id="eng-font" @click="joinSession()">Join!</v-btn>
 						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다.</h5>
-					<p>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -71,13 +71,13 @@
 
 				<v-row style="width: 80%; margin-left:1.5rem">
 					<v-text-field type="text" style="width:60%" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요"></v-text-field>
-					<button class="btn btn-primary" @click="sendMsg()" style="height:2rem">전송</button>
+					<v-btn dark elevation="0" color="primary" @click="sendMsg()" style="height:2rem">전송</v-btn>
 				</v-row>
 				<br>
 				<v-row style="width: 80%; margin-left:1.5rem">
 					<v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요"></v-text-field>
 					<h4 style="text-align:center">원</h4>
-					<button class="btn btn-danger" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</button>
+					<v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn>
 				</v-row>
 			</div>
 
@@ -87,11 +87,12 @@
 		<div class="fixedbutton" style="float: right">
 			<RouterLink :to="{ name: 'Main' }">
 				<v-btn 
-				class="ma-2"
-				color="orange darken-2"
-				dark
+          class="ma-2 black--text"
+          color="secondary"
+          elevation="0"
+          @click="leaveSession()"
 				>
-				<v-icon dark left>mdi-arrow-left</v-icon> Back
+				<v-icon left>mdi-arrow-left</v-icon> Back
 				</v-btn>
 			</RouterLink>
 		</div>

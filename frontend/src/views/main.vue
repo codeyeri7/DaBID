@@ -38,14 +38,13 @@
                   height="180px"
                   style="padding: 40px"
                 >
-                  <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title> -->
+                
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
                   <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
                   <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate | truncate(10, '.') }}</v-card-subtitle>
+                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
                 </div>
               </v-card>
             </v-col>
@@ -69,14 +68,12 @@
                   height="180px"
                   style="padding-left: 20px"
                 >
-                   <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style">방송 예정</v-card-title> -->
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
                    <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
                   <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate | truncate(10, '.') }}</v-card-subtitle>
+                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
                 </div>
               </v-card>
             </v-col>
@@ -99,14 +96,12 @@
                   height="180px"
                   style="padding-left: 25px"
                 >
-                   <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style">방송 종료</v-card-title> -->
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
                   <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
                   <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate | truncate(10, '.') }}</v-card-subtitle>
+                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
                 </div>
               </v-card>
             </v-col>

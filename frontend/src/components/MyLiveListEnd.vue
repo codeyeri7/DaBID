@@ -18,7 +18,7 @@
         <div class="card-content" id="kor-font">
               <v-card-title id="card-title">{{ live.prdName  | truncate(8, '...') }}</v-card-title><br>
               <v-card-subtitle class="py-0">시작가 | {{ live.prdPriceStart | comma }}원</v-card-subtitle>
-              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.liveDate | truncate(10, '.') }}</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.liveDate.slice(0,10) }}</v-card-subtitle>
             </div>
         </v-card>
       </v-col>
@@ -32,11 +32,11 @@
         <hr>
         <h5 style="margin-bottom:10px" class="title-font">상품명 : {{ live.prdName }}</h5>
         <h5 style="margin-bottom:10px" class="content-font">상품 일련번호 : {{ live.prdNo }}</h5>
-        <h5 style="margin-bottom:10px" class="content-font">경매 시작가 : {{ live.prdPriceStart }}</h5>
-        <h5 style="margin-bottom:10px" class="content-font">라이브 일시 : {{ live.liveDate }}</h5>
+        <h5 style="margin-bottom:10px" class="content-font">경매 시작가 : {{ live.prdPriceStart | comma }}</h5>
+        <h5 style="margin-bottom:10px" class="content-font">라이브 일시 : {{ live.liveDate.slice(0,10) }} {{ live.liveDate.slice(11, 16)}}</h5>
         <h5 style="margin-bottom:10px" class="content-font">설명 : {{ live.liveDesc }}</h5>
       </v-card-text>
-      <v-divider></v-divider>
+      <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn

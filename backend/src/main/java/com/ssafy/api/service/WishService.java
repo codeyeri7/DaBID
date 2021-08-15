@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.response.LiveRes;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
@@ -11,6 +12,7 @@ public interface WishService {
     void putWishLive(User user, int prdId);
     void deleteWishLive(User user, int prdId);
     boolean checkWishLive(User user, int prdId);
-    List<Live> getBestLives();
+    List<LiveRes> getBestLives();
+    int getLiveHearts(Live live);
 
 }

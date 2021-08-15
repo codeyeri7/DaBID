@@ -30,40 +30,32 @@
                   </template>
                   <v-card>
                     <v-container>
-                      <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
-                      <div style="font-family: 'IBMPlexSansKR-Regular';">
-                        <v-text-field
-                          v-model="userId"
-                          laber="User Id"
-                          required
-                        ></v-text-field>
+                      <!-- 닉네임 변경 폼 변경했습니다 윤서 --> 
+                      <h3 style="font-size:15px; font-weight:bold" id="kor-font">닉네임 변경</h3>
+                      <div>
                         <v-text-field
                           v-model="userName"
                           laber="User Name"
                           required
-                        ></v-text-field>
-                        <v-text-field
-                          v-model="userScore"
-                          laber="User Score"
-                          required
+                          id="kor-font"
                         ></v-text-field>
                       </div>
                     </v-container>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
-                        color="blue darken-1"
-                        text
-                        @click="nameUpdate()"
-                      >
-                        Save
-                      </v-btn>
-                      <v-btn
-                        color="primary"
+                        color="#E53935"
                         text
                         @click="dialog = false"
                       >
                         Close
+                      </v-btn>
+                      <v-btn
+                        color="black"
+                        text
+                        @click="nameUpdate()"
+                      >
+                        Save
                       </v-btn>
                     </v-card-actions>
                   </v-card>
@@ -89,11 +81,6 @@
         </div>
         <div id="review">
           <span>
-            <!-- <img
-              src="@/assets/positive-vote.png"
-              alt="rating_click_img"
-              style="width: 16%"
-            /> -->
           </span>
           <button
             id="review-btn"
@@ -200,7 +187,7 @@ export default {
           this.nameChange = res.data
           console.log('OK',this.nameChange)
           console.log(res)
-          // this.refreshAll();
+          this.dialog = false
         })
         .catch((err) => {
           console.log(err)

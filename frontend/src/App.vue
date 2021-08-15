@@ -9,7 +9,7 @@
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO.png" width="42" class="pt-2">
+          <img src="@/assets/LOGO D.jpg" width="42" class="pt-2">
         </RouterLink>
 
         <!-- <v-spacer></v-spacer> -->
@@ -80,6 +80,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 footer{ 
   border-top: 1px solid #292938;
   position:fixed; 

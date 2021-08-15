@@ -8,19 +8,19 @@
 					<p>
 						<label id="eng-font">Live Title</label>
 						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
-					<p>
+					</p>
 						<hr>
 					<p>
 						<label id="eng-font">Live Info</label>
 						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
 						<h5 id="kor-font"> 시작가 {{ liveInfo.prdPriceStart | comma }}</h5>
 
-					<p>
+					</p>
 					<hr>
 					<p class="text-center">
 						<button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
 						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
-					<p>
+					</p>
 				</div>
 			</div>
 		</div>

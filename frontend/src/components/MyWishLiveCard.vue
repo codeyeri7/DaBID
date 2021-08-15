@@ -19,7 +19,7 @@
           <div class="card-content" id="kor-font">
               <v-card-title id="card-title">{{ live.live.prdName  | truncate(8, '...') }}</v-card-title><br>
               <v-card-subtitle class="py-0">시작가 | {{ live.live.prdPriceStart | comma }}원</v-card-subtitle>
-              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.live.liveDate | truncate(10, '.') }}</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.live.liveDate.slice(0,10) }}</v-card-subtitle>
             </div>
         </v-card>
       </v-col>
@@ -60,10 +60,10 @@
           상품 일련번호 : {{ live.live.prdNo }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          경매 시작가 : {{ live.live.prdPriceStart }}
+          경매 시작가 : {{ live.live.prdPriceStart | comma }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.live.liveDate }}
+          라이브 일시 : {{ live.live.liveDate.slice(0,10) }} {{ live.live.liveDate.slice(11, 16)}}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
           설명 : {{ live.live.liveDesc }}

@@ -38,8 +38,7 @@
                   height="180px"
                   style="padding: 40px"
                 >
-                  <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title> -->
+                
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
@@ -69,8 +68,6 @@
                   height="180px"
                   style="padding-left: 20px"
                 >
-                   <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style">방송 예정</v-card-title> -->
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
@@ -99,8 +96,6 @@
                   height="180px"
                   style="padding-left: 25px"
                 >
-                   <!-- image 안 title -->
-                  <!-- <v-card-title class="subtitle-style">방송 종료</v-card-title> -->
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">

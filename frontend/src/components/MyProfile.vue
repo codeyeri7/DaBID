@@ -33,17 +33,17 @@
                       <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
                       <div style="font-family: 'IBMPlexSansKR-Regular';">
                         <v-text-field
-                          v-model="person.userId"
+                          v-model="userId"
                           laber="User Id"
                           required
                         ></v-text-field>
                         <v-text-field
-                          v-model="person.userName"
+                          v-model="userName"
                           laber="User Name"
                           required
                         ></v-text-field>
                         <v-text-field
-                          v-model="person.userScore"
+                          v-model="userScore"
                           laber="User Score"
                           required
                         ></v-text-field>
@@ -190,7 +190,10 @@ export default {
       rest.
         axios({
           method: 'patch',
-          url: `/dabid/users/${this.person.userName}`,
+          url: `/dabid/users/`,
+          data: {
+            userName: this.userName,
+          },
           headers: config
         })
         .then((res) => {

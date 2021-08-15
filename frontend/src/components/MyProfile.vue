@@ -30,23 +30,24 @@
                   </template>
                   <v-card>
                     <v-container>
-                      <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
+                      <!-- 닉네임 변경 폼 변경했습니다 윤서 --> 
+                      <h3 style="font-size:15px; font-weight:bold" id="kor-font">닉네임 변경</h3>
                       <div style="font-family: 'IBMPlexSansKR-Regular';">
-                        <v-text-field
+                        <!-- <v-text-field
                           v-model="person.userId"
                           laber="User Id"
                           required
-                        ></v-text-field>
+                        ></v-text-field> -->
                         <v-text-field
                           v-model="person.userName"
                           laber="User Name"
                           required
                         ></v-text-field>
-                        <v-text-field
+                        <!-- <v-text-field
                           v-model="person.userScore"
                           laber="User Score"
                           required
-                        ></v-text-field>
+                        ></v-text-field> -->
                       </div>
                     </v-container>
                     <v-card-actions>

@@ -126,7 +126,7 @@ public class LiveServiceImpl implements LiveService {
 
 		// 카테고리 / 라이브 상태 / 키워드 모두 없을 때
 		List<Live> liveList = liveRepository.findAll();
-
+ 
 		// 카테고리로 라이브 검색
 		if (categories != null && !categories.isEmpty()) {
 			liveList.retainAll(this.searchLiveByCategory(categories));

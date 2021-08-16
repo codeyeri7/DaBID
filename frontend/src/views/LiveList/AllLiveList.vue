@@ -114,6 +114,7 @@ export default {
       items1: ["의류", "가방", "신발", "악세사리"],
       items2: ["방송종료", "방송중", "방송예정"],
       page: 0,
+      scrollNo: false
     };
   },
   filters: {
@@ -140,9 +141,7 @@ export default {
           }
         })
         .then((res) => {
-          // console.log(res.data.content);
           for (let live of res.data.content) {
-            // console.log(live);
             this.lives.push(live);
           }
           console.log("전체 라이브", this.lives);
@@ -166,7 +165,6 @@ export default {
         });
     },
     search() {
-      console.log(this.values1);
       rest
         .axios({
           method: "get",
@@ -196,15 +194,27 @@ export default {
       let scrollHeight = e.target.scrollingElement.scrollHeight
       
       if(scrollTop >= scrollHeight - 650) {
-        this.page++;
-        this.getAllLiveList();
+        if (this.scrollNo) {
+          
+          }
+        else {
+          this.page++;
+          this.getAllLiveList();
+        }
       }
     }
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getAllLiveList();
       this.getHotLives();
+      if (this.$route.params.liveStatus) {
+        this.values2 = this.$route.params.liveStatus
+        this.scrollNo = true
+        this.search()
+        }
+        else {
+          this.getAllLiveList();
+        }
     } else {
       this.$router.push({ name: "Login" });
     }

@@ -5,6 +5,7 @@ import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
 import session from '../views/Live/Session.vue'
+import Seller from '../views/Live/Seller.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
 import MyWishList from '../views/LiveList/MyWishList.vue'
@@ -15,7 +16,6 @@ import ReviewList from '../views/MyPage/ReviewList.vue'
 import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
 import TheCheat from '../views/MyPage/TheCheat.vue'
-import Notice from '../views/Notice/NoticeList.vue'
 import UserProfile from '../views/MyPage/UserProfile.vue'
 
 
@@ -48,6 +48,11 @@ const routes = [
     component: session
   },
   {
+    path: '/Seller',
+    name: 'Seller',
+    component: Seller
+  },
+  {
     path: '/MyLiveList',
     name: 'MyLiveList',
     component: MyLiveList
@@ -58,7 +63,7 @@ const routes = [
     component: UpdateMyLiveList
   },
   {
-    path: '/notice',
+    path: '/NoticeList',
     name: 'NoticeList',
     component: NoticeList
   },
@@ -96,11 +101,6 @@ const routes = [
     path: '/TheCheat',
     name: 'TheCheat',
     component: TheCheat
-  },
-  {
-    path: '/Notice',
-    name: 'Notice',
-    component: Notice
   },
   {
     path: '/UserProfile',

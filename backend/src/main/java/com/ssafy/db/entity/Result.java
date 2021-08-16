@@ -27,8 +27,12 @@ public class Result {
 
     @OneToOne
     @JoinColumn(name="res_buyer_id")
-    private User user;
-    
+    private User buyer;
+
+    @OneToOne
+    @JoinColumn(name="res_seller_id")
+    private User seller;
+
     @OneToOne(mappedBy = "result")
     private ChatRoom chatRoom;
 }

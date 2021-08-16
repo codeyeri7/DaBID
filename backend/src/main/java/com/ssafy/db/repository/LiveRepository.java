@@ -3,6 +3,8 @@ package com.ssafy.db.repository;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.LiveStatus;
 import com.ssafy.db.entity.ProductCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
@@ -24,4 +26,5 @@ public interface LiveRepository extends JpaRepository<Live,Integer> {
     Optional<List<Live>> findByProductCategoryIn(List<ProductCategory> prdCategory);
     Optional<List<Live>> findByLiveStatusIn(List<LiveStatus> liveStatuses);
 
+    Page<Live> findAll(Pageable pageable);
 }

@@ -23,6 +23,7 @@
 </template>
 <script>
 import axios from 'axios'
+import rest from "../../js/httpCommon.js"
 
 export default {
   data() {
@@ -36,8 +37,23 @@ export default {
     this.findAllRoom();
   },
   methods: {
+    setToken: function () {
+      const jwtToken = localStorage.getItem('jwt')
+      const config = {
+        Authorization: `Bearer ${jwtToken}`
+      }
+      return config
+    },
     findAllRoom: function() {
-      axios.get('https://localhost:8080/dabid/chat/rooms').then(response => { this.chatrooms = response.data; });
+      rest.axios({
+        url: "dabid/chat/rooms",
+        method: "get",
+        headers: this.setToken()
+      })
+      .then(res => {
+        this.chatrooms = res.data;
+      })
+      // axios.get('https://localhost:8080/dabid/chat/rooms').then(response => { this.chatrooms = response.data; });
     },
     createRoom: function() {
       if("" === this.room_name) {

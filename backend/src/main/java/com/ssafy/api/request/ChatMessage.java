@@ -1,4 +1,4 @@
-package com.ssafy.db.vo;
+package com.ssafy.api.request;
 
 import lombok.*;
 

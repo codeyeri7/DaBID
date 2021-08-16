@@ -15,7 +15,7 @@ public class Notice {
     private int noticeId;
     @Column(length = 50)
     private String noticeTitle;
-    @Column(columnDefinition = "DATE DEFAULT CURRENT_DATE")
+//    @Column(columnDefinition = "DATE DEFAULT CURRENT_DATE")
     private Date noticeDate;
     private Boolean noticeType;
     @Column(length = 200)

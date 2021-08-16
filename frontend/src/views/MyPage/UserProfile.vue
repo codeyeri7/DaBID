@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyProfile/>
+    <UserProfile/>
     <v-card class="mx-auto" max-width="300">
       <v-row dense>
         <v-col v-for="item in items" :key="item" :cols="3">
@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import MyProfile from "@/components/MyProfile";
-// import rest from "../../js/httpCommon.js";
+import UserProfile from "../../components/UserProfile.vue"
+import rest from "../../js/httpCommon.js";
 
 export default {
   name: "Mypage",
   components: {
-    MyProfile,
+    UserProfile,
   },
   data: function () {
     return {
@@ -66,33 +66,32 @@ export default {
       };
       return config;
     },
-    // getProfile: function () {
-    //   rest
-    //     .axios({
-    //       method: "get",
-    //       url: "/dabid/users/me",
-    //       headers: this.setToken(),
-    //     })
-    //     .then((res) => {
-    //       this.person = res.data;
-    //       console.log(res);
-    //       // this.$router.push({ name: "ReviewList" });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
-    menuActionClick(action) {
-      if (action === "goMyLive") {
-        this.$router.push({ name: "MyLiveList" });
-      } else if (action === "goReview") {
-        this.$router.push({ name: "ReviewList" });
-      } else if (action === "goNotice") {
-        this.$router.push({ name: "Notice" });
-      } else if (action === "goHelp") {
-        this.$router.push({ name: "Help" });
-      }
+    getProfile: function (userId) {
+      rest
+        .axios({
+          method: "get",
+          url: `/dabid/users/${userId}`,
+          headers: this.setToken(),
+        })
+        .then((res) => {
+          this.person = res.data;
+          console.log('받아온 정보', this.person);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
+    // menuActionClick(action) {
+    //   if (action === "goMyLive") {
+    //     this.$router.push({ name: "MyLiveList" });
+    //   } else if (action === "goReview") {
+    //     this.$router.push({ name: "ReviewList" });
+    //   } else if (action === "goNotice") {
+    //     this.$router.push({ name: "Notice" });
+    //   } else if (action === "goHelp") {
+    //     this.$router.push({ name: "Help" });
+    //   }
+    // },
   },
   created: function () {
     if (localStorage.getItem("jwt")) {

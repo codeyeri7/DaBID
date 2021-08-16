@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.api.service.ResultService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -24,6 +25,21 @@ public class ResultController {
     @Autowired
     ResultService resultService;
 
+
+    //=========================================================================
+    // Result + ChatRoom
+    @PostMapping("/end/{prdId}")
+    public ResponseEntity<?> endLive(@PathVariable int prdId,
+                                     @RequestBody ResultPostReq resultInfo) {
+
+        // Result Create
+        Result result = resultService.createResult(prdId, resultInfo);
+
+        // ChatRoom Create
+//		chatRoomService.createChatRoom(prdId, result);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
 
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")

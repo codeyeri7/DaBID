@@ -13,4 +13,4 @@ public class ChatRoom {
         chatRoom.roomId = prdId;
         return chatRoom;
     }
-}
+    }

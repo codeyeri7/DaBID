@@ -4,6 +4,7 @@ import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public interface WishListRepository extends JpaRepository<WishList,Integer> {
     Optional<WishList> findByUserAndLive(User user, Live live);
     int countByUserAndLive(User user, Live live);
     Optional<List<WishList>> findByUser(User user);
-
+    int countByLive(Live live);
     List<WishList> findAll();
+
+    @Query(value = "select * from wish_list wl group by prd_id",nativeQuery = true)
+    List<WishList> findAllGroupByPrdId();
 }

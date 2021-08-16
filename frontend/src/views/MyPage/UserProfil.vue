@@ -22,7 +22,7 @@
 
 <script>
 import MyProfile from "@/components/MyProfile";
-import rest from "../../js/httpCommon.js";
+// import rest from "../../js/httpCommon.js";
 
 export default {
   name: "Mypage",
@@ -41,16 +41,6 @@ export default {
           action: "goMyLive",
         },
         {
-          src: require("@/assets/mywish_40.png"),
-          text: "Wish",
-          action: "goWishLive",
-        },
-        {
-          src: require("@/assets/mychat_40.png"),
-          text: "Chat",
-          action: "goChat",
-        },
-        {
           src: require("@/assets/myreview_40.png"),
           text: "Review",
           action: "goReview",
@@ -64,17 +54,7 @@ export default {
           src: require("@/assets/myhelp_40.png"),
           text: "Help",
           action: "goHelp",
-        },
-        {
-          src: require("@/assets/bank.png"),
-          text: "Check",
-          action: "goTheCheat",
-        },
-        {
-          src: require("@/assets/mylogout_40.png"),
-          text: "Logout",
-          action: "logout",
-        },
+        }
       ],
     };
   },
@@ -86,42 +66,24 @@ export default {
       };
       return config;
     },
-    getProfile: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "/dabid/users/me",
-          headers: this.setToken(),
-        })
-        .then((res) => {
-          this.person = res.data;
-          console.log(res);
-          // this.$router.push({ name: "ReviewList" });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    async logout() {
-      // google 로그아웃
-      const result = await this.$gAuth.signOut();
-      console.log("result", result);
-      console.log("logout성공이닷");
-      // localstorage 처리
-      this.isLogin = false;
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("userName");
-      this.$router.push({ name: "main" });
-      this.$router.go();
-    },
+    // getProfile: function () {
+    //   rest
+    //     .axios({
+    //       method: "get",
+    //       url: "/dabid/users/me",
+    //       headers: this.setToken(),
+    //     })
+    //     .then((res) => {
+    //       this.person = res.data;
+    //       console.log(res);
+    //       // this.$router.push({ name: "ReviewList" });
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     menuActionClick(action) {
-      if (action === "logout") {
-        this.logout();
-      } else if (action === "goChat") {
-        this.$router.push({ name: "ChattingList" });
-      } else if (action === "goWishLive") {
-        this.$router.push({ name: "MyWishList" });
-      } else if (action === "goMyLive") {
+      if (action === "goMyLive") {
         this.$router.push({ name: "MyLiveList" });
       } else if (action === "goReview") {
         this.$router.push({ name: "ReviewList" });
@@ -129,8 +91,6 @@ export default {
         this.$router.push({ name: "Notice" });
       } else if (action === "goHelp") {
         this.$router.push({ name: "Help" });
-      } else if (action === "goTheCheat") {
-        this.$router.push({ name: "TheCheat" });
       }
     },
   },

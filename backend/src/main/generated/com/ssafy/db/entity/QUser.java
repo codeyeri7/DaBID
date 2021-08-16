@@ -26,7 +26,9 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<Live, QLive> liveList = this.<Live, QLive>createList("liveList", Live.class, QLive.class, PathInits.DIRECT2);
 
-    public final QResult result;
+    public final QResult result1;
+
+    public final QResult result2;
 
     public final ListPath<Review, QReview> reviewList = this.<Review, QReview>createList("reviewList", Review.class, QReview.class, PathInits.DIRECT2);
 
@@ -57,7 +59,8 @@ public class QUser extends EntityPathBase<User> {
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.auth = inits.isInitialized("auth") ? new QAuth(forProperty("auth"), inits.get("auth")) : null;
-        this.result = inits.isInitialized("result") ? new QResult(forProperty("result"), inits.get("result")) : null;
+        this.result1 = inits.isInitialized("result1") ? new QResult(forProperty("result1"), inits.get("result1")) : null;
+        this.result2 = inits.isInitialized("result2") ? new QResult(forProperty("result2"), inits.get("result2")) : null;
     }
 
 }

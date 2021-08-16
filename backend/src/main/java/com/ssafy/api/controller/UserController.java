@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.LiveRegisterPostReq;
 import com.ssafy.api.request.ReviewPostReq;
 import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.api.response.ReviewRes;
 import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.LiveService;
 import com.ssafy.db.entity.Live;
@@ -159,7 +160,7 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<?> checkReview(@PathVariable("userId") String userId){
-		List<Review> reviewList = userService.checkReview(userId);
+		List<ReviewRes> reviewList = userService.checkReview(userId);
 
 		if(reviewList.size()==0) return ResponseEntity.status(200).body(null);
 		else return ResponseEntity.status(200).body(reviewList);

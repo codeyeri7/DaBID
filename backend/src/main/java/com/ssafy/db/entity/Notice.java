@@ -2,11 +2,9 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -19,7 +17,7 @@ public class Notice {
     private String noticeTitle;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp noticeDate;
+    private Date noticeDate;
 
     private Boolean noticeType;
     @Column(length = 200)

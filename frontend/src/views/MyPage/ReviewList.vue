@@ -1,7 +1,24 @@
 <template>
   <div>
     <h3>Review List</h3>
-    
+    <v-col
+      v-for="review in reviews"
+      :key="review">
+      <v-card>
+        <div>
+          <v-card-title>
+            {{ review.reviewContent }}
+          </v-card-title>
+          <v-card-subtitle>
+            {{ review.reviewDate.slice(0,10) }}
+            {{ review.reviewDate.slice(11,16) }}
+          </v-card-subtitle>
+          <v-card-subtitle>
+            {{ review.reviewWriter }}
+          </v-card-subtitle>
+        </div>
+      </v-card>
+    </v-col>
   </div>
 </template>
 
@@ -12,8 +29,7 @@ export default {
   name: 'ReviewList',
   data: function () {
     return {
-      reviews: null,
-      // userId: null,
+      reviews: [],
     }
   },
   methods: {
@@ -34,14 +50,30 @@ export default {
           headers: this.setToken(),
         })
         .then((res) => {
-          this.person = res.data;
-          console.log(res);
-          // this.$router.push({ name: "ReviewList" });
+          this.reviews = res.data;
+          console.log(this.reviews);
         })
         .catch((err) => {
           console.log(err);
         });
-    }
+    },
+    // getUser: function () {
+    //   const writer = this.reviews.
+    //   console.log(writer)
+    //   rest
+    //     .axios({
+    //       method: "get",
+    //       url: `dabid/users/${writer}`,
+    //       headers: this.setToken()
+    //     })
+    //     .then((res) => {
+    //       this.writerId = res.data;
+    //       console.log(this.writerId);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     })
+    // }
   },
    created: function () {
     if (localStorage.getItem("jwt")) {

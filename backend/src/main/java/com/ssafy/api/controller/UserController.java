@@ -56,7 +56,6 @@ public class UserController {
 		List<Live> liveList = userService.getMyLives(userId);
 		return ResponseEntity.status(200).body(liveList);
 	}
-
 	@PatchMapping()
 	@ApiOperation(value = "회원 수정", notes = "사용자의 <strong>이름</strong>을 수정한다.")
 	@ApiResponses({

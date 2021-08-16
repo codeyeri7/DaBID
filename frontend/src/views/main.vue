@@ -25,7 +25,7 @@
         <v-container fluid>
           <div class="classify">
             <span><b>방송중인 상품</b></span>
-            <span>더보기</span>
+            <span @click="goSearchLive('방송중')">더보기</span>
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
@@ -55,7 +55,7 @@
         <v-container fluid>
           <div class="classify">
             <span><b>방송 예정</b></span>
-            <span>더보기</span>
+            <span @click="goSearchLive('방송예정')">더보기</span>
           </div>
           <v-row dense>
             <v-col v-for="card in will_live" :key="card.title" :cols="6">
@@ -83,7 +83,7 @@
         <v-container fluid>
           <div class="classify">
             <span><b>방송 종료</b></span>
-            <span>더보기</span>
+            <span @click="goSearchLive('방송종료')">더보기</span>
           </div>
           <v-row dense>
             <v-col v-for="card in end_live" :key="card.title" :cols="6">
@@ -161,6 +161,15 @@ export default {
         }
       });
     },
+    // 더보기로 이동
+    goSearchLive(liveStatus) {
+      this.$router.push({
+        name: "AllLiveList", 
+        params: {
+          liveStatus : liveStatus
+        }
+      });
+    },
     // live 정보
     getLive: function () {
       rest
@@ -198,11 +207,6 @@ export default {
   height: 20px;
   font-size: 4pt;
 }
-/* .subtitle-style {
-  height: 20px;
-  font-size: 3pt;
-  font-family: 'IBMPlexSansKR-Regular';
-} */
 .custom-selector {
   font-size: 3em;
 }
@@ -214,6 +218,7 @@ export default {
 .classify {
   display:flex; 
   justify-content:space-between;
+  margin-bottom: 0.6rem;
 }
 #card-title {
   font-size: 1rem;

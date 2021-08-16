@@ -9,6 +9,7 @@ import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -92,8 +93,8 @@ public class LiveController {
 
 	@GetMapping("/all")
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
-	public ResponseEntity<?> selectAllLives() {
-		List<Live> liveList = liveService.getAllLives();
+	public ResponseEntity<?> selectAllLives(@RequestParam(name="page") int page) {
+		Page<Live> liveList = liveService.getAllLives(page);
 		return ResponseEntity.status(200).body(liveList);
 	}
 

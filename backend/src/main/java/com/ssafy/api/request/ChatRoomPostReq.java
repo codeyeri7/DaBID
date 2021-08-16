@@ -1,4 +1,4 @@
-package com.ssafy.db.vo;
+package com.ssafy.api.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,12 +7,12 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class ChatRoom {
+public class ChatRoomPostReq {
     private String roomId;
     private String name;
 
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
+    public static ChatRoomPostReq create(String name) {
+        ChatRoomPostReq chatRoom = new ChatRoomPostReq();
         chatRoom.roomId = UUID.randomUUID().toString();
         chatRoom.name = name;
         return chatRoom;

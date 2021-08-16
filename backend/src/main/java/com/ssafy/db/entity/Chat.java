@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatId;
 
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp chatDate;
 
     @Column(length = 200)
@@ -25,6 +27,7 @@ public class Chat {
     private String chatFrom;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="prd_id")
     private Result result;
 }

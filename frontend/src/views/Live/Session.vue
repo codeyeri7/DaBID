@@ -54,7 +54,7 @@
 			</div>
 				<div style="margin-left: 1.2rem">
 					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
-					<p style="color:red">연속 베팅은 불가능합ㄴ디ㅏ. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
+					<p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
 				</div>
 			
 			<!-- 본인 화면 --> 

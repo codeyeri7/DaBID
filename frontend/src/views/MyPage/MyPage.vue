@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyProfile/>
+    <MyProfile :Person ="person"/>
     <v-card class="mx-auto" max-width="300">
       <v-row dense>
         <v-col v-for="item in items" :key="item" :cols="3">
@@ -35,6 +35,7 @@ export default {
       dialog: false,
       fontSize: 8,
       person: null,
+      userId: null,
       items: [
         {
           src: require("@/assets/mylive.png"),
@@ -96,8 +97,7 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          console.log(this.person);
-          console.log(this.person.userId)
+          // console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -123,7 +123,7 @@ export default {
       } else if (action === "goWishLive") {
         this.$router.push({ name: "MyWishList" });
       } else if (action === "goMyLive") {
-        this.$router.push({ name: "MyLiveList" });
+        this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
       } else if (action === "goReview") {
         this.$router.push({ name: "ReviewList", params: { userId: `${this.person.userId}`} });
       } else if (action === "goNotice") {
@@ -137,6 +137,7 @@ export default {
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
+      this.userId = localStorage.getItem('userId')
       this.getProfile();
     } else {
       this.$router.push({ name: "Login" });

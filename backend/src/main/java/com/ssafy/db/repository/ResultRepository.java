@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface ResultRepository extends JpaRepository<Result, Integer> {
     Optional<Result> findByPrdId(int prdId);
-    // ResultRepository.findBySellerOrBuyer(com.ssafy.db.entity.User)
-    // expects at least 2 arguments but only found 1.
-    // This leaves an operator of type SIMPLE_PROPERTY for property buyer unbound.
+    Result findByLive(Live live);
     List<Result> findBySellerOrBuyer(User seller, User buyer);
 }

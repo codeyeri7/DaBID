@@ -2,7 +2,8 @@
    <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card height="300" tile :elevation="0">
+        <v-card height="300" tile :elevation="0" v-bind="attrs"
+          v-on="on">
         <!-- Image -->
         <v-img
           :src= live.prdPhoto
@@ -10,8 +11,6 @@
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           height="180px"
           style="padding: 40px"
-          v-bind="attrs"
-          v-on="on"
         >
         </v-img>
         <!-- 카드 하단-->

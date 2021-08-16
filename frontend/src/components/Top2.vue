@@ -2,30 +2,40 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card height="300" tile :elevation="0" v-bind="attrs"
-            v-on="on">
-          <!-- Image -->
-          <v-img
-            :src="live.prdPhoto"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="180px"
-            style="padding: 40px"
-            @click="checkPrdId()"
-          >
-          </v-img>
-          <!-- 카드 하단-->
-          <div class="card-content" id="kor-font">
-              <v-card-title id="card-title">{{ live.prdName | truncate(8, '...') }}</v-card-title><br>
-              <v-card-subtitle class="py-0">시작가 | {{ live.prdPriceStart | comma }}원</v-card-subtitle>
-              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.liveDate.slice(0,10) }}</v-card-subtitle>
-            </div>
-        </v-card>
+        <v-card color="secondary" tile :elevation="0" light height="190" v-bind="attrs"
+          v-on="on">
+              <v-card-title class="pb-1">
+                <v-list-item-avatar>
+                  <v-img
+                    class="elevation-6"
+                    alt="profile image"
+                    src="@/assets/best-seller.png"
+                  ></v-img>
+                </v-list-item-avatar>
+                <div>
+                  <v-icon class="mr-1" style="color: red"> mdi-heart </v-icon>
+                  <span class="subheading mr-2">{{ hot_live.hearts }}</span>
+                </div>
+
+                <RouterLink :to="{ name: 'UserProfile', params: { userId : hot_live.user.userId}}">
+                  <h5 class="m-0">{{ hot_live.user.userName }}</h5>
+                </RouterLink>
+              </v-card-title>
+
+              <v-card-text class="card-text" id="kor-font">
+                <p>
+                  <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
+                </p>
+                <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
+                {{ hot_live.live.liveDate.slice(0, 10) }}
+              </v-card-text>
+            </v-card>
       </v-col>
     </template>
+
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
-        <h4>{{ live.liveTitle }}</h4>
+        <h4>{{ hot_live.live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn
@@ -44,36 +54,35 @@
               v-on:click="clicked = !clicked"
               @click="unwish()"
             >
-            <!-- v-bind:class="{ red: clicked }" -->
               <v-icon style="color:red">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
       </v-card-title>
       <v-card-text>
-        <img :src="live.prdPhoto" width="200px" class="mt-5" />
+        <img :src="hot_live.live.prdPhoto" width="200px" class="mt-5" />
         <hr />        
         <h5 style="margin-bottom: 10px" class="title-font">
-          상품명 : {{ live.prdName }}
+          상품명 : {{ hot_live.live.prdName }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          상품 일련번호 : {{ live.prdNo }}
+          상품 일련번호 : {{ hot_live.live.prdNo }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          경매 시작가 : {{ live.prdPriceStart | comma }}
+          경매 시작가 : {{ hot_live.live.prdPriceStart | comma }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.liveDate.slice(0,10) }} {{ live.liveDate.slice(11, 16)}}
+          라이브 일시 : {{ hot_live.live.liveDate.slice(0,10) }} {{ hot_live.live.liveDate.slice(11, 16)}}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          설명 : {{ live.liveDesc }}
+          설명 : {{ hot_live.live.liveDesc }}
         </h5>
       </v-card-text>
       <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
-        <v-btn color="red" text @click="remove()"> delete </v-btn>
+        <v-btn color="blue darken-1" text @click="edit"> edit </v-btn>
+        <v-btn color="red" text @click="remove"> delete </v-btn>
         <v-btn color="primary" text @click="dialog = false"> close </v-btn>
       </v-card-actions>
     </v-card>
@@ -86,12 +95,12 @@ import rest from "../js/httpCommon.js";
 export default {
   name: "MyLiveList",
   props: {
-    live: Object,
+    hot_live: Object,
   },
   data: function () {
     return {
-      prdId: this.live.prdId,
-      lives: [],
+      prdId: this.hot_live.live.prdId,
+      hot_lives: [],
       wishlist: [],
       dialog: false,
       clicked: false,
@@ -138,13 +147,33 @@ export default {
     },
     edit: function () {
       const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
+      if (this.hot_live.user.userId === userId) {
         this.$router.push({
           name: "UpdateMyLiveList",
           params: { prdId: `${this.prdId}` },
         });
       } else {
         alert("본인이 작성한 글만 수정 가능합니다!")
+      }
+    },
+    remove: function () {
+      const userId = localStorage.getItem('userId')
+      if (this.hot_live.user.userId === userId) {
+        rest
+          .axios({
+            method: "delete",
+            url: `/dabid/live/${this.prdId}`,
+            headers: this.setToken()
+          })
+          .then((res) => {
+            this.refreshAll();
+            console.log('삭제 성공')
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        alert('본인이 작성한 글만 삭제 가능합니다!')
       }
     },
     wish: function () {
@@ -198,15 +227,8 @@ export default {
 </script>
 
 <style scoped>
-#card-content {
-  background-color: #FDF4F4;
-  opacity: 0.8;
-}
-#card-title {
-  font-size: 1rem;
-  padding-bottom: 0;
-  padding-top: 0;
-  color:black;
+p {
+    margin-bottom: 0;
 }
 </style>
 

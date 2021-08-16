@@ -13,6 +13,7 @@
                 <span id="userName"
                   ><b>{{ person.userName }}</b></span
                 >
+                {{ user }}
                 <v-dialog
                   v-model="dialog"
                   persistent

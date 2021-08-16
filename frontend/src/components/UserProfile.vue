@@ -96,7 +96,6 @@ export default {
           this.userScore = res.data.userScore;
           console.log(res);
           console.log(this.person)
-          // this.$router.push({ name: "ReviewList" });
         })
         .catch((err) => {
           console.log(err);

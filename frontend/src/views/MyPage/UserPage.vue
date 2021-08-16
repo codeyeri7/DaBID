@@ -22,7 +22,7 @@
 
 <script>
 import MyProfile from "@/components/MyProfile";
-// import rest from "../../js/httpCommon.js";
+import rest from "../../js/httpCommon.js";
 
 export default {
   name: "Mypage",
@@ -66,22 +66,22 @@ export default {
       };
       return config;
     },
-    // getProfile: function () {
-    //   rest
-    //     .axios({
-    //       method: "get",
-    //       url: "/dabid/users/me",
-    //       headers: this.setToken(),
-    //     })
-    //     .then((res) => {
-    //       this.person = res.data;
-    //       console.log(res);
-    //       // this.$router.push({ name: "ReviewList" });
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    getProfile: function () {
+      rest
+        .axios({
+          method: "get",
+          url: `/dabid/users/${this.userId}`,
+          headers: this.setToken(),
+        })
+        .then((res) => {
+          this.person = res.data;
+          console.log(res);
+          // this.$router.push({ name: "ReviewList" });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     menuActionClick(action) {
       if (action === "goMyLive") {
         this.$router.push({ name: "MyLiveList" });

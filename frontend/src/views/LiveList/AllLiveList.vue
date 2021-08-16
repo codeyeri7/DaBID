@@ -7,7 +7,7 @@
         <v-row dense>
           <v-col
             v-for="hot_live in hot_lives"
-            :key="hot_live.liveTitle"
+            :key="hot_live.live.liveTitle"
             :cols="6"
           >
             <v-card color="secondary" tile :elevation="0" light height="190">
@@ -28,10 +28,10 @@
 
               <v-card-text id="kor-font">
                 <p>
-                  <b>{{ hot_live.liveTitle | truncate(9, "..") }}</b>
+                  <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
                 </p>
-                <p>₩ {{ hot_live.prdPriceStart | comma }}</p>
-                {{ hot_live.liveDate | truncate(10, "*") }}
+                <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
+                {{ hot_live.live.liveDate | truncate(10, "*") }}
               </v-card-text>
             </v-card>
           </v-col>

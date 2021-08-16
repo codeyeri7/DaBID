@@ -31,6 +31,7 @@ export default {
   },
   data: function () {
     return {
+      // userId: this.person.userId,
       dialog: false,
       fontSize: 8,
       person: null,
@@ -95,8 +96,8 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          console.log(res);
-          // this.$router.push({ name: "ReviewList" });
+          console.log(this.person);
+          console.log(this.person.userId)
         })
         .catch((err) => {
           console.log(err);
@@ -124,7 +125,7 @@ export default {
       } else if (action === "goMyLive") {
         this.$router.push({ name: "MyLiveList" });
       } else if (action === "goReview") {
-        this.$router.push({ name: "ReviewList" });
+        this.$router.push({ name: "ReviewList", params: { userId: `${this.person.userId}`} });
       } else if (action === "goNotice") {
         this.$router.push({ name: "Notice" });
       } else if (action === "goHelp") {

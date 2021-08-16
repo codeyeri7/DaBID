@@ -11,55 +11,25 @@
               <div>
                 <img src="@/assets/profileImg.jpg" alt="profile image" />
                 <span id="userName"
-                  ><b>{{ person.userName }}</b></span
+                  ><b>{{ userName }}</b></span
                 >
-                <v-dialog
-                  v-model="dialog"
-                  persistent
-                  max-width="600px"
-                >
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      icon
-                      color="black"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <v-card>
-                    <v-container>
-                      <!-- 닉네임 변경 폼 변경했습니다 윤서 --> 
-                      <h3 style="font-size:15px; font-weight:bold" id="kor-font">닉네임 변경</h3>
-                      <div>
-                        <v-text-field
-                          v-model="userName"
-                          laber="User Name"
-                          required
-                          id="kor-font"
-                        ></v-text-field>
-                      </div>
-                    </v-container>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        color="#E53935"
-                        text
-                        @click="dialog = false"
-                      >
-                        Close
-                      </v-btn>
-                      <v-btn
-                        color="primary"
-                        text
-                        @click="nameUpdate()"
-                      >
-                        Save
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                  color="#E53935"
+                  text
+                  @click="dialog = false"
+                  >
+                  Close
+                  </v-btn>
+                  <v-btn
+                  color="primary"
+                  text
+                  @click="nameUpdate()"
+                  >
+                  Save
+                  </v-btn>
+                </v-card-actions>
               </div>
             </v-card-title>
           </v-col>
@@ -118,10 +88,9 @@ export default {
     return {
       dialog: false,
       person: [],
-      // userName: "",
-      // userScore: "",
+      userName: "",
+      userScore: "",
       reviews: [],
-      nameChange: []
     };
   },
   methods: {
@@ -170,28 +139,6 @@ export default {
     },
     writeReviews: function () {
       this.$router.push({ name: "ReviewCreate" });
-    },
-    nameUpdate: function () {
-      console.log(this.person)
-      const config = this.setToken()
-      rest.
-        axios({
-          method: 'patch',
-          url: `/dabid/users/`,
-          data: {
-            userName: this.userName,
-          },
-          headers: config
-        })
-        .then((res) => {
-          this.nameChange = res.data
-          console.log('OK',this.nameChange)
-          console.log(res)
-          this.dialog = false
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     refreshAll: function () {
       // 새로고침

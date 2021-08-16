@@ -1,6 +1,7 @@
 <template>
   <div>
-
+    <h3>Review List</h3>
+    
   </div>
 </template>
 
@@ -12,7 +13,7 @@ export default {
   data: function () {
     return {
       reviews: null,
-      userId: null,
+      // userId: null,
     }
   },
   methods: {
@@ -24,6 +25,8 @@ export default {
       return config;
     },
     getReviews: function () {
+      const userId = this.$route.params.userId
+      console.log(userId)
       rest
         .axios({
           method: "get",
@@ -42,7 +45,6 @@ export default {
   },
    created: function () {
     if (localStorage.getItem("jwt")) {
-      this.userId = this.$route.params.userId
       this.getReviews();
     } else {
       this.$router.push({ name: "Login" });

@@ -54,7 +54,7 @@
 				<div style="margin-left: 1.2rem">
 					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
 					<v-btn @click="endSession">방종</v-btn>
-					<v-btn @click="goChat()">임시 채팅가기</v-btn>
+					<v-btn @click="goChat">임시 채팅가기</v-btn>
 				</div>
 			
 			<!-- 본인 화면 --> 
@@ -158,7 +158,27 @@ export default {
 			
 		},
 		goChat() {
-			
+			rest.axios({
+				url: "/dabid/chat/end/"+this.prdId,
+				method: "post",
+				data: {
+					sellerId: this.liveInfo.user.userId,
+					buyerId: this.currentUser,
+					// buyerId: "P1628131859142",
+					resPriceEnd: this.currentPrice,
+					// resPriceEnd: 700000,
+				}
+			})
+			.then(res => {
+				this.leaveSession();
+				// this.$router.push("Chatlist");
+				this.$router.push({
+					name: "Chatroom",
+					params: {
+						prdId: this.prdId,
+					}
+				})
+			})
 		},
 		bidding() {
 			return new Promise((resolve, reject) => {
@@ -367,6 +387,7 @@ export default {
 		this.prdId = this.$route.params.prdId
 		console.log(this.prdId+ '번 방송입니다.')
 		this.getLiveInfo()
+		this.joinSession()
 	}
 }
 </script>

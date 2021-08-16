@@ -5,6 +5,7 @@ import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
 import session from '../views/Live/Session.vue'
+import Seller from '../views/Live/Seller.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
 import MyWishList from '../views/LiveList/MyWishList.vue'
@@ -46,6 +47,11 @@ const routes = [
     path: '/session',
     name: 'session',
     component: session
+  },
+  {
+    path: '/Seller',
+    name: 'Seller',
+    component: Seller
   },
   {
     path: '/MyLiveList',

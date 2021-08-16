@@ -161,7 +161,7 @@ public class UserController {
 	public ResponseEntity<?> checkReview(@PathVariable("userId") String userId){
 		List<Review> reviewList = userService.checkReview(userId);
 
-		if(reviewList.size()==0) return ResponseEntity.status(409).body(null);
+		if(reviewList.size()==0) return ResponseEntity.status(200).body(null);
 		else return ResponseEntity.status(200).body(reviewList);
 	}
 

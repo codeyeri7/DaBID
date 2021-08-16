@@ -17,7 +17,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 public class Live { //라이브테이블
 
     @Id

@@ -1,7 +1,7 @@
 <template>
   <div class=" d-flex align-center text-center mx-3 mt-6">
     <v-card class="ap-card" >
-      <v-card-title class="text-h5"
+      <v-card-title tile class="text-h5"
       style="color:#ebe2de; background-color: #292938">
         Accident Policy
       </v-card-title>

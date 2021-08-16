@@ -71,7 +71,7 @@ export default {
       // pub/sub event
       stompClient.connect({}, function(frame) {
         console.log('Connected: ', frame);
-        stompClient.subscribe("/sub/chat/room/", (res) => {
+        stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
           var recv = JSON.parse(res.body);
           this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
           // this.recvMessage(recv);

@@ -16,6 +16,8 @@ import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
 import TheCheat from '../views/MyPage/TheCheat.vue'
 import Notice from '../views/Notice/NoticeList.vue'
+import UserProfile from '../views/MyPage/UserProfile.vue'
+
 
 Vue.use(VueRouter)
 
@@ -71,6 +73,11 @@ const routes = [
     component: ReviewCreate
   },
   {
+    path: '/ReviewList',
+    name: 'ReviewList',
+    component: ReviewList
+  },
+  {
     path: '/MyWishList',
     name: 'MyWishList',
     component: MyWishList
@@ -86,11 +93,6 @@ const routes = [
     component: Chatlist
   },
   {
-    path: '/ReviewList',
-    name: 'ReviewList',
-    component: ReviewList
-  },
-  {
     path: '/TheCheat',
     name: 'TheCheat',
     component: TheCheat
@@ -99,6 +101,11 @@ const routes = [
     path: '/Notice',
     name: 'Notice',
     component: Notice
+  },
+  {
+    path: '/UserProfile',
+    name: 'UserProfile',
+    component: UserProfile
   }
 ]
 

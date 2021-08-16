@@ -13,23 +13,6 @@
                 <span id="userName"
                   ><b>{{ userName }}</b></span
                 >
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                  color="#E53935"
-                  text
-                  @click="dialog = false"
-                  >
-                  Close
-                  </v-btn>
-                  <v-btn
-                  color="primary"
-                  text
-                  @click="nameUpdate()"
-                  >
-                  Save
-                  </v-btn>
-                </v-card-actions>
               </div>
             </v-card-title>
           </v-col>
@@ -58,7 +41,7 @@
             type="button"
             @click="checkReviews()"
           >
-            Check your reviews
+            Check reviews
           </button>
 
           <!-- <button
@@ -80,13 +63,12 @@
 <script>
 import rest from "../js/httpCommon.js";
 export default {
-  name: "MyProfile",
+  name: "UserProfile",
   props: {
     user: Object,
   },
   data: function () {
     return {
-      dialog: false,
       person: [],
       userName: "",
       userScore: "",
@@ -114,7 +96,6 @@ export default {
           this.userScore = res.data.userScore;
           console.log(res);
           console.log(this.person)
-          // this.$router.push({ name: "ReviewList" });
         })
         .catch((err) => {
           console.log(err);
@@ -137,9 +118,9 @@ export default {
           console.log(err);
         });
     },
-    writeReviews: function () {
-      this.$router.push({ name: "ReviewCreate" });
-    },
+    // writeReviews: function () {
+    //   this.$router.push({ name: "ReviewCreate" });
+    // },
     refreshAll: function () {
       // 새로고침
       this.$router.go();
@@ -167,9 +148,6 @@ export default {
   width: 150px;
   margin: auto;
   padding: 0;
-}
-#userName {
-  font-family: "IBMPlexSansKR-Regular";
 }
 #barEmoji {
   width: 85%;

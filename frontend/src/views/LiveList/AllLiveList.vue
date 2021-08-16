@@ -1,42 +1,25 @@
 <template>
   <div>
-    <h3 id="eng-font" style="margin-left: 10px">Top 2</h3>
     <!-- top2 carousel -->
-    <div class="mx-auto">
-      <v-container fluid>
-        <v-row dense>
-          <v-col
-            v-for="hot_live in hot_lives"
-            :key="hot_live.live.liveTitle"
-            :cols="6"
-          >
-            <v-card color="secondary" tile :elevation="0" light height="190">
-              <v-card-title>
-                <v-list-item-avatar>
-                  <v-img
-                    class="elevation-6"
-                    alt="profile image"
-                    src="@/assets/best-seller.png"
-                  ></v-img>
-                </v-list-item-avatar>
-                <div>
-                  <v-icon class="mr-1" style="color: red"> mdi-heart </v-icon>
-                  <span class="subheading mr-2">{{ hot_live.hearts }}</span>
-                </div>
-                <h5>{{ hot_live.user.userName }}</h5>
-              </v-card-title>
-
-              <v-card-text id="kor-font">
-                <p>
-                  <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
-                </p>
-                <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
-                {{ hot_live.live.liveDate | truncate(10, "*") }}
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+    <div id="kor-font">
+      <div class="main-card">
+        <div class="mx-auto">
+          <v-container fluid>
+            <div>
+              <span id="eng-font" style="font-size: 20px; margin-bottom: 20px">
+                <b>Top 2</b>
+              </span>
+            </div>
+            <v-row dense>
+              <Top2
+                v-for="(hot_live, idx) in hot_lives"
+                :key="idx"
+                :hot_live="hot_live"
+              />
+            </v-row>
+          </v-container>
+        </div>
+      </div>
     </div>
 
     <!-- 검색 카테고리 창 -->
@@ -105,16 +88,20 @@
 
 <script>
 import MyLiveListCard from "../../components/MyLiveListCard.vue";
+import Top2 from "../../components/Top2.vue"
 import rest from "../../js/httpCommon.js";
 
 export default {
   name: "MyLiveList",
-  components: { MyLiveListCard },
+  components: { 
+    MyLiveListCard,
+    Top2,
+    },
   data: function () {
     return {
-      hot_lives: [],
       lives: [],
-
+      hot_lives: [],
+    
       //검색 관련
       keyword: "",
       values1: "",

@@ -13,6 +13,7 @@
                 <span id="userName"
                   ><b>{{ person.userName }}</b></span
                 >
+                {{ user }}
                 <v-dialog
                   v-model="dialog"
                   persistent
@@ -67,7 +68,7 @@
         <div id="barEmoji">
           <!-- v-bind:buffer-value="userScore" -->
           <v-progress-linear
-            v-model="userScore"
+            v-model="person.userScore"
             color="#D0836E"
             background-color="#F4E3D7"
             height="15"
@@ -118,6 +119,7 @@ export default {
     return {
       dialog: false,
       person: [],
+      // person있는 정보 굳이 또 받아옴 
       // userName: "",
       // userScore: "",
       reviews: [],
@@ -141,11 +143,9 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          this.userName = res.data.userName;
-          this.userScore = res.data.userScore;
-          console.log(res);
-          console.log(this.person)
-          // this.$router.push({ name: "ReviewList" });
+          // this.userName = res.data.userName;
+          // this.userScore = res.data.userScore;
+          console.log('내정보',this.person)
         })
         .catch((err) => {
           console.log(err);
@@ -162,7 +162,6 @@ export default {
         .then((res) => {
           this.reviews = res.data;
           console.log(this.reviews);
-          //this.$router.push({ name: "ReviewCreate" });
         })
         .catch((err) => {
           console.log(err);

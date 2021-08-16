@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyProfile :Person ="person"/>
+    <UserProfile/>
     <v-card class="mx-auto" max-width="300">
       <v-row dense>
         <v-col v-for="item in items" :key="item" :cols="3">
@@ -21,36 +21,24 @@
 </template>
 
 <script>
-import MyProfile from "@/components/MyProfile";
+import UserProfile from "../../components/UserProfile.vue"
 import rest from "../../js/httpCommon.js";
 
 export default {
   name: "Mypage",
   components: {
-    MyProfile,
+    UserProfile,
   },
   data: function () {
     return {
-      // userId: this.person.userId,
       dialog: false,
       fontSize: 8,
       person: null,
-      userId: null,
       items: [
         {
           src: require("@/assets/mylive.png"),
           text: "Live",
           action: "goMyLive",
-        },
-        {
-          src: require("@/assets/mywish_40.png"),
-          text: "Wish",
-          action: "goWishLive",
-        },
-        {
-          src: require("@/assets/mychat_40.png"),
-          text: "Chat",
-          action: "goChat",
         },
         {
           src: require("@/assets/myreview_40.png"),
@@ -66,17 +54,7 @@ export default {
           src: require("@/assets/myhelp_40.png"),
           text: "Help",
           action: "goHelp",
-        },
-        {
-          src: require("@/assets/bank.png"),
-          text: "Check",
-          action: "goTheCheat",
-        },
-        {
-          src: require("@/assets/mylogout_40.png"),
-          text: "Logout",
-          action: "logout",
-        },
+        }
       ],
     };
   },
@@ -88,56 +66,35 @@ export default {
       };
       return config;
     },
-    getProfile: function () {
+    getProfile: function (userId) {
       rest
         .axios({
           method: "get",
-          url: "/dabid/users/me",
+          url: `/dabid/users/${userId}`,
           headers: this.setToken(),
         })
         .then((res) => {
           this.person = res.data;
-          // console.log(res);
+          console.log('받아온 정보', this.person);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    async logout() {
-      // google 로그아웃
-      const result = await this.$gAuth.signOut();
-      console.log("result", result);
-      console.log("logout성공이닷");
-      // localstorage 처리
-      this.isLogin = false;
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("userName");
-      this.$router.push({ name: "main" });
-      this.$router.go();
-    },
-    menuActionClick(action) {
-      if (action === "logout") {
-        this.logout();
-      } else if (action === "goChat") {
-        this.$router.push({ name: "ChattingList" });
-      } else if (action === "goWishLive") {
-        this.$router.push({ name: "MyWishList" });
-      } else if (action === "goMyLive") {
-        this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
-      } else if (action === "goReview") {
-        this.$router.push({ name: "ReviewList", params: { userId: `${this.person.userId}`} });
-      } else if (action === "goNotice") {
-        this.$router.push({ name: "Notice" });
-      } else if (action === "goHelp") {
-        this.$router.push({ name: "Help" });
-      } else if (action === "goTheCheat") {
-        this.$router.push({ name: "TheCheat" });
-      }
-    },
+    // menuActionClick(action) {
+    //   if (action === "goMyLive") {
+    //     this.$router.push({ name: "MyLiveList" });
+    //   } else if (action === "goReview") {
+    //     this.$router.push({ name: "ReviewList" });
+    //   } else if (action === "goNotice") {
+    //     this.$router.push({ name: "Notice" });
+    //   } else if (action === "goHelp") {
+    //     this.$router.push({ name: "Help" });
+    //   }
+    // },
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.userId = localStorage.getItem('userId')
       this.getProfile();
     } else {
       this.$router.push({ name: "Login" });

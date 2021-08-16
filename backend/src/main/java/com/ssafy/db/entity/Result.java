@@ -1,10 +1,7 @@
 package com.ssafy.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,7 +30,6 @@ public class Result {
     @JoinColumn(name="res_seller_id")
     private User seller;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "result", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Chat> chatlist = new ArrayList<>();
 }

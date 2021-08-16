@@ -1,7 +1,7 @@
 <template>
   <div class="container" id="app" v-cloak>
     <div>
-      <h2>{{room.name}}</h2>
+      <h2>{{ room.live.prdName }}</h2>
     </div>
     <div class="input-group">
       <div class="input-group-prepend">
@@ -22,9 +22,10 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
+import rest from "../../js/httpCommon.js"
 
 export default {
   data() {
@@ -38,14 +39,28 @@ export default {
     }
   },
   created() {
-    this.roomId = this.$route.params.roomId;
-    this.sender = this.$route.params.sender;
+    this.roomId = this.$route.params.prdId;
+    // this.sender = this.$route.params.sender;
+    this.sender = localStorage.getItem("userName");
     this.findRoom();
     this.connect();
   },
   methods: {
     findRoom: function() {
-      axios.get('https://localhost:8080/dabid/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+      // axios.get('https://localhost:8080/dabid/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+      rest.axios({
+        url: "dabid/chat/room/"+this.roomId,
+      })
+      .then(res => {
+        console.log(res.data);
+        this.room = res.data;
+        for (let message of res.data.chatlist) {
+          this.messages.push({"type":"TALK","sender":message.chatFrom,"message":message.chatContent})
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
     },
     sendMessage: function() {
       let chat =  {

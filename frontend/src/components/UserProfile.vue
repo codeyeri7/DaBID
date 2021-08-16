@@ -10,9 +10,9 @@
             <v-card-title>
               <div>
                 <img src="@/assets/profileImg.jpg" alt="profile image" />
-                <span id="userName"
-                  ><b>{{ userName }}</b></span
-                >
+                <span id="userName">
+                    <b>{{ User.user.userName }}</b>
+                </span>
               </div>
             </v-card-title>
           </v-col>
@@ -20,7 +20,7 @@
         <div id="barEmoji">
           <!-- v-bind:buffer-value="userScore" -->
           <v-progress-linear
-            v-model="userScore"
+            v-model="User.user.userScore"
             color="#D0836E"
             background-color="#F4E3D7"
             height="15"
@@ -43,15 +43,6 @@
           >
             Check reviews
           </button>
-
-          <!-- <button
-            id="review-btn"
-            class="btn"
-            type="button"
-            @click="writeReviews()"
-          >
-            write your reviews
-          </button> -->
         </div>
         <v-divider dark></v-divider>
       </v-card>
@@ -64,17 +55,15 @@
 import rest from "../js/httpCommon.js";
 export default {
   name: "UserProfile",
-  props: {
-    user: Object,
-  },
   data: function () {
     return {
-      person: [],
-      userName: "",
-      userScore: "",
+      person: null,
       reviews: [],
     };
   },
+  props: {
+      User: Object
+    },  
   methods: {
     setToken: function () {
       const jwtToken = localStorage.getItem("jwt");
@@ -82,24 +71,6 @@ export default {
         Authorization: `Bearer ${jwtToken}`,
       };
       return config;
-    },
-    getProfile: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "/dabid/users/me",
-          headers: this.setToken(),
-        })
-        .then((res) => {
-          this.person = res.data;
-          this.userName = res.data.userName;
-          this.userScore = res.data.userScore;
-          console.log(res);
-          console.log(this.person)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     //review list로 페이지 전환
     checkReviews: function () {
@@ -112,15 +83,11 @@ export default {
         .then((res) => {
           this.reviews = res.data;
           console.log(this.reviews);
-          //this.$router.push({ name: "ReviewCreate" });
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    // writeReviews: function () {
-    //   this.$router.push({ name: "ReviewCreate" });
-    // },
     refreshAll: function () {
       // 새로고침
       this.$router.go();

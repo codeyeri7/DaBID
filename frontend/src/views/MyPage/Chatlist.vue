@@ -15,7 +15,7 @@
       </div>
     </div> -->
     <ul class="list-group">
-      <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId" v-on:click="enterRoom(item.roomId)">
+      <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.live.prdId" v-on:click="enterRoom(item.live.prdId)">
         <span v-if="checkUser(item)">
           {{ item.buyer.userName }} | {{ item.live.prdName }}
         </span>
@@ -50,7 +50,7 @@ export default {
       return config
     },
     checkUser(item) {
-      return item.seller == localStorage.getItem("userId");
+      return item.seller.userId == localStorage.getItem("userId");
     },
     findAllRoom: function() {
       rest.axios({
@@ -82,20 +82,20 @@ export default {
           .catch( response => { alert("채팅방 개설에 실패하였습니다."); } );
         }
     },
-    enterRoom: function(roomId) {
-      var sender = prompt('대화명을 입력해 주세요.');
-      if(sender != "") {
+    enterRoom: function(prdId) {
+      // var sender = prompt('대화명을 입력해 주세요.');
+      // if(sender != "") {
         // localStorage.setItem('wschat.sender',sender);
         // localStorage.setItem('wschat.roomId',roomId);
         // location.href="/chat/room/enter/"+roomId;
         this.$router.push({
           name: "Chatroom",
           params: {
-            sender: sender,
-            roomId: roomId,
+            // sender: sender,
+            prdId: prdId,
           }
         })
-      }
+      // }
     }
   }
 }

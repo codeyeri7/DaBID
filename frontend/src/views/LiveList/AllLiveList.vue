@@ -121,6 +121,7 @@ export default {
       values2: "",
       items1: ["의류", "가방", "신발", "악세사리"],
       items2: ["방송종료", "방송중", "방송예정"],
+      page: 0,
     };
   },
   filters: {
@@ -140,11 +141,18 @@ export default {
       rest
         .axios({
           method: "get",
-          url: "/dabid/live",
+          url: "/dabid/live/all",
           headers: this.setToken(),
+          params: {
+            page: this.page,
+          }
         })
         .then((res) => {
-          this.lives = res.data;
+          // console.log(res.data.content);
+          for (let live of res.data.content) {
+            // console.log(live);
+            this.lives.push(live);
+          }
           console.log("전체 라이브", this.lives);
         })
         .catch((err) => {
@@ -188,6 +196,15 @@ export default {
     reset() {
       (this.values1 = ""), (this.values2 = ""), (this.keyword = "");
     },
+    infiniteScroll(e) {
+      let scrollTop = e.target.scrollingElement.scrollTop
+      let scrollHeight = e.target.scrollingElement.scrollHeight
+      
+      if(scrollTop >= scrollHeight - 650) {
+        this.page++;
+        this.getAllLiveList();
+      }
+    }
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
@@ -196,8 +213,13 @@ export default {
     } else {
       this.$router.push({ name: "Login" });
     }
+    window.addEventListener('scroll', this.infiniteScroll);
   },
+  destroyed () {
+    window.removeEventListener('scroll', this.infiniteScroll);
+  }
 };
+
 </script>
 
 <style scoped>

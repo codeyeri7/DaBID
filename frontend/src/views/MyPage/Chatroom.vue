@@ -1,24 +1,57 @@
 <template>
-  <div class="container" id="app" v-cloak>
-    <div>
-      <h2>{{ room.live.prdName }}</h2>
-    </div>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text">내용</label>
+<div>
+  <div>
+    <v-card>
+      <div class="d-flex justify-content mx-3">
+        <div>
+          <v-img
+            :src="room.live.prdPhoto"
+            class="white--text align-center mx-2"
+            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+            height="50px"
+            width="60px"
+            @click="checkPrdId()"
+          >
+          </v-img>
+        </div>
+        <div class="d-flex align-items">
+          <div>
+            <v-text>{{ room.live.prdName }}</v-text>
+          </div>
+          <div>
+            <v-text>{{ endlive.resPriceEnd }}원</v-text>
+          </div>
+        </div>
       </div>
-      <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
-      <div class="input-group-append">
-          <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
-      </div>
+    </v-card>
+    <v-container class="fill-height">
+      <v-row class="fill-height pb-14" align="end">
+        <v-col>
+          <div v-for="(message, index) in messages" :key="index" 
+              :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
+            <span v-if="message.sender == sender" class="blue--text mr-3">{{ message.message }}</span>
+            <v-avatar :color="message.sender == sender ? 'indigo': 'red'" size="36">
+              <span class="white--text">{{ message.sender[0] }}</span>
+            </v-avatar>
+            <span v-if="message.sender != sender" class="blue--text ml-3">{{ message.message }}</span>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="fixedchat">
+      <v-container>
+        <v-row no-gutters>
+          <v-col>
+            <div class="d-flex flex-row align-center">
+              <v-text-field v-model="msg" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
+              <v-btn icon class="ml-4" @click="sendMessage"><v-icon>mdi-send</v-icon></v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
-    <ul class="list-group">
-      <li class="list-group-item" v-for="(message, idx) in messages" :key="idx" :message="message">
-        <a>{{message.sender}} - {{message.message}}</a>
-      </li>
-    </ul>
-    <div></div>
   </div>
+</div>
 </template>
 
 <script>
@@ -32,6 +65,7 @@ export default {
     return {
       roomId: '',
       room: {},
+      endlive: {},
       sender: '',
       message: '',
       messages: [],
@@ -43,6 +77,7 @@ export default {
     // this.sender = this.$route.params.sender;
     this.sender = localStorage.getItem("userName");
     this.findRoom();
+    this.getEndLive();
     this.connect();
   },
   methods: {
@@ -60,6 +95,18 @@ export default {
       })
       .catch(err => {
         console.log(err);
+      })
+    },
+    getEndLive: function() {
+      rest.axios({
+        url: "dabid/chat/room/"+this.roomId,
+      })
+      .then(res => {
+        console.log(res.data);
+        this.endlive = res.data
+      })
+      .catch(err => {
+        console.log(err)
       })
     },
     sendMessage: function() {
@@ -107,5 +154,11 @@ export default {
     }
   },
 }
-
 </script>
+
+<style scoped>
+.fixedchat {
+  position: fixed;
+  bottom: 30px;
+}
+</style>

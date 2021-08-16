@@ -1,20 +1,20 @@
 <template>
   <div>
-    <h3>Review List</h3>
+    <h3 class="mx-3 text-center" id="eng-font">Review List</h3>
     <v-col v-for="review in reviews" :key="review">
-      <v-card>
-        <div>
-          <v-card-title>
-            {{ review.reviewContent }}
-          </v-card-title>
-          <v-card-subtitle>
-            {{ review.reviewDate.slice(0, 10) }}
-            {{ review.reviewDate.slice(11, 16) }}
-          </v-card-subtitle>
-          <v-card-subtitle>
-            {{ review.reviewWriter }}
-          </v-card-subtitle>
+      <v-card color="cardcolor" tile elevation="1">
+        <div class="d-flex justify-space-between pb-2 px-2" id="kor-font" :style="{'font-size':fontSize1+'px'}">
+          <v-card-subtitle1>
+            {{ review.writerName }} 
+          </v-card-subtitle1>
+          <v-card-subtitle2>
+            {{ review.review.reviewDate.slice(0, 10) }}
+            {{ review.review.reviewDate.slice(11, 16) }}
+          </v-card-subtitle2>
         </div>
+          <v-card-subtitle1 class="px-2" id="kor-font" :style="{'font-size':fontSize2+'px'}">
+            {{ review.review.reviewContent }}
+          </v-card-subtitle1>
       </v-card>
     </v-col>
   </div>
@@ -28,6 +28,8 @@ export default {
   data: function () {
     return {
       reviews: [],
+      fontSize1: 14,
+      fontSize2: 16
     };
   },
   methods: {
@@ -49,29 +51,12 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          console.log("***" + this.reviews);
+          console.log(this.reviews);
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    // getUser: function () {
-    //   const writer = this.reviews.
-    //   console.log(writer)
-    //   rest
-    //     .axios({
-    //       method: "get",
-    //       url: dabid/users/${writer},
-    //       headers: this.setToken()
-    //     })
-    //     .then((res) => {
-    //       this.writerId = res.data;
-    //       console.log(this.writerId);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     })
-    // }
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
@@ -84,4 +69,10 @@ export default {
 </script>
 
 <style scoped>
+#card-subtitle1 {
+  font-size: 2rem;
+}
+#card-subtitle2 {
+  font-size: 0.75rem;
+}
 </style>

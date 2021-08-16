@@ -2,7 +2,7 @@
   <div>
     <div class="container" style="padding: 0px">
       <v-card
-        class="mx-auto elevation-20"
+        class="mx-auto elevation-3"
         style="max-width: 80%; margin-top: 50px"
       >
         <v-row justify="space-between">

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserProfile/>
+    <UserProfile :User="person"/>
     <v-card class="mx-auto" max-width="300">
       <v-row dense>
         <v-col v-for="item in items" :key="item" :cols="3">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import UserProfile from "../../components/UserProfile.vue"
+import UserProfile from "@/components/UserProfile.vue"
 import rest from "../../js/httpCommon.js";
 
 export default {
@@ -34,6 +34,7 @@ export default {
       dialog: false,
       fontSize: 8,
       person: null,
+      userId: null,
       items: [
         {
           src: require("@/assets/mylive.png"),
@@ -81,21 +82,23 @@ export default {
           console.log(err);
         });
     },
-    // menuActionClick(action) {
-    //   if (action === "goMyLive") {
-    //     this.$router.push({ name: "MyLiveList" });
-    //   } else if (action === "goReview") {
-    //     this.$router.push({ name: "ReviewList" });
-    //   } else if (action === "goNotice") {
-    //     this.$router.push({ name: "Notice" });
-    //   } else if (action === "goHelp") {
-    //     this.$router.push({ name: "Help" });
-    //   }
-    // },
+    menuActionClick(action) {
+      if (action === "goMyLive") {
+        this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
+      } else if (action === "goReview") {
+        this.$router.push({ name: "ReviewList" });
+      } else if (action === "goNotice") {
+        this.$router.push({ name: "Notice" });
+      } else if (action === "goHelp") {
+        this.$router.push({ name: "Help" });
+      }
+    },
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getProfile();
+      this.userId = this.$route.params.userId
+      console.log('받아온 ID', this.userId)
+      this.getProfile(this.userId);
     } else {
       this.$router.push({ name: "Login" });
     }

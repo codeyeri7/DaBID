@@ -49,6 +49,7 @@
             </v-btn>
           </v-col>
         </span>
+      <v-btn color="primary" text @click="dialog = false"> X </v-btn>
       </v-card-title>
       <v-card-text>
         <img :src="live.prdPhoto" width="200px" class="mt-5" />
@@ -72,9 +73,11 @@
       <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
-        <v-btn color="red" text @click="remove()"> delete </v-btn>
-        <v-btn color="primary" text @click="dialog = false"> close </v-btn>
+        <div v-if="checkUser(live)">
+          <v-btn color="primary" text @click="goLive(live.prdId)"> Start Live </v-btn>
+          <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
+          <v-btn color="red" text @click="remove()"> delete </v-btn>
+        </div>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -112,40 +115,42 @@ export default {
       return config;
     },
     remove: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
-        rest
-          .axios({
-            method: "delete",
-            url: `/dabid/live/${this.prdId}`,
-            headers: this.setToken()
-          })
-          .then((res) => {
-            this.refreshAll();
-            console.log(res)
-            console.log('삭제 성공')
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      } else {
-        alert('본인이 작성한 글만 삭제 가능합니다!')
-      }
+      rest
+        .axios({
+          method: "delete",
+          url: `/dabid/live/${this.prdId}`,
+          headers: this.setToken()
+        })
+        .then((res) => {
+          this.refreshAll();
+          console.log(res)
+          console.log('삭제 성공')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
     refreshAll: function () {
       // 새로고침
       this.$router.go();
     },
     edit: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
         this.$router.push({
           name: "UpdateMyLiveList",
           params: { prdId: `${this.prdId}` },
         });
-      } else {
-        alert("본인이 작성한 글만 수정 가능합니다!")
-      }
+    },
+    checkUser(live) {
+      const userId = localStorage.getItem('userId')
+      return live.user.userId == userId
+    },
+    goLive (prdId) {
+      this.$router.push({
+        name: "Seller", 
+        params: {
+          prdId : prdId
+        }
+      });
     },
     wish: function () {
       rest

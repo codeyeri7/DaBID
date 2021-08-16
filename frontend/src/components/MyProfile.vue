@@ -11,9 +11,9 @@
               <div>
                 <img src="@/assets/profileImg.jpg" alt="profile image" />
                 <span id="userName"
-                  ><b>{{ person.userName }}</b></span
+                  ><b>{{ Person.userName }}</b></span
                 >
-                {{ user }}
+
                 <v-dialog
                   v-model="dialog"
                   persistent
@@ -31,12 +31,10 @@
                   </template>
                   <v-card>
                     <v-container>
-                      <!-- 닉네임 변경 폼 변경했습니다 윤서 --> 
                       <h3 style="font-size:15px; font-weight:bold" id="kor-font">닉네임 변경</h3>
                       <div>
                         <v-text-field
                           v-model="userName"
-                          laber="User Name"
                           required
                           id="kor-font"
                         ></v-text-field>
@@ -66,9 +64,8 @@
           </v-col>
         </v-row>
         <div id="barEmoji">
-          <!-- v-bind:buffer-value="userScore" -->
           <v-progress-linear
-            v-model="person.userScore"
+            v-model="Person.userScore"
             color="#D0836E"
             background-color="#F4E3D7"
             height="15"
@@ -112,19 +109,16 @@
 import rest from "../js/httpCommon.js";
 export default {
   name: "MyProfile",
-  props: {
-    user: Object,
-  },
   data: function () {
     return {
       dialog: false,
-      person: [],
-      // person있는 정보 굳이 또 받아옴 
-      // userName: "",
-      // userScore: "",
       reviews: [],
-      nameChange: []
+      userName: null,
+      // nameChange: []
     };
+  },
+  props: {
+    Person: Object
   },
   methods: {
     setToken: function () {
@@ -133,23 +127,6 @@ export default {
         Authorization: `Bearer ${jwtToken}`,
       };
       return config;
-    },
-    getProfile: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "/dabid/users/me",
-          headers: this.setToken(),
-        })
-        .then((res) => {
-          this.person = res.data;
-          // this.userName = res.data.userName;
-          // this.userScore = res.data.userScore;
-          console.log('내정보',this.person)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     //review list로 페이지 전환
     checkReviews: function () {
@@ -161,7 +138,7 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          console.log(this.reviews);
+          // console.log(this.reviews);
         })
         .catch((err) => {
           console.log(err);
@@ -171,7 +148,6 @@ export default {
       this.$router.push({ name: "ReviewCreate" });
     },
     nameUpdate: function () {
-      console.log(this.person)
       const config = this.setToken()
       rest.
         axios({
@@ -183,9 +159,9 @@ export default {
           headers: config
         })
         .then((res) => {
-          this.nameChange = res.data
-          console.log('OK',this.nameChange)
-          console.log(res)
+          // this.nameChange = res.data
+          // console.log('OK',this.nameChange)
+          // console.log(res)
           this.dialog = false
         })
         .catch((err) => {
@@ -199,7 +175,8 @@ export default {
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getProfile();
+      this.userName = User.userName
+      console.log('@@@@@@@@@@@@@@@@@@@내이름!!!!!!!!!!!!!!!!11',this.userName)
     } else {
       this.$router.push({ name: "Login" });
     }

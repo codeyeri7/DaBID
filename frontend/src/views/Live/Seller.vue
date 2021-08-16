@@ -43,7 +43,6 @@
 						</v-list-item-title>
 						<v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
 					</v-list-item-content>
-
 					<v-list-item-avatar
 						tile
 						size="70"
@@ -54,7 +53,8 @@
 			</div>
 				<div style="margin-left: 1.2rem">
 					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
-					<p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
+					<v-btn @click="endSession">방종</v-btn>
+					<v-btn @click="goChat()">임시 채팅가기</v-btn>
 				</div>
 			
 			<!-- 본인 화면 --> 
@@ -80,27 +80,8 @@
 					<v-btn dark elevation="0" color="primary" @click="sendMsg()" style="height:2rem">전송</v-btn>
 				</v-row>
 				<br>
-				<v-row style="width: 80%; margin-left:1.5rem">
-					<v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요"></v-text-field>
-					<h4 style="text-align:center">원</h4>
-					<v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn>
-				</v-row>
-				<h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5>
 			</div>
-
 		<!-- session 닫히는 태그 --> 	
-		</div>
-
-		<div class="fixedbutton" style="float: right">
-        <v-btn 
-          class="ma-2"
-          dark
-          color="#FCE4EC"
-          id="eng-font"
-		  @click="goBack"
-        >
-          <v-icon light left>mdi-arrow-left</v-icon> Back
-        </v-btn>
 		</div>
 	</div>
 </template>
@@ -117,7 +98,7 @@ const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-	name: 'Session',
+	name: 'Seller',
 
 	components: {
 		UserVideo,
@@ -141,6 +122,7 @@ export default {
 
 			bid: '',
 			currentPrice: 0,
+			currentUser: '',
 			PriceRules: [
 			v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
       ],
@@ -172,8 +154,11 @@ export default {
 				.catch(error => reject(error.response));
 			});
 		},
-		goBack() {
-			// 영진님 해주새요 
+		endSession() {
+			
+		},
+		goChat() {
+			
 		},
 		bidding() {
 			return new Promise((resolve, reject) => {
@@ -242,6 +227,8 @@ export default {
 					console.log(event.data); // Message
 					if (event.type === "signal:BID") {
 						this.currentPrice = event.data;
+						this.currentUser = event.from;
+						console.log('방금 입력한 놈', this.currentUser)
 					} else {
 						this.chatList.push(event.data);
 					}

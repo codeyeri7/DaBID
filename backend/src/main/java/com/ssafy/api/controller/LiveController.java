@@ -125,19 +125,4 @@ public class LiveController {
 		List<Live> liveList = liveService.searchLives(categories, liveStatuses, keyword);
 		return ResponseEntity.status(200).body(liveList);
 	}
-
-	//=========================================================================
-	// Result + ChatRoom
-	@PostMapping("/end/{prdId}")
-	public ResponseEntity<?> endLive(@PathVariable int prdId,
-									 @RequestBody ResultPostReq resultInfo) {
-
-		// Result Create
-		Result result = resultService.createResult(prdId, resultInfo);
-
-		// ChatRoom Create
-//		chatRoomService.createChatRoom(prdId, result);
-
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-	}
 }

@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.api.service.ResultService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -24,6 +25,17 @@ public class ResultController {
     @Autowired
     ResultService resultService;
 
+    //=========================================================================
+    // Result + ChatRoom
+    @PostMapping("/end/{prdId}")
+    public ResponseEntity<?> endLive(@PathVariable int prdId,
+                                     @RequestBody ResultPostReq resultInfo) {
+
+        // Result Create
+        Result result = resultService.createResult(prdId, resultInfo);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
 
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
@@ -36,24 +48,9 @@ public class ResultController {
         return ResponseEntity.status(200).body(chatRoom);
     }
 
-    // 채팅방 생성
-//    @PostMapping("/room/{prdId}")
-//    @ApiOperation(value = "채팅방 생성", notes = "채팅방 생성.")
-////    public ChatRoomPostReq createRoom(@PathVariable String roomName,
-//    public ResponseEntity<?> createRoom(@PathVariable int prdId,
-//                                      @ApiIgnore Authentication authentication) {
-//        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//        String userId = userDetails.getUsername();
-//
-////        chatRoomService.createChatRoom(prdId);
-//
-//        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"채팅방이 생성완료."));
-//    }
-
     // 특정 채팅방 조회
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/room/{prdId}")
     @ApiOperation(value = "특정 채팅방 조회", notes = "특정 채팅방 조회.")
-//    public ResponseEntity<?> roomInfo(@PathVariable String roomId) {
     public ResponseEntity<?> roomInfo(@PathVariable int prdId) {
         Result result = resultService.findResultById(prdId);
         if(result.equals(null))

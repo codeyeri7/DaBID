@@ -127,7 +127,7 @@ export default {
       } else if (action === "goReview") {
         this.$router.push({ name: "ReviewList", params: { userId: `${this.person.userId}`} });
       } else if (action === "goNotice") {
-        this.$router.push({ name: "Notice" });
+        this.$router.push({ name: "NoticeList" });
       } else if (action === "goHelp") {
         this.$router.push({ name: "Help" });
       } else if (action === "goTheCheat") {

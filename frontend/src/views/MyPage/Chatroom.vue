@@ -88,7 +88,7 @@ export default {
         console.log('Connected: ', frame);
         stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
           var recv = JSON.parse(res.body);
-          this.messages.push({"type":recv.type,"sender":recv.chatFrom,"message":recv.chatContent})
+          this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
           // this.recvMessage(recv);
         });
         // stompClient.send("/pub/chat/message/", JSON.stringify({'type':'ENTER', 'roomId':this.roomId, 'sender':this.sender}), {});

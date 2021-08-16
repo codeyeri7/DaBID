@@ -168,6 +168,7 @@ export default {
         this.clicked6 == true
       ) {
         this.userscore -= 5;
+        console.log(this.userscore)
       }
       //   if (localStorage.getItem('jwt')) {
       //     // 바로 정보 가져오기

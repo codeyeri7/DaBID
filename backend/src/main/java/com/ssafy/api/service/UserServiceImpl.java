@@ -1,22 +1,15 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.api.response.ReviewRes;
 import com.ssafy.db.entity.*;
-import com.ssafy.db.repository.AuthRepository;
 import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.ReviewRepository;
-import io.swagger.annotations.ApiOperation;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.repository.UserRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,10 +60,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<Review> checkReview(String userId) {
+	public List<ReviewRes> checkReview(String userId) {
 		User user = getUserByUserId(userId);
 		List<Review> reviewList = reviewRepository.findByUser(user).orElse(null);
-		return reviewList;
+		List<ReviewRes> resList = new ArrayList<>();
+
+		for (int i=0; i<reviewList.size(); i++){
+			Review review = reviewList.get(i);
+			String writerName = userRepository.findByUserId(review.getReviewWriter()).get().getUserName();
+			String userName = review.getUser().getUserName();
+			System.out.println("****"+writerName+" "+userName);
+			ReviewRes reviewRes = new ReviewRes(review,writerName,userName);
+
+			resList.add(reviewRes);
+		}
+		return resList;
 	}
 
 	@Override

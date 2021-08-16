@@ -21,7 +21,7 @@ public class ChatController {
 //            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
 //        }
 //        System.out.println(message.getMessage());
-        messagingTemplate.convertAndSend("/sub/chat/room/", message);
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 }
 

@@ -1,11 +1,14 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
+import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.api.service.LiveService;
+import com.ssafy.api.service.ResultService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.Result;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 /**
  * 라이브 관련 요청 처리를 위한 컨트롤러 정의.
  */
@@ -29,6 +34,9 @@ public class LiveController {
 	UserService userService;
 	@Autowired
 	LiveService liveService;
+	@Autowired
+	ResultService resultService;
+
 	/**
 	 * 라이브 CRUD 관련 Controller
 	 */
@@ -118,4 +126,18 @@ public class LiveController {
 		return ResponseEntity.status(200).body(liveList);
 	}
 
+	//=========================================================================
+	// Result + ChatRoom
+	@PostMapping("/end/{prdId}")
+	public ResponseEntity<?> endLive(@PathVariable int prdId,
+									 @RequestBody ResultPostReq resultInfo) {
+
+		// Result Create
+		Result result = resultService.createResult(prdId, resultInfo);
+
+		// ChatRoom Create
+//		chatRoomService.createChatRoom(prdId, result);
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
 }

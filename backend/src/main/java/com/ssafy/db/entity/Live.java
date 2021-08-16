@@ -48,6 +48,7 @@ public class Live { //라이브테이블
     private LiveStatus liveStatus;
 
     @OneToOne(mappedBy = "live")
+    @JsonIgnore
     private Result result;
 
     @ManyToOne()

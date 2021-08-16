@@ -158,7 +158,7 @@ export default {
 			
 		},
 		goChat() {
-			
+			this.currentUser 
 		},
 		bidding() {
 			return new Promise((resolve, reject) => {

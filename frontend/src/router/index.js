@@ -16,7 +16,6 @@ import ReviewList from '../views/MyPage/ReviewList.vue'
 import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
 import TheCheat from '../views/MyPage/TheCheat.vue'
-import Notice from '../views/Notice/NoticeList.vue'
 import UserProfile from '../views/MyPage/UserProfile.vue'
 
 
@@ -64,7 +63,7 @@ const routes = [
     component: UpdateMyLiveList
   },
   {
-    path: '/notice',
+    path: '/NoticeList',
     name: 'NoticeList',
     component: NoticeList
   },
@@ -102,11 +101,6 @@ const routes = [
     path: '/TheCheat',
     name: 'TheCheat',
     component: TheCheat
-  },
-  {
-    path: '/Notice',
-    name: 'Notice',
-    component: Notice
   },
   {
     path: '/UserProfile',

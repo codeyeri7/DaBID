@@ -92,15 +92,16 @@
 		</div>
 
 		<div class="fixedbutton" style="float: right">
+			<RouterLink :to="{ name: 'Main' }">
         <v-btn 
           class="ma-2"
           dark
           color="#FCE4EC"
           id="eng-font"
-		  @click="goBack"
         >
           <v-icon light left>mdi-arrow-left</v-icon> Back
         </v-btn>
+			</RouterLink>
 		</div>
 	</div>
 </template>
@@ -117,7 +118,7 @@ const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-	name: 'Session',
+	name: 'App',
 
 	components: {
 		UserVideo,
@@ -171,9 +172,6 @@ export default {
 				.then(data => resolve(data.token))
 				.catch(error => reject(error.response));
 			});
-		},
-		goBack() {
-			// 영진님 해주새요 
 		},
 		bidding() {
 			return new Promise((resolve, reject) => {

@@ -48,6 +48,13 @@ public class UserController {
 		return ResponseEntity.status(200).body(myLiveList);
 	}
 
+	@GetMapping("/getLive/{userId}")
+	@ApiOperation(value = "선택한 유저의 라이브 조회", notes = "선택한 유저가 등록한 라이브를 조회할 수 있다.")
+	public ResponseEntity<?> getUserLives(@PathVariable("userId") String userId) {
+		List<Live> liveList = userService.getMyLives(userId);
+		return ResponseEntity.status(200).body(liveList);
+	}
+
 	@PatchMapping()
 	@ApiOperation(value = "회원 수정", notes = "사용자의 <strong>이름</strong>을 수정한다.")
 	@ApiResponses({
@@ -100,6 +107,8 @@ public class UserController {
 
 		return ResponseEntity.status(200).body(user);
 	}
+
+
 
 	//=============================== 리뷰 관련 ===============================
 

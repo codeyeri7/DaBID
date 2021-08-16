@@ -97,6 +97,7 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
+          console.log(this.person)
           // console.log(res);
         })
         .catch((err) => {

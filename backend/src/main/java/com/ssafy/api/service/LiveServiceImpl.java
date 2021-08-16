@@ -9,6 +9,8 @@ import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.LiveStatusRepository;
 import com.ssafy.db.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -110,9 +112,11 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public List<Live> getAllLives() {
-		List<Live> list = liveRepository.findAll();
-		return list;
+	public Page<Live> getAllLives(int page) {
+//	public List<Live> getAllLives() {
+//		List<Live> list = liveRepository.findAll();
+//		return list;
+		return liveRepository.findAll(PageRequest.of(page, 6));
 	}
 
 	@Override

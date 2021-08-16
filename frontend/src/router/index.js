@@ -71,6 +71,11 @@ const routes = [
     component: ReviewCreate
   },
   {
+    path: '/ReviewList',
+    name: 'ReviewList',
+    component: ReviewList
+  },
+  {
     path: '/MyWishList',
     name: 'MyWishList',
     component: MyWishList
@@ -84,11 +89,6 @@ const routes = [
     path: '/Chatlist',
     name: 'Chatlist',
     component: Chatlist
-  },
-  {
-    path: '/ReviewList',
-    name: 'ReviewList',
-    component: ReviewList
   },
   {
     path: '/TheCheat',

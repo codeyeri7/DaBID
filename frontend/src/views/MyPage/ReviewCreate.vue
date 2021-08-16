@@ -1,10 +1,11 @@
 <template>
   <div class="container" id="kor-font">
     <h4>거래 정보</h4>
-    <!-- <img src="" alt="" />
+    <!-- <img src="" alt="" />-->
     <v-text>live.prdName</v-text>
     <v-text>낙찰가</v-text>
-    <v-text>{{ this.live }}</v-text> -->
+    <v-text>{{ this.live }}</v-text> 
+    
     <h3>리뷰 작성</h3>
     <v-divider></v-divider>
     <h5>라이브 품질</h5>
@@ -91,7 +92,7 @@ import rest from "../../js/httpCommon.js";
 export default {
   data() {
     return {
-      live: [],
+      live: null,
       content: "",
       clicked1: false,
       clicked2: false,
@@ -126,7 +127,6 @@ export default {
     createReview: function () {
       const config = this.setToken()
       const review = {
-        //userId: localStorage.getItem("userId"),
         userId: "P1628213340945",
         userscore: this.userscore,
         prdId: this.prdId,
@@ -139,14 +139,13 @@ export default {
         rest
           .axios({
             method: "post",
-            //url: `/dabid/users/${this.prdId}`,
             url: "/dabid/users/writeReview/",
             data: review,
             headers: config
           })
           .then((res) => {
             console.log(res);
-            // this.$router.push({ name: "ReviewList" });
+            this.$router.push({ name: "ReviewList", params: { userId: `${this.userId}` } });
           })
           .catch((err) => {
             console.log(err);

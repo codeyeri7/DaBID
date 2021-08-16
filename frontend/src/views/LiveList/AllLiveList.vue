@@ -31,7 +31,7 @@
                   <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
                 </p>
                 <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
-                {{ hot_live.live.liveDate | truncate(10, "*") }}
+                {{ hot_live.live.liveDate.slice(0, 9) }}
               </v-card-text>
             </v-card>
           </v-col>

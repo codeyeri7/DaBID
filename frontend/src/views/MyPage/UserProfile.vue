@@ -34,6 +34,7 @@ export default {
       dialog: false,
       fontSize: 8,
       person: null,
+      userId: null,
       items: [
         {
           src: require("@/assets/mylive.png"),
@@ -95,7 +96,8 @@ export default {
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getProfile();
+      this.userId = 
+      this.getProfile(this.userId);
     } else {
       this.$router.push({ name: "Login" });
     }

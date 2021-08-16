@@ -119,9 +119,6 @@ export default {
     return {
       dialog: false,
       person: [],
-      // person있는 정보 굳이 또 받아옴 
-      // userName: "",
-      // userScore: "",
       reviews: [],
       nameChange: []
     };
@@ -143,8 +140,6 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          // this.userName = res.data.userName;
-          // this.userScore = res.data.userScore;
           console.log('내정보',this.person)
         })
         .catch((err) => {

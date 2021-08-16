@@ -96,7 +96,6 @@ export default {
         .then((res) => {
           this.person = res.data;
           console.log(res);
-          // this.$router.push({ name: "ReviewList" });
         })
         .catch((err) => {
           console.log(err);

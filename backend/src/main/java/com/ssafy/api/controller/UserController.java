@@ -3,16 +3,17 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.LiveRegisterPostReq;
 import com.ssafy.api.request.ReviewPostReq;
 import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.api.response.UserRes;
+import com.ssafy.api.service.LiveService;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.Review;
 import com.ssafy.db.entity.User;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -46,6 +47,13 @@ public class UserController {
 
 		List<Live> myLiveList = userService.getMyLives(userId);
 		return ResponseEntity.status(200).body(myLiveList);
+	}
+
+	@GetMapping("/getLive/{userId}")
+	@ApiOperation(value = "선택한 유저의 라이브 조회", notes = "선택한 유저가 등록한 라이브를 조회할 수 있다.")
+	public ResponseEntity<?> getUserLives(@PathVariable("userId") String userId) {
+		List<Live> liveList = userService.getMyLives(userId);
+		return ResponseEntity.status(200).body(liveList);
 	}
 
 	@PatchMapping()
@@ -100,6 +108,20 @@ public class UserController {
 
 		return ResponseEntity.status(200).body(user);
 	}
+
+	@GetMapping("/{userId}")
+	@ApiOperation(value = "선택한 회원 정보 조회", notes = "선택한 회원의 유저정보와 등록한 라이브 정보 조회")
+	public ResponseEntity<?> getAnotherUserInfo(@PathVariable("userId") String userId) {
+
+		User user = userService.getUserByUserId(userId);
+		List<Live> liveList = userService.getMyLives(userId);
+
+		UserRes userRes = new UserRes(user,liveList);
+
+		return ResponseEntity.status(200).body(userRes);
+	}
+
+
 
 	//=============================== 리뷰 관련 ===============================
 

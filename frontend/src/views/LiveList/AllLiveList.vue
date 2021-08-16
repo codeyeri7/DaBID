@@ -7,7 +7,7 @@
           <v-container fluid>
             <div>
               <span id="eng-font" style="font-size: 20px; margin-bottom: 20px">
-                <b>Top 2</b>
+                <b id="T2">Top 2</b>
               </span>
             </div>
             <v-row dense>
@@ -83,6 +83,11 @@
         </div>
       </div>
     </div>
+    <v-fab-transition>
+      <v-btn class="scroll-btn" bottom right fixed fab dark small v-show="btnShow" @click="$vuetify.goTo('#T2')">
+        <v-icon color="white">fas fa-angle-double-up</v-icon>
+      </v-btn>
+    </v-fab-transition>
   </div>
 </template>
 
@@ -183,6 +188,9 @@ export default {
     reset() {
       (this.values1 = ""), (this.values2 = ""), (this.keyword = "");
     },
+    handleScroll() {
+      this.btnShow = window.scrollY > 400;
+    },
     infiniteScroll(e) {
       let scrollTop = e.target.scrollingElement.scrollTop
       let scrollHeight = e.target.scrollingElement.scrollHeight
@@ -204,6 +212,12 @@ export default {
   },
   destroyed () {
     window.removeEventListener('scroll', this.infiniteScroll);
+  },
+  beforeMount() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
+  beforeDestory() {
+    window.removeEventListener("scroll", this.handleScroll)
   }
 };
 
@@ -213,6 +227,10 @@ export default {
 #panel {
   width: 95%;
   margin: auto;
+}
+.scroll-btn {
+  margin-bottom: 3rem;
+  color: #292938
 }
 .search-button {
   display: flex;

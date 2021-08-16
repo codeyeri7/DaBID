@@ -87,7 +87,6 @@ public class ChatRoomController {
     @Autowired
     ChatRoomRepository chatRoomRepository;
 
-
     // 모든 채팅방 목록 반환
     @GetMapping("/rooms")
     @ApiOperation(value = "전체 채팅 조회", notes = "전체 채팅 조회")
@@ -102,6 +101,7 @@ public class ChatRoomController {
     public ChatRoom createRoom(@PathVariable int prdId) {
         return chatRoomRepository.createChatRoom(prdId);
     }
+
 //    // 채팅방 입장 화면
 //    @GetMapping("/room/enter/{roomId}")
 //    @ApiOperation(value = "채팅방 입장 화면", notes = "채팅방 입장 화면.")
@@ -109,6 +109,7 @@ public class ChatRoomController {
 //        model.addAttribute("roomId", roomId);
 //        return "/chat/roomdetail";
 //    }
+
     // 특정 채팅방 조회
     @GetMapping("/room/{roomId}")
     @ApiOperation(value = "특정 채팅방 조회", notes = "특정 채팅방 조회.")

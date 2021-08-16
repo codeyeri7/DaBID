@@ -1,57 +1,54 @@
 <template>
   <div class="container">
-    <v-container>
-      
-      <v-form
-        ref="form"
-        v-model="valid"
-        lazy-validation>
-        <v-row>
-          <v-col>
-            <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
-            <div style="font-family: 'IBMPlexSansKR-Regular';">
-              <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
-              <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
-              <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-              <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
-              <h5 id="kor-font" style="color:gray">
-                사진 업로드
-              </h5>
-                <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-            </div>
-            <hr id="top-hr">
-            <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
-            <div style="font-family: 'IBMPlexSansKR-Regular';">
-              <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
-              <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
-              <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
-              
-              <v-dialog
-                ref="dialog"
-                v-model="menu2"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="date"
-                    label="방송 예정 날짜 (1주 이내)"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    :rules="DateRules"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation>
+      <v-row>
+        <v-col>
+          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info></h3>
+          <div style="font-family: 'IBMPlexSansKR-Regular';">
+            <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
+            <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
+            <h5 id="kor-font" style="color:gray">
+              사진 업로드
+            </h5>
+              <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
+              <v-btn class="black--text" elevation="0" @click="upload" color="secondary" flat>업로드</v-btn>
+          </div>
+          <hr id="top-hr">
+          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
+          <div style="font-family: 'IBMPlexSansKR-Regular';">
+            <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
+            <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
+            <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+            <v-dialog
+              ref="dialog"
+              v-model="menu2"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="date"
-                  @input="menu2 = false"
-                  :min= "today"
-                  :max= "sevenday"
-                ></v-date-picker>
-              </v-dialog>
+                  label="방송 예정 날짜 (1주 이내)"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :rules="DateRules"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="date"
+                @input="menu2 = false"
+                :min= "today"
+                :max= "sevenday"
+              ></v-date-picker>
+            </v-dialog>
             <v-dialog
               ref="dialog2"
               v-model="modal2"
@@ -92,38 +89,37 @@
                 </v-btn>
               </v-time-picker>
             </v-dialog>
-            </div>
-            <v-row
-              align="center"
-              justify="space-around"
-            >
+          </div>
+          <v-row
+            align="center"
+            justify="space-around"
+          >
             <v-btn
-                tile
-                @click="goBack"
-                class="mt-5"
-              >
-                <v-icon left>
-                  mdi-cancel
-                </v-icon>
+              tile
+              @click="goBack"
+              class="mt-5"
+            >
+              <v-icon left>
+                mdi-cancel
+              </v-icon>
                 Cancel
-              </v-btn>
-              <v-btn
-                tile
-                color="primary"
-                @click="createLive"
-                :disabled="!valid"
-                class="mt-5"
-              >
-                <v-icon left>
-                  mdi-pencil
-                </v-icon>
+            </v-btn>
+            <v-btn
+              tile
+              color="primary"
+              @click="createLive"
+              :disabled="!valid"
+              class="mt-5"
+            >
+              <v-icon left>
+                mdi-pencil
+              </v-icon>
                 Make Live
-              </v-btn>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-form>
-    </v-container>
+            </v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-form>
   </div>
 </template>
 

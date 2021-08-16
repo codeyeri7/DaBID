@@ -31,12 +31,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	LiveRepository liveRepository;
 
-//	@Autowired
-////	UserRepositorySupport userRepositorySupport;
-//
-//	@Autowired
-//	PasswordEncoder passwordEncoder;
-
 	@Override
 	public List<Live> getMyLives(String userId) {
 		User user = getUserByUserId(userId);
@@ -52,13 +46,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(String userId, UserUpdatePatchReq updateInfo) {
+	public User updateUser(String userId, String userName) {
 		User user = getUserByUserId(userId);
-		//찾았음
-//		user.setDepartment(updateInfo.getDepartment());
-//		user.setName(updateInfo.getName());
-//		user.setPosition(updateInfo.getPosition());
-
+		user.setUserName(userName);
 		return userRepository.save(user);
 	}
 	@Override

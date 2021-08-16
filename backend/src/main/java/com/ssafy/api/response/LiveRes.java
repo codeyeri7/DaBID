@@ -1,7 +1,8 @@
 package com.ssafy.api.response;
 
+import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,20 +13,13 @@ import lombok.Setter;
 @Setter
 @ApiModel("LiveResponse")
 public class LiveRes {
-	@ApiModelProperty(name="Product ID")
-	String liveTitle;	// 라이브 제목
-	String token;
-	String userName;	// 유저 닉네임
-	String userId;		// 회원 고유 아이디
-	String role;
-	
-	public static LiveRes of(String liveTitle, String token, String userName, String userId, String role) {
-		LiveRes res = new LiveRes();
-		res.setLiveTitle(liveTitle);
-		res.setToken(token);
-		res.setUserName(userName);
-		res.setUserId(userId);
-		res.setRole(role);
-		return res;
+	User user;
+	Live live;
+	int hearts;
+
+	public LiveRes(User user, Live live, int hearts) {
+		this.user = user;
+		this.live = live;
+		this.hearts = hearts;
 	}
 }

@@ -33,7 +33,6 @@ public class Result {
     @JoinColumn(name="res_seller_id")
     private User seller;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "result", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Chat> chatlist = new ArrayList<>();
 }

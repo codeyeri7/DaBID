@@ -67,7 +67,7 @@ public class ResultController {
 //    }
 
     // 특정 채팅방 조회
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/room/{prdId}")
     @ApiOperation(value = "특정 채팅방 조회", notes = "특정 채팅방 조회.")
 //    public ResponseEntity<?> roomInfo(@PathVariable String roomId) {
     public ResponseEntity<?> roomInfo(@PathVariable int prdId) {

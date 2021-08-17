@@ -116,7 +116,7 @@
           small
           class="mr-3" 
           fab dark
-          color="#d48d4e"
+          color="#9b896b"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
@@ -215,26 +215,25 @@ export default {
   /* background-color: #ffffff; */
   /* opacity: 0.8; */
   background-color: #3c3f44;
-  color:#ffffff
+  color:#9b896b
 }
 .classify {
   display:flex; 
   justify-content:space-between;
   /* margin-bottom: 0.6rem; */
-  color: #ffffff;
+  color: #9b896b;
   font-family: "InfinitySans-RegularA1";
 }
 #card-title {
   font-size: 1rem;
   padding-bottom: 0;
   padding-top: 0;
-  color:rgb(255, 255, 255);
+  color:#9b896b;
 }
 .main-back {
   /* background-color:#3f404d;
    */
-  background-color: #111111;
+  background-color: #151618;
   /* background-color: rgba(46,48,53,0.7) */
-
 }
 </style>

@@ -194,10 +194,7 @@ export default {
       let scrollHeight = e.target.scrollingElement.scrollHeight
       
       if(scrollTop >= scrollHeight - 650) {
-        if (this.scrollNo) {
-          
-          }
-        else {
+        if (!this.scrollNo) {
           this.page++;
           this.getAllLiveList();
         }

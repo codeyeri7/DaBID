@@ -22,6 +22,10 @@
             <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 4120019bcb2d4b36188376d4ac62ef5f78cc58b3
             <v-dialog
               ref="dialog"
               v-model="menu2"
@@ -48,42 +52,42 @@
                 :max= "sevenday"
               ></v-date-picker>
             </v-dialog>
-            <v-dialog
-              ref="dialog2"
-              v-model="modal2"
-              :return-value.sync="time"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="time"
-                  label="방송 예정 시간"
-                  prepend-icon="mdi-clock-time-four-outline"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="DateRules"
-                ></v-text-field>
-              </template>
-              <v-time-picker
-                v-if="modal2"
+          <v-dialog
+            ref="dialog2"
+            v-model="modal2"
+            :return-value.sync="time"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
                 v-model="time"
-                full-width
+                label="방송 예정 시간"
+                prepend-icon="mdi-clock-time-four-outline"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                :rules="DateRules"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="modal2"
+              v-model="time"
+              full-width
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="red"
+                @click="modal2 = false"
               >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="red"
-                  @click="modal2 = false"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="blue"
-                  @click="$refs.dialog2.save(time)"
-                >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="blue"
+                @click="$refs.dialog2.save(time)"
+              >
                   OK
                 </v-btn>
               </v-time-picker>
@@ -172,6 +176,8 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
+      // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      // date: dayjs().format('YYYY-MM-DD HH:mm'),
       date: '',
       today: dayjs().format('YYYY-MM-DD'),
       sevenday: '',
@@ -243,6 +249,9 @@ export default {
       this.file = this.$refs.file.files[0]
       console.log(this.file, '파일이 잘 업로드 되었습니다.')
       this.upload()
+    },
+    calcDate() {
+      this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')

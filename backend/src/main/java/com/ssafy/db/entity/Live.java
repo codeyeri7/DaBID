@@ -51,4 +51,7 @@ public class Live { //라이브테이블
     @JsonIgnore
     @OneToMany(mappedBy = "live", orphanRemoval = true)
     private List<WishList> WishList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "live")
+    private List<LiveLog> logList = new ArrayList<>();
 }

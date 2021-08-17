@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
+import com.ssafy.api.request.LogPostReq;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import org.springframework.data.domain.Page;
@@ -18,4 +19,5 @@ public interface LiveService {
     List<Live> getRecentLives(int liveStatus);
     Page<Live> getAllLives(int page);
     List<Live> searchLives(List<String> category, List<String> liveStatuses, String keyword);
+    void createLog(LogPostReq logInfo);
 }

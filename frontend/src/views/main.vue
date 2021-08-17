@@ -34,7 +34,6 @@
                 <v-img
                   src= "card.prdPhoto"
                   class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="180px"
                   style="padding: 40px"
                 >
@@ -61,14 +60,21 @@
             <v-col v-for="card in will_live" :key="card.title" :cols="6">
               <v-card height="280" class="section2" tile :elevation="0">
                 <!-- Image -->
-                <v-img
-                  src= "card.prdPhoto"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="180px"
-                  style="padding-left: 20px"
-                >
-                </v-img>
+                
+                <div>
+                  <v-img
+                    src= "card.prdPhoto"
+                    class="white--text d-flex justify-center"
+                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                    height="180px"
+                    style="padding-left: 20px"
+                  >
+                  <div class="live-time d-flex flex-column">
+                    <span class="font">{{ card.liveDate.slice(5,10) }}</span>
+                    <span class="font">{{ card.liveDate.slice(11,16) }}</span>
+                  </div>
+                  </v-img>  
+                </div>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
                    <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
@@ -96,6 +102,7 @@
                   height="180px"
                   style="padding-left: 25px"
                 >
+                <v-card-title>방송종료</v-card-title>
                 </v-img>
                 <!-- 카드 하단-->
                 <div class="card-content" id="kor-font">
@@ -235,5 +242,19 @@ export default {
   background-color: #151618;
   height: 100%;
   /* background-color: rgba(46,48,53,0.7) */
+}
+.live-time {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 160px;
+  height: 100%;
+  z-index: 1;
+}
+.font {
+  font-size: 1.25rem;
 }
 </style>

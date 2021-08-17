@@ -24,9 +24,17 @@
       </div>
     </div>
     <div id="session" v-if="session">
+      <!-- 참가자(Publisher) 화면 -->
+      <!-- <div id="video-container" class="col-md-6"> -->
+      <div id="video-container">
+        <!-- <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> -->
+        <user-video :stream-manager="publisher"/>
+        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+      </div>
       <!-- 본인 화면 --> 
-      <div class="video col-md-6" id="main-video" height="400px">
-        <user-video :stream-manager="mainStreamManager"/>
+      <!-- <div class="video col-md-6" id="main-video" height="400px">
+        <user-video :stream-manager="mainStreamManager"/> -->
         <div class="prdInfo" id="session-header">
           <v-card
             class="mx-auto"
@@ -52,11 +60,12 @@
             </v-list-item>
           </v-card>
         </div>
-      </div>
+      <!-- </div> -->
       <div class="button" style="margin-left: 1.2rem">
 				<span v-if="liveInfo.user.userId != loginId">
           <p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
-          <p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
+          <p>참여자 수: {{ subscribers.length }}</p>
+          <p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
         </span>
         <span v-else>
           <v-btn @click="endSession">방종</v-btn>
@@ -92,11 +101,6 @@
       <div class="video col-md-6" id="main-video">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
-      <!-- 무슨 화면 -->
-      <!-- <div id="video-container" class="col-md-6">
-        <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-      </div> -->
       <div class="chat">
       <div class="chat-list">
         <p v-for="(chat, idx) in chatList" :key="idx">
@@ -111,11 +115,57 @@
       <br>
       <span v-if="liveInfo.user.userId != loginId">
         <v-row style="width: 80%; margin-left:1.5rem">
-          <v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요"></v-text-field>
+          <v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="dialog=true" placeholder="금액을 입력하세요"></v-text-field>
           <h4 style="text-align:center">원</h4>
-          <v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn>
+          <!-- <v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn> -->
+          <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="290"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                dark elevation="0" color="primary" style="margin-left:1rem; height:2rem"
+                v-bind="attrs"
+                v-on="on"
+              >
+                입찰
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="text-h5">
+                가격을 확인해 주세요.
+              </v-card-title>
+              <v-card-text>
+                현재 입찰가: <strong>{{ this.currentPrice | comma }}</strong>원<br>
+                추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
+                <hr>
+                최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  @click="dialog = false"
+                >
+                  취소
+                </v-btn>
+                <!-- <v-btn
+                  color="green darken-1"
+                  @click="dialog = false"
+                > -->
+                <v-btn
+                  color="green darken-1"
+                  @click="bidding"
+                >
+                  확인
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-row>
         <h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5>
+        
       </span>
       </div>
     <!-- session 닫히는 태그 -->    
@@ -174,7 +224,8 @@ export default {
       PriceRules: [
         v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
       ],
-      loginId: localStorage.getItem('userId')
+      loginId: localStorage.getItem('userId'),
+      dialog: false,
     }
   },
   filters: {
@@ -212,6 +263,7 @@ export default {
 					}
 				})
 				this.bid='';
+        this.dialog = false;
 			})
 			.catch(error => {
 				console.error(error);
@@ -324,24 +376,33 @@ export default {
       });
       this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
         .then(() => {
-          // --- Get your own camera stream with the desired properties ---
-          let publisher = this.OV.initPublisher(undefined, {
-            audioSource: undefined, // The source of audio. If undefined default microphone
-            videoSource: undefined, // The source of video. If undefined default webcam
-            publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
-            publishVideo: true,     // Whether you want to start publishing with your video enabled or not
-            resolution: '480x640',  // The resolution of your video
-            frameRate: 30,         // The frame rate of your video
-            insertMode: 'APPEND',   // How the video is inserted in the target element 'video-container'
-            mirror: false          // Whether to mirror your local video or not
-          });
+          if(this.isPublisher()){
+            // --- Get your own camera stream with the desired properties ---
+            let publisher = this.OV.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: undefined, // The source of video. If undefined default webcam
+              publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true,     // Whether you want to start publishing with your video enabled or not
+              resolution: '360x640',  // The resolution of your video
+              // 480x640
+              // 320x540
+              // 360x640
+              frameRate: 30,         // The frame rate of your video
+              insertMode: 'APPEND',   // How the video is inserted in the target element 'video-container'
+              mirror: false          // Whether to mirror your local video or not
+            });
+  
+            this.mainStreamManager = publisher;
+            this.publisher = publisher;
+  
+            // --- Publish your stream ---
+  
+            this.session.publish(this.publisher);
 
-          this.mainStreamManager = publisher;
-          this.publisher = publisher;
-
-          // --- Publish your stream ---
-
-          this.session.publish(this.publisher);
+          } else {
+            // this.mainStreamManager = publisher;
+            console.log("Subscriber입니다....")
+          }
         })
         .catch(error => {
           console.log('There was an error connecting to the session:', error.code, error.message);
@@ -349,7 +410,9 @@ export default {
       });
       window.addEventListener('beforeunload', this.leaveSession)
     },
-
+    isPublisher() {
+      return this.liveInfo.user.userId == localStorage.getItem("userId");
+    },
     leaveSession () {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.session) this.session.disconnect();
@@ -437,14 +500,14 @@ export default {
         // 방송 제목과  받아오기
         this.mySessionId = this.prdId + ''
         this.myUserName = localStorage.getItem('userName')
-	      if (res.data.logList.length) {
+        if (res.data.logList.length) {
 					this.currentPrice = res.data.logList[(res.data.logList.length-1)].bidPrice,
 					this.currentUser = res.data.logList[(res.data.logList.length-1)].bidder
 				}
       })
-        .catch((err) => {
-          console.log('라이브 정보 받아오기 오류: ' + err)
-        })
+      .catch((err) => {
+        console.log('라이브 정보 받아오기 오류: ' + err)
+      })
     },
     goProfile () {
       this.$router.push({ name: "MyPage" });

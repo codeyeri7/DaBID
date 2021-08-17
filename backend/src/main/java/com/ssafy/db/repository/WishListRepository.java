@@ -22,6 +22,6 @@ public interface WishListRepository extends JpaRepository<WishList,Integer> {
     int countByLive(Live live);
     List<WishList> findAll();
 
-    @Query(value = "select * from wish_list wl group by prd_id",nativeQuery = true)
+    @Query(value = "select * from wish_list group by prd_id order by count(prd_id) desc",nativeQuery = true)
     List<WishList> findAllGroupByPrdId();
 }

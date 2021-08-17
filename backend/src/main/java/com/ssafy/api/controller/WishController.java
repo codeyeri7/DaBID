@@ -49,7 +49,6 @@ public class WishController {
 	@GetMapping("/check/{prdId}")
 	@ApiOperation(value = "내가 찜한 라이브인지 판별", notes = "로그인한 유저가 찜한 라이브인지 아닌지 판별")
 	public ResponseEntity<?> checkWishLive(@PathVariable int prdId,@ApiIgnore Authentication authentication) {
-		System.out.println("여기들어와");
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);

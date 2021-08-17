@@ -4,12 +4,12 @@
       <v-app-bar
         app
         flat
-        color="white"  
         light
+        id="app-bar"
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO D.jpg" width="42" class="pt-2">
+          <img src="@/assets/logowhite.png" width="42" class="pt-2">
         </RouterLink>
 
         <v-spacer></v-spacer>
@@ -54,7 +54,7 @@
       <footer
         app
         flat  
-        light
+        light 
       >
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/Home.png" width="40" style="margin-left:1.2rem;">
@@ -115,13 +115,13 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 footer{ 
-  border-top: 1px solid #292938;
+  border-top: 1px solid #3a3837;
   position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:rgb(255, 255, 255); 
+  background:#111111; 
   display:flex; 
   justify-content:space-between;
   align-items: center;
@@ -143,5 +143,8 @@ footer{
 }
 #kor-font {
   font-family: "InfinitySans-RegularA1";
+}
+#app-bar {
+  background-color: #111111;
 }
 </style>

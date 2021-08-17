@@ -1,25 +1,16 @@
 <template>
-  <div class="container" id="app" v-cloak>
+  <div class="container main-back" id="app" v-cloak>
     <div class="row">
       <div class="col-md-12">
-        <h3>채팅방 리스트</h3>
+        <h3 id="eng-font" class="gold-color ml-5">Chat Room</h3>
       </div>
     </div>
-    <!-- <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text">방제목</label>
-      </div>
-      <input type="text" class="form-control" v-model="room_name" v-on:keyup.enter="createRoom">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
-      </div>
-    </div> -->
     <ul class="list-group">
-      <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.live.prdId" v-on:click="enterRoom(item.live.prdId)">
-        <span v-if="checkUser(item)">
+      <li id="kor-font" class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.live.prdId" v-on:click="enterRoom(item.live.prdId)">
+        <span v-if="checkUser(item)" class="gold-color">
           {{ item.buyer.userName }} | {{ item.live.prdName }}
         </span>
-        <span v-else>
+        <span v-else class="gold-color">
           {{ item.seller.userName }} | {{ item.live.prdName }}
         </span>
       </li>
@@ -27,7 +18,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import rest from "../../js/httpCommon.js"
 
 export default {
@@ -82,3 +73,13 @@ export default {
   }
 }
 </script>
+<style scoped>
+#app {
+  background-color: #151618;
+}
+.list-group-item {
+  background-color: #3c3f44;
+  width: 90%;
+  border: #3c3f44;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="body main-back">
     <MyProfile :Person ="person"/>
       <v-card color="secondary" class="mx-auto" max-width="290">
           <v-simple-table>

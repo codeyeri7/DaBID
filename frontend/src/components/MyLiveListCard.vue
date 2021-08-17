@@ -146,7 +146,7 @@ export default {
     },
     goLive (prdId) {
       this.$router.push({
-        name: "Seller", 
+        name: "session", 
         params: {
           prdId : prdId
         }

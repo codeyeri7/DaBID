@@ -1,4 +1,5 @@
 <template>
+  <div class="main-back">
     <div id="kor-font" class="main-card">
       <div class="mx-auto">
         <v-container fluid>
@@ -11,6 +12,7 @@
         </v-container>
       </div>
     </div>
+  </div>
 </template>
 
 <script>

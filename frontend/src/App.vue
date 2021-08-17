@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-back">
     <v-app>
       <v-app-bar
         app
@@ -149,5 +149,12 @@ footer{
 }
 .gold-color {
   color: #dfb772;
+}
+.main-back {
+  /* background-color:#3f404d;
+   */
+  background-color: #151618;
+  height: 100%;
+  /* background-color: rgba(46,48,53,0.7) */
 }
 </style>

@@ -4,6 +4,7 @@ import com.ssafy.api.request.LiveRegisterPostReq;
 import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.LiveRepository;
+import com.ssafy.db.repository.LiveStatusRepository;
 import com.ssafy.db.repository.ResultRepository;
 import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class ResultService {
     @Autowired
     ResultRepository resultRepository;
 
+    @Autowired
+    LiveStatusRepository liveStatusRepository;
+
     public Result createResult(int prdId, ResultPostReq resultInfo) {
         Result result = new Result();
         Live live = liveRepository.findByPrdId(prdId).get();
@@ -36,6 +40,7 @@ public class ResultService {
         result.setResPriceEnd(resultInfo.getResPriceEnd());
         resultRepository.save(result);
 
+        live.setLiveStatus(liveStatusRepository.getOne(2));
         live.setResult(result);
         liveRepository.save(live);
         return result;

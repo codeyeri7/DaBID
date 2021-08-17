@@ -2,7 +2,7 @@
   <div class="body main-back">
     <MyProfile :Person ="person"/>
 
-      <v-card color="secondary" class="mx-auto" max-width="290">
+      <v-card class="mx-auto" max-width="290">
           <v-simple-table>
           <template v-slot:default>
             <tbody style="background-color:#3c3f44;">
@@ -50,17 +50,22 @@ export default {
       userId: null,
       items: [
         {
-          src: require("@/assets/myLive.png"),
+          // src: require("@/assets/myLive.png"),
           text: "My B-Live",
           action: "goMyLive",
         },
         {
-          src: require("@/assets/mywish.png"),
+          // src: require("@/assets/mywish.png"),
           text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          src: require("@/assets/mynotice.png"),
+          // src: require("@/assets/mynotice.png"),
+          text: "My Review",
+          action: "goReview",
+        },
+        {
+          // src: require("@/assets/mynotice.png"),
           text: "Notice",
           action: "goNotice",
         },

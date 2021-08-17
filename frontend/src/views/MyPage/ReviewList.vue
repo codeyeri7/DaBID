@@ -78,4 +78,7 @@ export default {
 .review-content {
   color: #dfb772;
 }
+.container {
+  margin-bottom: 60px;
+}
 </style>

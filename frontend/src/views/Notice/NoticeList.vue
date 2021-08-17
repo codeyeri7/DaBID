@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-
+  <div class="container main-back">
     <div class="notice-head pb-4">
       <h1 class="ms-2" id="eng-font">Notices</h1>
         <v-btn color="primary" dark tile @click="none" id="kor-font"
@@ -22,6 +21,7 @@
 <v-expansion-panel-header>
           <div class="gold-color"><img v-if="notice.noticeType == true" src="@/assets/exclamation-mark.png" alt="alert-img" width="20"> {{ notice.noticeTitle }} </div>
         </v-expansion-panel-header>
+
         <v-expansion-panel-content>
           <p v-html="notice.noticeContent"></p>
         </v-expansion-panel-content>

@@ -1,8 +1,7 @@
 <template>
-<div>
   <div>
-    <v-card tile elevation="1">
-      <div class="d-flex justify-content mx-3 mt-4">
+    <v-card color="secondary" tile elevation="1">
+      <div class="d-flex justify-content mx-3">
         <div>
           <v-img
             :src="room.live.prdPhoto"
@@ -14,61 +13,62 @@
           >
           </v-img>
         </div>
-        <div class="d-flex flex-column mx-2" id="kor-font">
+
+        <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
           <p>상품명 : {{ room.live.prdName }}</p>
           <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
+          <!-- <p>{{ room.live }}</p> -->
         </div>
-        <span v-if="endlive.seller.userName != sender">
-          <v-row
-            align="end"
-            justify="space-around"
-            class="mb-4"
-          >
+
+        <div v-if="endlive.seller.userName == sender">
             <v-btn
               tile
               x-small
-              color="secondary"
-              class="black--text"
-              @click="goReview()"
+              color="primary"
+              class="black--text mt-5 ml-3"
+              id="kor-font"
+              @click="goReview(room.live.prdId)"
             >
-              <v-icon left>
+              <v-icon left color="black">
                 mdi-pencil
               </v-icon>
               리뷰작성
             </v-btn>
-          </v-row>
-        </span>
+        </div>
       </div>
     </v-card>
-    <v-container class="fill-height">
+
+    <v-container class="fill-height" style="background-color:#3c3f44">
       <v-row class="fill-height pb-14" align="end">
         <v-col>
           <div v-for="(message, index) in messages" :key="index" id="kor-font"
               :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
-            <span v-if="message.sender == sender" class="black--text mr-3">{{ message.message }}</span>
-            <v-avatar :color="message.sender == sender ? 'primary': 'secondary'" size="36">
+            <span v-if="message.sender == sender" class="white--text mr-3 chat">{{ message.message }}</span>
+
+            <v-avatar :color="message.sender == sender ? 'primary': 'cardcolor'" size="36">
               <span v-if="message.sender == sender" class="white--text">{{ message.sender[0] }}</span>
               <span v-else class="black--text">{{ message.sender[0] }}</span>
             </v-avatar>
-            <span v-if="message.sender != sender" class="black--text ml-3">{{ message.message }}</span>
+
+            <span v-if="message.sender != sender" class="white--text ml-3 chat">{{ message.message }}</span>
           </div>
         </v-col>
       </v-row>
     </v-container>
+    
     <div class="fixedchat">
       <v-container>
         <v-row no-gutters>
           <v-col>
             <div class="d-flex flex-row align-center">
-              <v-text-field v-model="msg" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
-              <v-btn icon class="ml-4" @click="sendMessage"><v-icon>mdi-send</v-icon></v-btn>
+              <v-text-field class="gold-color" v-model="message" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
+              <v-btn icon class="ml-4" @click="sendMessage"><v-icon color="primary">mdi-send</v-icon></v-btn>
             </div>
           </v-col>
         </v-row>
       </v-container>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -119,7 +119,7 @@ export default {
         url: "dabid/chat/room/"+this.roomId,
       })
       .then(res => {
-        console.log(res.data);
+        console.log('거래완료한 방송 정보', res.data);
         this.endlive = res.data
       })
       .catch(err => {
@@ -142,11 +142,11 @@ export default {
       // this.messages.push({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
     // },
     connect() {
-      const endPoint = "/ws-stomp";
+      const endPoint = "https://i5a506.p.ssafy.io:8080/ws-stomp";
       let sock = new SockJS(endPoint);
       let stompClient = Stomp.over(sock);
       console.log(stompClient);
-      // let reconnect = 0;
+      // let reconnect = 0; 
       // pub/sub event
       stompClient.connect({}, function(frame) {
         console.log('Connected: ', frame);
@@ -169,11 +169,13 @@ export default {
       });
       this.stompClient = stompClient;
     },
-    goReview : function () {
+    goReview : function (Id) {
+      console.log('이 정보 넘길거다', this.endlive.seller, Id)
       this.$router.push({
         name: "ReviewCreate",
         params: {
-          seller : `${this.endlive.seller}`
+          seller : this.endlive.seller,
+          prdId : Id
         }
       })
     }
@@ -185,5 +187,10 @@ export default {
 .fixedchat {
   position: fixed;
   bottom: 30px;
+}
+.chat {
+  background-color: #151618;
+  padding: 10px;
+  border-radius: 10px;
 }
 </style>

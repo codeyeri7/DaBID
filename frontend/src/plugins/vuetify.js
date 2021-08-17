@@ -12,7 +12,8 @@ export default new Vuetify({
             light: {
                 primary: '#dfb772',
                 secondary: '#151618',
-                cardcolor: '#FDF4F4'
+                cardcolor: '#FDF4F4',
+                gray: '#3c3f44'
             }
         }
     },

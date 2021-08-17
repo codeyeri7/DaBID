@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card color="#FDF4F4" tile :elevation="0" light height="150" v-bind="attrs"
+        <v-card color="#3c3f44" tile :elevation="0" light height="150" v-bind="attrs"
           v-on="on">
               <v-card-title class="pb-1">
                 <RouterLink :to="{ name: 'UserProfile', params: { userId : hot_live.user.userId}}">
@@ -221,7 +221,7 @@ export default {
 <style scoped>
 p {
     margin-bottom: 0;
-    color: #000000;
+    color: #f3e7d0;
 }
 </style>
 

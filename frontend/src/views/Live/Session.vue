@@ -1,5 +1,125 @@
 <template>
 <!--buyer화면 --> 
+<<<<<<< HEAD
+	<div id="main-container" class="container">
+		<div id="join" v-if="!session">
+			<div id="join-dialog" class="jumbotron vertical-center">
+				<h2>Live 입장하기</h2>
+				<div class="form-group">
+					<p>
+						<label id="eng-font">Live Title</label>
+						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
+					</p>
+						<hr>
+					<p>
+						<label id="eng-font">Live Info</label>
+						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
+						<h5 id="kor-font"> 시작가 {{ liveInfo.prdPriceStart | comma }}</h5>
+
+					</p>
+					<hr>
+					<p class="text-center">
+						<button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="session" v-if="session">
+			<div id="session-header">
+				<v-card
+					class="mx-auto"
+					max-height="150"
+					outlined
+					id="kor-font"
+				>
+					<v-list-item three-line>
+					<v-list-item-content>
+						<div class="text-overline mb-2">
+						{{ liveInfo.productCategory.prdCategoryName }}
+						</div>
+						<v-list-item-title class="text-h6 mb-1">
+						{{ liveInfo.liveTitle }}
+						</v-list-item-title>
+						<v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
+					</v-list-item-content>
+
+					<v-list-item-avatar
+						tile
+						size="70"
+						@click="goProfile()"
+					>
+					</v-list-item-avatar>
+					<!-- <img src="@/assets/profileImg.PNG" alt="profile image"/> -->
+					</v-list-item>
+				</v-card>
+			</div>
+				<div style="margin-left: 1.2rem">
+					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
+					<p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
+				</div>
+			<v-btn
+				icon
+				v-if="this.publisher.properties.publishAudio"
+				@click="toggleAudio"
+				class="toggleBtn"
+			>
+				<i class="fas fa-microphone"></i>
+			</v-btn>
+			<v-btn icon v-else @click="toggleAudio" class="toggleBtn">
+				<i class="fas fa-microphone-slash"></i>
+			</v-btn>
+
+			<!-- 카메라 on/off 버튼 -->
+			<v-btn
+				icon
+				v-if="this.publisher.properties.publishVideo"
+				@click="toggleVideo"
+				class="toggleBtn video"
+			>
+				<i class="fas fa-video"></i>
+			</v-btn>
+			<v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
+				<i class="fas fa-video-slash"></i>
+			</v-btn>
+			<!-- 본인 화면 --> 
+			<div id="main-video" class="col-md-6">
+				<user-video :stream-manager="mainStreamManager"/>
+			</div>
+			<!-- 무슨 화면 -->
+			<div id="video-container" class="col-md-6">
+				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+			</div>
+			
+			<div class="chat">
+				<div class="chat-list">
+					<p v-for="(chat, idx) in chatList" :key="idx">
+						<span>{{ chat.from }}: </span>
+						<v-text>{{ chat.data }}</v-text>
+						</p>
+				</div>
+
+				<v-row style="width: 80%; margin-left:1.5rem">
+					<v-text-field type="text" style="width:60%" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요"></v-text-field>
+					<v-btn dark elevation="0" color="primary" @click="sendMsg()" style="height:2rem">전송</v-btn>
+				</v-row>
+				<br>
+				<v-row style="width: 80%; margin-left:1.5rem">
+					<v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="bidding" placeholder="금액을 입력하세요"></v-text-field>
+					<h4 style="text-align:center">원</h4>
+					<v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn>
+				</v-row>
+				<h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5>
+			</div>
+
+		<!-- session 닫히는 태그 --> 	
+		</div>
+
+		<div class="fixedbutton" style="float: right">
+			<RouterLink :to="{ name: 'Main' }">
+=======
   <div id="main-container" class="container">
     <div id="join" v-if="!session">
       <div id="join-dialog" class="jumbotron vertical-center">
@@ -173,6 +293,7 @@
 
     <div class="fixedbutton" style="float: right">
       <RouterLink :to="{ name: 'Main' }">
+>>>>>>> e7a69cb14a46e04e349ea4305b0940b74860d1a1
         <v-btn 
           class="ma-2"
           dark

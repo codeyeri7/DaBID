@@ -1,19 +1,15 @@
 <template>
-  <div>
     <div class="container" style="padding: 0px">
       <v-card
         class="mx-auto elevation-3"
-        style="max-width: 80%; margin-top: 50px"
+        style="max-width: 80%; margin-top: 50px;background-color:#3c3f44"
       >
         <v-row justify="space-between">
           <v-col>
             <v-card-title>
               <div>
-                <img src="@/assets/profileImg.jpg" alt="profile image" />
-                <span id="userName"
-                  ><b>{{ Person.userName }}</b></span
-                >
-
+                <img src="@/assets/profileImg.png" alt="profile image" width="50" />
+                <span class="ml-3" id="userName"><b>{{ Person.userName }}</b></span>
                 <v-dialog
                   v-model="dialog"
                   persistent
@@ -22,7 +18,7 @@
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       icon
-                      color="black"
+                      color="white"
                       v-bind="attrs"
                       v-on="on"
                     >
@@ -63,6 +59,7 @@
             </v-card-title>
           </v-col>
         </v-row>
+
         <div id="barEmoji">
           <v-progress-linear
             v-model="Person.userScore"
@@ -70,29 +67,22 @@
             background-color="#F4E3D7"
             height="15"
           ></v-progress-linear>
-          <br />
           <div class="emoji">
-            <img src="@/assets/sad.png" alt="sad_emoji" />
-            <img src="@/assets/neutral.png" alt="neutral" />
-            <img src="@/assets/laughing.png" alt="laughing_emojiss" />
+            <p>:(</p>
+            <p>:|</p>
+            <p>:)</p>
+            <p>:D</p>
           </div>
         </div>
-        <div id="review">
-          <span>
-          </span>
-          <button
-            id="review-btn"
-            class="btn d-flex align-center"
-            type="button"
-            @click="checkReviews()"
-          >
-            Check your reviews
-          </button>
+
+        <div id="review" @click="checkReviews"> 
+           <RouterLink :to="{ name: 'ReviewList', params: { userId: userId }}">
+            <h5 class="pb-3" id="eng-font">{{ reviews_num }} Reviews</h5>
+          </RouterLink>
         </div>
-        <v-divider dark></v-divider>
+
       </v-card>
     </div>
-  </div>
 </template>
 
 <script>
@@ -103,7 +93,9 @@ export default {
     return {
       dialog: false,
       reviews: [],
+      reviews_num: null,
       userName: null,
+      userId: null,
     };
   },
   props: {
@@ -117,7 +109,6 @@ export default {
       };
       return config;
     },
-    //review list로 페이지 전환
     checkReviews: function () {
       //남이 나에게 써준 리뷰
       rest
@@ -127,7 +118,8 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          // console.log(this.reviews);
+          console.log(this.reviews.length, '리뷰 갯수다')
+          this.reviews_num = this.reviews.length 
         })
         .catch((err) => {
           console.log(err);
@@ -164,8 +156,8 @@ export default {
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.userName = User.userName
-      console.log('@@@@@@@@@@@@@@@@@@@내이름!!!!!!!!!!!!!!!!11',this.userName)
+      this.userId = localStorage.getItem('userId')
+      this.checkReviews
     } else {
       this.$router.push({ name: "Login" });
     }
@@ -180,14 +172,12 @@ export default {
 .emoji {
   display: flex;
   justify-content: space-between;
-}
-#review-btn {
-  width: 150px;
-  margin: auto;
-  padding: 0;
+  font-weight: bold;
+  color: white;
 }
 #userName {
   font-family: "IBMPlexSansKR-Regular";
+  color:white
 }
 #barEmoji {
   width: 85%;
@@ -195,11 +185,10 @@ export default {
   margin-bottom: 1.2rem;
 }
 #review {
-  margin-left: 2rem;
-  background-color: rgb(212, 212, 212);
-  margin-right: 2rem;
-  /* border-radius: 30px; */
+  margin-left: 10px;
+  color:white
 }
+
 #hrline {
   height: 1px;
   background: #bbb;

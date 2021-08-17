@@ -1,25 +1,25 @@
 <template>
-  <div>
+  <div class="body main-back">
     <UserProfile :User="person"/>
-    <v-card class="mx-auto" max-width="300">
-      <v-row dense>
-        <v-col v-for="item in items" :key="item" :cols="3">
-          <v-card tile :elevation="0">
-            <img
-              class="mx-3"
-              :src="item.src"
-              @click="menuActionClick(item.action)"
-            >
-            <div id="eng-font">
-              <v-card-subtitle class="pt-0 pb-1 text-center" :style="{'font-size':fontSize+'px'}">{{ item.text }}</v-card-subtitle>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+    
+    <v-card color="secondary" class="mx-auto" max-width="290">
+          <v-simple-table>
+          <template v-slot:default>
+            <tbody style="background-color:#3c3f44;">
+              <tr
+                v-for="item in items"
+                :key="item.name"
+                @click="menuActionClick(item.action)"
+              >
+                <td id="eng-font" class="gold-color">{{ item.text }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
     </v-card>
+
   </div>
 </template>
-
 <script>
 import UserProfile from "@/components/UserProfile.vue"
 import rest from "../../js/httpCommon.js";
@@ -35,6 +35,7 @@ export default {
       fontSize: 8,
       person: null,
       userId: null,
+      reviews: [],
       items: [
         {
           src: require("@/assets/mylive.png"),
@@ -43,19 +44,9 @@ export default {
         },
         {
           src: require("@/assets/myreview_40.png"),
-          text: "Review",
+          text: "Write Review",
           action: "goReview",
         },
-        // {
-        //   src: require("@/assets/mynotice_40.png"),
-        //   text: "Notice",
-        //   action: "goNotice",
-        // },
-        {
-          src: require("@/assets/myhelp_40.png"),
-          text: "Help",
-          action: "goHelp",
-        }
       ],
     };
   },
@@ -82,11 +73,26 @@ export default {
           console.log(err);
         });
     },
+    checkReviews: function () {
+      //남이 나에게 써준 리뷰
+      rest
+        .axios({
+          method: "get",
+          url: `/dabid/users/checkReview/${this.userId}`,
+        })
+        .then((res) => {
+          this.reviews = res.data;
+          console.log('리뷰갯수에요',this.reviews.length);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     menuActionClick(action) {
       if (action === "goMyLive") {
         this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
       } else if (action === "goReview") {
-        this.$router.push({ name: "ReviewList" });
+        this.$router.push({ name: "ReviewCreate" });
       } else if (action === "goNotice") {
         this.$router.push({ name: "Notice" });
       } else if (action === "goHelp") {
@@ -99,6 +105,7 @@ export default {
       this.userId = this.$route.params.userId
       console.log('받아온 ID', this.userId)
       this.getProfile(this.userId);
+      this.checkReviews
     } else {
       this.$router.push({ name: "Login" });
     }
@@ -111,5 +118,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
+.body {
+  background-color: #151618;
+}
 </style>

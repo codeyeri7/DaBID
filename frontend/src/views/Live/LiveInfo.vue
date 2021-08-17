@@ -290,6 +290,9 @@ export default {
 </script>
 
 <style scoped>
+.container{
+  margin-bottom: 50px;
+}
 #top-hr{
   margin-top: 1rem;
   height:1px;

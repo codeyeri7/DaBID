@@ -1,13 +1,15 @@
 <template>
   <div class="container" id="kor-font">
-    <h4>거래 정보</h4>
-    <!-- <img src="" alt="" />-->
-    <v-text>live.prdName</v-text>
-    <v-text>낙찰가</v-text>
-    <v-text>{{ this.live }}</v-text> 
-    
-    <h3>리뷰 작성</h3>
+    <v-card color="secondary" tile elevation="1">
+      <h4 class="gold-color">거래 정보</h4>
+      <v-text>라이브 제목: {{ live.Title }}</v-text><br>
+      <v-text>낙찰가</v-text><br>
+      <v-text>상품 품목: {{ live.prdName }}</v-text> <br>
+      <v-text>상품 품목: {{ live.user.userName }}</v-text> 
+    </v-card>
+
     <v-divider></v-divider>
+
     <h5>라이브 품질</h5>
     <v-text>Q1. 라이브는 문제없이 진행됐나요?</v-text>
     <v-btn
@@ -92,7 +94,15 @@ import rest from "../../js/httpCommon.js";
 export default {
   data() {
     return {
+      // 받아온 라이브 번호 
+      prdId: null,
+      // 받아온 라이브 정보 
       live: null,
+      // 판매자 
+      seller: null,
+      // 점수 합계 
+      userscore: null,
+
       content: "",
       clicked1: false,
       clicked2: false,
@@ -111,75 +121,78 @@ export default {
       return config;
     },
     getLive: function () {
-      const prdId = this.$route.params.prdId
+      console.log(this.prdId, '!!!!!!!!!!!!!')
       rest.axios({
         method: 'get',
-        url: `/dabid/live/${prdId}`,
+        url: `/dabid/live/${this.prdId}`,
         headers: this.setToken()
       })
         .then((res) => {
+          // 거래한 라이브 정보 
           this.live = res.data
+          console.log('가져온 라이브 데이터', this.live)
         })
         .catch((err) => {
           console.log(err)
         })
     },
+    getScore() {
+      if (this.clicked1 == true) {
+        this.userscore += 1;
+      }
+      if (this.clicked3 == true) {
+        this.userscore += 1;
+      }
+      if (this.clicked5 == true) {
+        this.userscore += 1;
+      }
+      if (this.clicked2 == true) {
+        this.userscore -= 5;
+      }
+      if (this.clicked4 == true) {
+        this.userscore -= 5;
+      }
+      if (this.clicked6 == true) {
+        this.userscore -= 5;
+      }
+      console.log(this.userscore)
+    },
     createReview: function () {
+      this.getScore()
       const config = this.setToken()
       const review = {
-        userId: "P1628213340945",
+        userId: this.seller.userId,
         userscore: this.userscore,
         prdId: this.prdId,
         content: this.content,
       };
-      console.log(this.userscore);
-      if (this.userscore > 0 || this.userscore < 0) {
-        console.log("등록시작"),
-        console.log(this.review),
-        rest
-          .axios({
-            method: "post",
-            url: "/dabid/users/writeReview/",
-            data: review,
-            headers: config
-          })
-          .then((res) => {
-            console.log(res);
-            this.$router.push({ name: "ReviewList", params: { userId: `${this.userId}` } });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    },
-    //  if로 점수 추가할 때 참고하기...
-    mounted() {
-      if (
-        this.clicked1 == true ||
-        this.clicked3 == true ||
-        this.clicked5 == true
-      ) {
-        this.userscore += 1;
-        console.log(this.userscore)
-      }
-      if (
-        this.clicked2 == true ||
-        this.clicked4 == true ||
-        this.clicked6 == true
-      ) {
-        this.userscore -= 5;
-        console.log(this.userscore)
-      }
-      //   if (localStorage.getItem('jwt')) {
-      //     // 바로 정보 가져오기
-      //     this.live = this.$route.params.live
-      //     // console.log(this.live)
-      //   } else {
-      //     console.log('오류')
-      //   }
-      //   this.calcDate()
+      rest
+        .axios({
+          method: "post",
+          url: "/dabid/users/writeReview/",
+          data: review,
+          headers: config
+        })
+        .then((res) => {
+          console.log(res);
+          this.$router.push({ name: "ReviewList", params: { userId: this.seller.userId }});
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
+    created() {
+      if (localStorage.getItem('jwt')) {
+        // 바로 정보 가져오기
+        this.prdId = this.$route.params.prdId
+        this.seller = this.$route.params.seller
+        console.log(this.prdId, '받아온 라이브 번호', this.seller)
+        this.getLive();
+      } else {
+        console.log('오류')
+      }
+    }
 };
 </script>
 
@@ -192,6 +205,7 @@ export default {
 }
 .container {
   width: 90%;
+  margin-bottom: 60px;
 }
 .submit-buttom {
   display:flex; 
@@ -199,5 +213,8 @@ export default {
   font-size: 1.1rem;
   background-color: #292938;
   margin: auto;
+}
+v-text {
+  color: #dfb772;
 }
 </style>

@@ -17,21 +17,23 @@
         <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
           <p>상품명 : {{ room.live.prdName }}</p>
           <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
+          <!-- <p>{{ room.live }}</p> -->
         </div>
-        <div v-if="endlive.seller.userName != sender">
-          <v-btn
-            tile
-            x-small
-            color="primary"
-            class="black--text mt-5 ml-3"
-            id="kor-font"
-            @click="goReview()"
-          >
-            <v-icon left color="black">
-              mdi-pencil
-            </v-icon>
-            리뷰작성
-          </v-btn>
+
+        <div v-if="endlive.seller.userName == sender">
+            <v-btn
+              tile
+              x-small
+              color="primary"
+              class="black--text mt-5 ml-3"
+              id="kor-font"
+              @click="goReview(room.live.prdId)"
+            >
+              <v-icon left color="black">
+                mdi-pencil
+              </v-icon>
+              리뷰작성
+            </v-btn>
         </div>
       </div>
     </v-card>
@@ -121,7 +123,7 @@ export default {
         url: "dabid/chat/room/"+this.roomId,
       })
       .then(res => {
-        console.log(res.data);
+        console.log('거래완료한 방송 정보', res.data);
         this.endlive = res.data
       })
       .catch(err => {
@@ -158,7 +160,7 @@ export default {
       let sock = new SockJS(endPoint);
       let stompClient = Stomp.over(sock);
       console.log(stompClient);
-      // let reconnect = 0;
+      // let reconnect = 0; 
       // pub/sub event
       stompClient.connect({}, function(frame) {
         console.log('Connected: ', frame);
@@ -181,11 +183,13 @@ export default {
       });
       this.stompClient = stompClient;
     },
-    goReview : function () {
+    goReview : function (Id) {
+      console.log('이 정보 넘길거다', this.endlive.seller, Id)
       this.$router.push({
         name: "ReviewCreate",
         params: {
-          seller : `${this.endlive.seller}`
+          seller : this.endlive.seller,
+          prdId : Id
         }
       })
     }

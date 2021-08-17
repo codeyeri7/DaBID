@@ -1,6 +1,7 @@
 <template>
   <div class="body main-back">
     <MyProfile :Person ="person"/>
+
       <v-card color="secondary" class="mx-auto" max-width="290">
           <v-simple-table>
           <template v-slot:default>
@@ -43,7 +44,6 @@ export default {
   },
   data: function () {
     return {
-      // userId: this.person.userId,
       dialog: false,
       fontSize: 8,
       person: null,
@@ -138,15 +138,9 @@ export default {
 .body {
   background-color: #151618;
 }
-.card-text {
-  display: flex;
-  flex-direction: column;
-}
-.text-center {
-  color:bisque
-}
 .logout {
   color:red;
   text-align: center;
 }
+
 </style>

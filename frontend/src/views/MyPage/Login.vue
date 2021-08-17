@@ -5,7 +5,7 @@
         <img src="@/assets/LOGO.png" width="150px" class="mb-5 logo" style="margin-top: 120px;"><br>
           <div class="card-body">
             <div v-if="isLogin">
-              <img src="@/assets/loading.png" alt="loading" style="margin-left:113px;margin-top:60px;width:90px">
+              <img src="@/assets/loading.png" alt="loading" style="margin-top:60px;width:90px;text-align:center">
             </div>
             <div v-else class="login-body">
               <h4 style="margin-top:60px;" id="eng-font"><b>Get your Luxury</b></h4>
@@ -71,8 +71,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 #back {
   background-image: url('background.jpg'); 
   background-size: cover;

@@ -1,5 +1,5 @@
 <template>
-  <div id="kor-font">
+  <div id="kor-font" class="main-back">
     <div class="main-card">
       <div class="mx-auto">
         <v-tabs

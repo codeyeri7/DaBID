@@ -25,7 +25,8 @@
     </div>
     <div id="session" v-if="session">
       <!-- 참가자(Publisher) 화면 -->
-      <div id="video-container" class="col-md-6">
+      <!-- <div id="video-container" class="col-md-6"> -->
+      <div id="video-container">
         <!-- <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> -->
         <user-video :stream-manager="publisher"/>
@@ -55,7 +56,7 @@
               tile
               size="70"
               @click="goProfile()"
-            ><img src="@/assets/profileImg.jpg" alt="profile image"/></v-list-item-avatar>
+            ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
             </v-list-item>
           </v-card>
         </div>
@@ -397,7 +398,10 @@ export default {
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
               publishVideo: true,     // Whether you want to start publishing with your video enabled or not
-              resolution: '480x640',  // The resolution of your video
+              resolution: '360x640',  // The resolution of your video
+              // 480x640
+              // 320x540
+              // 360x640
               frameRate: 30,         // The frame rate of your video
               insertMode: 'APPEND',   // How the video is inserted in the target element 'video-container'
               mirror: false          // Whether to mirror your local video or not
@@ -512,9 +516,9 @@ export default {
         this.mySessionId = this.prdId + ''
         this.myUserName = localStorage.getItem('userName')
         if (res.data.logList.length) {
-               this.currentPrice = res.data.logList[(res.data.logList.length-1)].bidPrice,
-               this.currentUser = res.data.logList[(res.data.logList.length-1)].bidder
-            }
+					this.currentPrice = res.data.logList[(res.data.logList.length-1)].bidPrice,
+					this.currentUser = res.data.logList[(res.data.logList.length-1)].bidder
+				}
       })
       .catch((err) => {
         console.log('라이브 정보 받아오기 오류: ' + err)

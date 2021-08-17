@@ -116,13 +116,13 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 
 footer{ 
-  border-top: 1px solid #3a3837;
+  border-top: 1px solid #292938;
   position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:#313131; 
+  background:#3c3f44; 
   display:flex; 
   justify-content:space-between;
   align-items: center;
@@ -145,6 +145,6 @@ footer{
   font-style: normal;
 }
 #app-bar {
-  background-color: #313131;
+  background-color: #3c3f44;
 }
 </style>

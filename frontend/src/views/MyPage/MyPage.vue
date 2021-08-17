@@ -2,7 +2,7 @@
   <div class="body main-back">
     <MyProfile :Person ="person"/>
 
-      <v-card color="secondary" class="mx-auto" max-width="290">
+      <v-card class="mx-auto" max-width="290">
           <v-simple-table>
           <template v-slot:default>
             <tbody style="background-color:#3c3f44;">
@@ -63,6 +63,11 @@ export default {
           src: require("@/assets/mynotice.png"),
           text: "Notice",
           action: "goNotice",
+        },
+        {
+          src: require("@/assets/mynotice.png"),
+          text: "Review",
+          action: "goReview",
         },
       ],
     };

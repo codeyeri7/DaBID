@@ -118,7 +118,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 
 footer{ 
-  border-top: 1px solid #292938;
+  /* border-top: 1px solid #292938; */
   position:fixed; 
   left:0px; 
   bottom:0px; 
@@ -130,7 +130,7 @@ footer{
   align-items: center;
 }
 .v-toolbar__content, .v-toolbar__extension {
-  border-bottom: 1px solid #292938;
+  /* border-bottom: 1px solid #292938; */
 }
 #eng-font {
   font-family: 'Lora', serif;

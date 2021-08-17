@@ -27,17 +27,9 @@
       <!-- 참가자(Publisher) 화면 -->
       <!-- <div id="video-container" class="col-md-6"> -->
       <div id="video-container">
-        <!-- <user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> -->
-        <user-video :stream-manager="publisher"/>
-        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-      </div>
-      <!-- 본인 화면 --> 
-      <!-- <div class="video col-md-6" id="main-video" height="400px">
-        <user-video :stream-manager="mainStreamManager"/> -->
         <div class="prdInfo" id="session-header">
           <v-card
-            class="mx-auto"
+            class="mx-auto liveInfoCard"
             max-height="150"
             outlined
             id="kor-font"
@@ -60,6 +52,12 @@
             </v-list-item>
           </v-card>
         </div>
+        <user-video :stream-manager="publisher"/>
+        <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+      </div>
+      <!-- 본인 화면 --> 
+      <!-- <div class="video col-md-6" id="main-video" height="400px">
+        <user-video :stream-manager="mainStreamManager"/> -->
       <!-- </div> -->
       <div class="button" style="margin-left: 1.2rem">
             <span v-if="liveInfo.user.userId != loginId">
@@ -149,7 +147,8 @@
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
-                    color="green darken-1"
+                    dark
+                    color="primary"
                     @click="dialog = false"
                   >
                     취소
@@ -159,7 +158,8 @@
                     @click="dialog = false"
                   > -->
                   <v-btn
-                    color="green darken-1"
+                    dark
+                    color="primary"
                     @click="bidding"
                   >
                     확인
@@ -556,7 +556,8 @@ export default {
   font-family: "InfinitySans-RegularA1";
 }
 #main-container {
-  padding-bottom: 0;
+  /* padding-bottom: 0; */
+  padding: 0px;
 }
 div.video {
   position: absolute;
@@ -589,5 +590,9 @@ div.comments_wrap {
   color: black;
   overscroll-behavior: none;
   will-change: bottom;
+}
+
+.liveInfoCard {
+  background-color: rgba(255, 255, 255, 0);
 }
 </style>

@@ -58,6 +58,7 @@ public class ResultController {
         return ResponseEntity.status(200).body(result);
     }
 
+
     // 특정 채팅방 삭제
 //    @DeleteMapping("/room/{roomId}")
 //    @ApiOperation(value = "특정 채팅방 삭제", notes = "특정 채팅방 삭제.")

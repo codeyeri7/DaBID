@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-back">
     <!-- carousel-->
     <v-carousel
       :continuous="false"
@@ -29,7 +29,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card height="300" class="section1" @click="goLive(card.prdId)" tile :elevation="0">
+              <v-card height="280" class="section1" @click="goLive(card.prdId)" tile :elevation="0">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -59,7 +59,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in will_live" :key="card.title" :cols="6">
-              <v-card height="300" class="section2" tile :elevation="0">
+              <v-card height="280" class="section2" tile :elevation="0">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -87,7 +87,7 @@
           </div>
           <v-row dense>
             <v-col v-for="card in end_live" :key="card.title" :cols="6">
-              <v-card height="300" class="section3" tile :elevation="0">
+              <v-card height="280" class="section3" tile :elevation="0">
                 <!-- Image -->
                 <v-img
                   src= "card.prdPhoto"
@@ -116,7 +116,7 @@
           small
           class="mr-3" 
           fab dark
-          color="#292938"
+          color="#d48d4e"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
@@ -200,7 +200,7 @@ export default {
 /* 상품 등록 버튼 고정 */
 .fixedbutton {
   position: sticky;
-  bottom: 60px;
+  bottom: 100px;
   padding-left: 250px;
 }
 .title-style label[for]{
@@ -210,20 +210,31 @@ export default {
 .custom-selector {
   font-size: 3em;
 }
+/* 카드 밑 바닥  */
 .card-content {
-  background-color: #FDF4F4;
-  opacity: 0.8;
-  color: black;
+  /* background-color: #ffffff; */
+  /* opacity: 0.8; */
+  background-color: #3c3f44;
+  color:#ffffff
 }
 .classify {
   display:flex; 
   justify-content:space-between;
-  margin-bottom: 0.6rem;
+  /* margin-bottom: 0.6rem; */
+  color: #ffffff;
+  font-family: "InfinitySans-RegularA1";
 }
 #card-title {
   font-size: 1rem;
   padding-bottom: 0;
   padding-top: 0;
-  color:black;
+  color:rgb(255, 255, 255);
+}
+.main-back {
+  /* background-color:#3f404d;
+   */
+  background-color: #111111;
+  /* background-color: rgba(46,48,53,0.7) */
+
 }
 </style>

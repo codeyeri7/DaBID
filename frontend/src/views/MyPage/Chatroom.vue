@@ -1,8 +1,8 @@
 <template>
 <div>
   <div>
-    <v-card>
-      <div class="d-flex justify-content mx-3">
+    <v-card tile elevation="1">
+      <div class="d-flex justify-content mx-3 mt-4">
         <div>
           <v-img
             :src="room.live.prdPhoto"
@@ -14,26 +14,43 @@
           >
           </v-img>
         </div>
-        <div class="d-flex align-items">
-          <div>
-            <v-text>{{ room.live.prdName }}</v-text>
-          </div>
-          <div>
-            <v-text>{{ endlive.resPriceEnd }}원</v-text>
-          </div>
+        <div class="d-flex flex-column mx-2" id="kor-font">
+          <p>상품명 : {{ room.live.prdName }}</p>
+          <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
         </div>
+        <span v-if="endlive.seller.userName != sender">
+          <v-row
+            align="end"
+            justify="space-around"
+            class="mb-4"
+          >
+            <v-btn
+              tile
+              x-small
+              color="secondary"
+              class="black--text"
+              @click="goReview()"
+            >
+              <v-icon left>
+                mdi-pencil
+              </v-icon>
+              리뷰작성
+            </v-btn>
+          </v-row>
+        </span>
       </div>
     </v-card>
     <v-container class="fill-height">
       <v-row class="fill-height pb-14" align="end">
         <v-col>
-          <div v-for="(message, index) in messages" :key="index" 
+          <div v-for="(message, index) in messages" :key="index" id="kor-font"
               :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
-            <span v-if="message.sender == sender" class="blue--text mr-3">{{ message.message }}</span>
-            <v-avatar :color="message.sender == sender ? 'indigo': 'red'" size="36">
-              <span class="white--text">{{ message.sender[0] }}</span>
+            <span v-if="message.sender == sender" class="black--text mr-3">{{ message.message }}</span>
+            <v-avatar :color="message.sender == sender ? 'primary': 'secondary'" size="36">
+              <span v-if="message.sender == sender" class="white--text">{{ message.sender[0] }}</span>
+              <span v-else class="black--text">{{ message.sender[0] }}</span>
             </v-avatar>
-            <span v-if="message.sender != sender" class="blue--text ml-3">{{ message.message }}</span>
+            <span v-if="message.sender != sender" class="black--text ml-3">{{ message.message }}</span>
           </div>
         </v-col>
       </v-row>
@@ -151,6 +168,14 @@ export default {
         // }
       });
       this.stompClient = stompClient;
+    },
+    goReview : function () {
+      this.$router.push({
+        name: "ReviewCreate",
+        params: {
+          seller : `${this.endlive.seller}`
+        }
+      })
     }
   },
 }

@@ -56,7 +56,30 @@
 					<p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
 					<p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 방송 종료됩니다.</p>
 				</div>
-			
+			<v-btn
+				icon
+				v-if="this.publisher.properties.publishAudio"
+				@click="toggleAudio"
+				class="toggleBtn"
+			>
+				<i class="fas fa-microphone"></i>
+			</v-btn>
+			<v-btn icon v-else @click="toggleAudio" class="toggleBtn">
+				<i class="fas fa-microphone-slash"></i>
+			</v-btn>
+
+			<!-- 카메라 on/off 버튼 -->
+			<v-btn
+				icon
+				v-if="this.publisher.properties.publishVideo"
+				@click="toggleVideo"
+				class="toggleBtn video"
+			>
+				<i class="fas fa-video"></i>
+			</v-btn>
+			<v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
+				<i class="fas fa-video-slash"></i>
+			</v-btn>
 			<!-- 본인 화면 --> 
 			<div id="main-video" class="col-md-6">
 				<user-video :stream-manager="mainStreamManager"/>
@@ -70,8 +93,8 @@
 			<div class="chat">
 				<div class="chat-list">
 					<p v-for="(chat, idx) in chatList" :key="idx">
-						<span>{{ myUserName }}: </span>
-						<v-text>{{ chat }}</v-text>
+						<span>{{ chat.from }}: </span>
+						<v-text>{{ chat.data }}</v-text>
 						</p>
 				</div>
 
@@ -193,6 +216,18 @@ export default {
 				.catch(error => reject(error.response));
 			});
 		},
+    toggleAudio() {
+      this.publisher.properties.publishAudio =
+        !this.publisher.properties.publishAudio;
+      this.publisher.publishAudio(this.publisher.properties.publishAudio);
+    },
+    toggleVideo() {
+      //   this.publisher.stream.disposeWebRtcPeer();
+      //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
+      this.publisher.properties.publishVideo =
+        !this.publisher.properties.publishVideo;
+      this.publisher.publishVideo(this.publisher.properties.publishVideo);
+    },
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
@@ -241,7 +276,7 @@ export default {
 					if (event.type === "signal:BID") {
 						this.currentPrice = event.data;
 					} else {
-						this.chatList.push(event.data);
+						this.chatList.push(event);
 					}
 					// console.log(event.from); // Connection object of the sender
 					// console.log(event.type); // The type of message

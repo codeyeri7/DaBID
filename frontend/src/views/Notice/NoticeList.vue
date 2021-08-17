@@ -10,18 +10,17 @@
       </div>
     <v-expansion-panels
       v-model="panel"
-      multiple
+      multiple 
+     
     >
       <v-expansion-panel
         v-for="(notice,i) in notices"
         :key="i"
         id="kor-font"
+         style="background-color:#3c3f44"
       >
-        <v-expansion-panel-header>
-          <div v-if="notice.noticeType == true">
-            <img src="@/assets/exclamation-mark.png" alt="alert-img" width="20"> 
-          </div>
-          <div > {{ notice.noticeTitle }} </div>
+<v-expansion-panel-header>
+          <div class="gold-color"><img v-if="notice.noticeType == true" src="@/assets/exclamation-mark.png" alt="alert-img" width="20"> {{ notice.noticeTitle }} </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <p v-html="notice.noticeContent"></p>
@@ -75,5 +74,13 @@ export default {
   display:flex; 
   justify-content:space-between;
   align-items: center;
+
+}
+.container{
+  background-color: #151618;
+}
+
+.ms-2{
+  color: #dfb772;
 }
 </style>

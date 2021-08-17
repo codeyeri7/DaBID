@@ -16,13 +16,13 @@
         v-for="(notice,i) in notices"
         :key="i"
         id="kor-font"
-         style="background-color:#3c3f44"
+        style="background-color:#3c3f44"
       >
-<v-expansion-panel-header>
+      <v-expansion-panel-header>
           <div class="gold-color"><img v-if="notice.noticeType == true" src="@/assets/exclamation-mark.png" alt="alert-img" width="20"> {{ notice.noticeTitle }} </div>
         </v-expansion-panel-header>
 
-        <v-expansion-panel-content>
+        <v-expansion-panel-content class="pt-4" color="#4e5258">
           <p v-html="notice.noticeContent"></p>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -57,6 +57,9 @@ export default {
           })
           .then((res) => {
             this.notices = res.data.content
+            for (let i = 0; i < this.notices.length; i++) {
+              this.notices[i].noticeContent = this.notices[i].noticeContent.split('\n').join('<br />');
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -78,9 +81,13 @@ export default {
 }
 .container{
   background-color: #151618;
+  margin-bottom: 60px;
 }
 
 .ms-2{
+  color: #dfb772;
+}
+p {
   color: #dfb772;
 }
 </style>

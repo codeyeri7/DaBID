@@ -20,4 +20,5 @@ public interface LiveService {
     Page<Live> getAllLives(int page);
     List<Live> searchLives(List<String> category, List<String> liveStatuses, String keyword);
     void createLog(LogPostReq logInfo);
+    void updateStatus(int prdId);
 }

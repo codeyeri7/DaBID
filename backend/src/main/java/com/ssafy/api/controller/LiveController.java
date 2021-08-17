@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
+import com.ssafy.api.request.LogPostReq;
 import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.api.service.LiveService;
 import com.ssafy.api.service.ResultService;
@@ -115,7 +116,6 @@ public class LiveController {
 		return ResponseEntity.status(200).body(liveList);
 	}
 
-
 	@GetMapping()
 	@ApiOperation(value="라이브 검색", notes="라이브 검색")
 	public ResponseEntity<?> searchLive(@RequestParam(name="categories", required = false) List<String> categories,
@@ -124,5 +124,11 @@ public class LiveController {
 
 		List<Live> liveList = liveService.searchLives(categories, liveStatuses, keyword);
 		return ResponseEntity.status(200).body(liveList);
+	}
+
+	// 라이브 진행 중 로그
+	@PostMapping("/log")
+	public void createLog(@RequestBody LogPostReq logInfo) {
+		liveService.createLog(logInfo);
 	}
 }

@@ -51,5 +51,4 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<WishList> WishList = new ArrayList<>();
-
 }

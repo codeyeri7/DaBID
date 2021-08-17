@@ -38,7 +38,7 @@ export default {
       reviews: [],
       items: [
         {
-          src: require("@/assets/mylive.png"),
+          src: require("@/assets/myLive.png"),
           text: "Live",
           action: "goMyLive",
         },

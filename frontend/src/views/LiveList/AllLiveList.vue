@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="body">
     <!-- top2 carousel -->
     <div id="kor-font">
       <div class="main-card">
         <div class="mx-auto">
           <v-container fluid>
             <div>
-              <span id="eng-font" style="font-size: 20px; margin-bottom: 20px">
-                <b id="T2">Top 2</b>
+              <span class="gold-color" id="eng-font" style="font-size: 20px; margin-bottom: 20px">
+                <b id="T2">Best</b>
               </span>
             </div>
             <v-row dense>
@@ -51,7 +51,7 @@
             ></v-autocomplete>
             <v-text-field label="검색어" v-model="keyword"></v-text-field>
             <div class="search-button" id="kor-font">
-              <v-btn light color="secondary" @click="reset" style="color: black"
+              <v-btn light color="beige" @click="reset" style="color: black"
                 >초기화</v-btn
               >
               <v-btn dark color="primary" @click="search">검색</v-btn>
@@ -67,7 +67,7 @@
         <div class="mx-auto">
           <v-container fluid>
             <div>
-              <span id="eng-font" style="font-size: 20px; margin-bottom: 20px">
+              <span class="gold-color" id="eng-font" style="font-size: 20px; margin-bottom: 20px">
                 <b>All Live</b>
               </span>
             </div>
@@ -84,7 +84,7 @@
       </div>
     </div>
     <v-fab-transition>
-      <v-btn class="scroll-btn" bottom right fixed fab dark small v-show="btnShow" @click="$vuetify.goTo('#T2')">
+      <v-btn color="#dfb772" class="scroll-btn" bottom right fixed fab dark small v-show="btnShow" @click="$vuetify.goTo('#T2')">
         <v-icon color="white">fas fa-angle-double-up</v-icon>
       </v-btn>
     </v-fab-transition>
@@ -234,13 +234,18 @@ export default {
 </script>
 
 <style scoped>
+.body {
+  background-color: #151618;
+}
+.gold-color {
+  color: #dfb772;
+}
 #panel {
   width: 95%;
   margin: auto;
 }
 .scroll-btn {
   margin-bottom: 3rem;
-  color: #292938
 }
 .search-button {
   display: flex;

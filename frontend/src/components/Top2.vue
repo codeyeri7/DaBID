@@ -2,32 +2,24 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card color="secondary" tile :elevation="0" light height="190" v-bind="attrs"
+        <v-card color="#FDF4F4" tile :elevation="0" light height="150" v-bind="attrs"
           v-on="on">
               <v-card-title class="pb-1">
-                <v-list-item-avatar>
-                  <v-img
-                    class="elevation-6"
-                    alt="profile image"
-                    src="@/assets/best-seller.png"
-                  ></v-img>
-                </v-list-item-avatar>
-                <div>
+                <RouterLink :to="{ name: 'UserProfile', params: { userId : hot_live.user.userId}}">
+                  <h4 class="m-0">{{ hot_live.user.userName }}</h4>
+                </RouterLink>
+                <div class="ml-5">
                   <v-icon class="mr-1" style="color: red"> mdi-heart </v-icon>
                   <span class="subheading mr-2">{{ hot_live.hearts }}</span>
                 </div>
-
-                <RouterLink :to="{ name: 'UserProfile', params: { userId : hot_live.user.userId}}">
-                  <h5 class="m-0">{{ hot_live.user.userName }}</h5>
-                </RouterLink>
               </v-card-title>
 
               <v-card-text class="card-text" id="kor-font">
-                <p>
+                <p class="mb-3">
                   <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
                 </p>
                 <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
-                {{ hot_live.live.liveDate.slice(0, 10) }}
+                <p>{{ hot_live.live.liveDate.slice(0, 10) }}</p>
               </v-card-text>
             </v-card>
       </v-col>
@@ -229,6 +221,7 @@ export default {
 <style scoped>
 p {
     margin-bottom: 0;
+    color: #000000;
 }
 </style>
 

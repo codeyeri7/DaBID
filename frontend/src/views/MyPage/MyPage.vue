@@ -1,22 +1,34 @@
 <template>
-  <div>
+  <div class="body">
     <MyProfile :Person ="person"/>
-    <v-card class="mx-auto" max-width="300">
-      <v-row dense>
-        <v-col v-for="item in items" :key="item" :cols="3">
-          <v-card tile :elevation="0">
-            <img
-              class="mx-3"
-              :src="item.src"
-              @click="menuActionClick(item.action)"
-            >
-            <div id="eng-font">
-              <v-card-subtitle class="pt-0 pb-1 text-center" :style="{'font-size':fontSize+'px'}">{{ item.text }}</v-card-subtitle>
-            </div>
-          </v-card>
-        </v-col>
-      </v-row>
+      <v-card color="secondary" class="mx-auto" max-width="290">
+          <v-simple-table>
+          <template v-slot:default>
+            <tbody style="background-color:#3c3f44;">
+              <tr
+                v-for="item in items"
+                :key="item.name"
+                @click="menuActionClick(item.action)"
+              >
+                <td id="eng-font" class="gold-color">{{ item.text }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
     </v-card>
+
+    <v-card color="secondary" class="mx-auto mt-5" max-width="290">
+          <v-simple-table>
+          <template v-slot:default>
+            <tbody style="background-color:#3c3f44;">
+              <tr @click="logout()">
+                <td class="logout" id="eng-font"><b>Log out</b></td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+    </v-card>
+
   </div>
 </template>
 
@@ -38,44 +50,19 @@ export default {
       userId: null,
       items: [
         {
-          src: require("@/assets/mylive.png"),
-          text: "Live",
+          src: require("@/assets/myLive.png"),
+          text: "My B-Live",
           action: "goMyLive",
         },
         {
-          src: require("@/assets/mywish_40.png"),
-          text: "Wish",
+          src: require("@/assets/mywish.png"),
+          text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          src: require("@/assets/mychat_40.png"),
-          text: "Chat",
-          action: "goChat",
-        },
-        {
-          src: require("@/assets/myreview_40.png"),
-          text: "Review",
-          action: "goReview",
-        },
-        {
-          src: require("@/assets/mynotice_40.png"),
+          src: require("@/assets/mynotice.png"),
           text: "Notice",
           action: "goNotice",
-        },
-        {
-          src: require("@/assets/myhelp_40.png"),
-          text: "Help",
-          action: "goHelp",
-        },
-        {
-          src: require("@/assets/bank.png"),
-          text: "Check",
-          action: "goTheCheat",
-        },
-        {
-          src: require("@/assets/mylogout_40.png"),
-          text: "Logout",
-          action: "logout",
         },
       ],
     };
@@ -148,9 +135,18 @@ export default {
 </script>
 
 <style scoped>
+.body {
+  background-color: #151618;
+}
 .card-text {
   display: flex;
   flex-direction: column;
 }
-
+.text-center {
+  color:bisque
+}
+.logout {
+  color:red;
+  text-align: center;
+}
 </style>

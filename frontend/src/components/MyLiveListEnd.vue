@@ -2,7 +2,7 @@
    <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card height="300" tile :elevation="0" v-bind="attrs"
+        <v-card height="280" tile :elevation="0" v-bind="attrs"
           v-on="on">
         <!-- Image -->
         <v-img

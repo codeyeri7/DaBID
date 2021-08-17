@@ -1,10 +1,9 @@
 <template>
-  <div id="kor-font">
-    <div class="main-card">
+    <div id="kor-font" class="main-card">
       <div class="mx-auto">
         <v-container fluid>
           <div>
-            <span id="eng-font" style="font-size:20px; padding-bottom:40px"><b>My Wish List</b></span>
+            <span class="gold-color" id="eng-font" style="font-size:20px; padding-bottom:40px"><b>My Wish List</b></span>
           </div>
           <v-row dense class="mt-2">
             <MyWishLiveCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
@@ -12,7 +11,6 @@
         </v-container>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -62,5 +60,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.main-card {
+  background-color: #151618;
+}
 </style>

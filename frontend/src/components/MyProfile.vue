@@ -88,20 +88,10 @@
           >
             Check your reviews
           </button>
-
-          <!-- <button
-            id="review-btn"
-            class="btn"
-            type="button"
-            @click="writeReviews()"
-          >
-            write your reviews
-          </button> -->
         </div>
         <v-divider dark></v-divider>
       </v-card>
     </div>
-    <hr id="hrline" />
   </div>
 </template>
 
@@ -114,7 +104,6 @@ export default {
       dialog: false,
       reviews: [],
       userName: null,
-      // nameChange: []
     };
   },
   props: {

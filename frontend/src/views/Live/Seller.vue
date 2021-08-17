@@ -5,22 +5,22 @@
 			<div id="join-dialog" class="jumbotron vertical-center">
 				<h2>Live 입장하기</h2>
 				<div class="form-group">
-					<p>
+					<div>
 						<label id="eng-font">Live Title</label>
 						<h4 id="kor-font">{{ liveInfo.liveTitle }}</h4>
-					</p>
+					</div>
 						<hr>
-					<p>
+					<div>
 						<label id="eng-font">Live Info</label>
 						<h4 id="kor-font">{{ liveInfo.liveDesc }}</h4>
 						<h5 id="kor-font"> 시작가 {{ liveInfo.prdPriceStart | comma }}</h5>
 
-					</p>
+					</div>
 					<hr>
-					<p class="text-center">
-						<button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+					<div class="text-center">
+						<button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession">Join!</button>
 						<h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
-					</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,7 +64,7 @@
 			<!-- 무슨 화면 -->
 			<div id="video-container" class="col-md-6">
 				<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-				<!-- <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> -->
+				<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 			</div>
 			
 			<div class="chat">
@@ -154,8 +154,34 @@ export default {
 				.catch(error => reject(error.response));
 			});
 		},
+		//publisher 입장에서 방송 강제 종료
 		endSession() {
-			
+			// 사람들 다 내쫓고 
+			if (this.session) this.session.forceDisconnect();
+			// 방송도 아예 종료 
+
+			var _this = this;
+       		return new Promise(function (resolve, reject) {
+            if (!_this.sessionConnected()) {
+                reject(_this.notConnectedError());
+            }
+            _this.openvidu.sendRequest('forceDisconnect', { connectionId: connection.connectionId }, function (error, response) {
+                if (error) {
+                    console.log('Error forcing disconnect for Connection ' + connection.connectionId, error);
+                    if (error.code === 401) {
+                        reject(new OpenViduError_1.OpenViduError(OpenViduError_1.OpenViduErrorName.OPENVIDU_PERMISSION_DENIED, "You don't have permissions to force a disconnection"));
+                    }
+                    else {
+                        reject(error);
+                    }
+                }
+                else {
+                    console.log('Forcing disconnect correctly for Connection ' + connection.connectionId);
+                    resolve();
+                }
+            });
+        });
+
 		},
 		goChat() {
 			rest.axios({

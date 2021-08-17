@@ -62,7 +62,7 @@
           <img src="@/assets/myLive.png" width="35">
         </RouterLink>
         <RouterLink :to="{ name: 'Chatlist' }">
-          <img src="@/assets/chat.png" width="30">
+          <img src="@/assets/Chat.png" width="30">
         </RouterLink>
         <RouterLink :to="{ name: 'MyPage' }">
           <img src="@/assets/profile.png" width="30"  style="margin-right:1.2rem">

@@ -47,7 +47,9 @@
 						tile
 						size="70"
 						@click="goProfile()"
-					><img src="@/assets/profileImg.jpg" alt="profile image"/></v-list-item-avatar>
+					>
+					</v-list-item-avatar>
+					<!-- <img src="@/assets/profileImg.PNG" alt="profile image"/> -->
 					</v-list-item>
 				</v-card>
 			</div>

@@ -11,11 +11,11 @@
         <RouterLink :to="{ name: 'Main' }">
           <img src="@/assets/logoa.png" width="42" class="pt-2">
         </RouterLink>
-
+        
         <v-spacer></v-spacer>
-
-        <v-app-bar-nav-icon @click="drawer = true" color="black"></v-app-bar-nav-icon>
       </v-app-bar>
+      <!-- <v-app-bar-nav-icon @click="drawer = true" color="black"></v-app-bar-nav-icon> -->
+        <!-- 
       <v-navigation-drawer
         v-model="drawer"
         absolute
@@ -44,31 +44,33 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-      </v-navigation-drawer>
+      </v-navigation-drawer> -->
+
       <!-- 메인페이지가 routerview default -->
       <v-content>
         <RouterView></RouterView>
       </v-content>
-    <div v-if="isLogin" class="row" style="margin-top:60px">
-      <footer
-        app
-        flat  
-        light 
-      >
-        <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/Home.png" width="35" style="margin-left:1.2rem;">
-        </RouterLink>
-        <RouterLink :to="{ name: 'AllLiveList' }">
-          <img src="@/assets/myLive.png" width="35">
-        </RouterLink>
-        <RouterLink :to="{ name: 'Chatlist' }">
-          <img src="@/assets/chat.png" width="30">
-        </RouterLink>
-        <RouterLink :to="{ name: 'MyPage' }">
-          <img src="@/assets/profile.png" width="30"  style="margin-right:1.2rem">
-        </RouterLink>
-      </footer>
-    </div>
+
+        <div v-if="isLogin">
+          <footer
+            app
+            flat  
+            light 
+          >
+            <RouterLink :to="{ name: 'Main' }">
+              <img src="@/assets/Home.png" width="35" style="margin-left:1.2rem;">
+            </RouterLink>
+            <RouterLink :to="{ name: 'AllLiveList' }">
+              <img src="@/assets/myLive.png" width="35">
+            </RouterLink>
+            <RouterLink :to="{ name: 'Chatlist' }">
+              <img src="@/assets/chat.png" width="30">
+            </RouterLink>
+            <RouterLink :to="{ name: 'MyPage' }">
+              <img src="@/assets/profile.png" width="30"  style="margin-right:1.2rem">
+            </RouterLink>
+          </footer>
+         </div>
     </v-app>
   </div>
 </template>
@@ -150,4 +152,8 @@ footer{
 .gold-color {
   color: #dfb772;
 }
+.main-back {
+  height: 100%;
+}
+
 </style>

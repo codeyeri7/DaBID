@@ -200,7 +200,7 @@ export default {
 /* 상품 등록 버튼 고정 */
 .fixedbutton {
   position: sticky;
-  bottom: 100px;
+  bottom: 70px;
   padding-left: 250px;
 }
 .title-style label[for]{

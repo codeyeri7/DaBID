@@ -2,14 +2,14 @@
   <div>
     <div class="container" style="padding: 0px">
       <v-card
-        class="mx-auto elevation-20"
-        style="max-width: 80%; margin-top: 50px"
+        class="mx-auto elevation-3"
+        style="max-width: 80%; margin-top: 50px;background-color:#3c3f44"
       >
         <v-row justify="space-between">
           <v-col>
             <v-card-title>
               <div>
-                <img src="@/assets/profileImg.jpg" alt="profile image" />
+                <img src="@/assets/profileImg.png" alt="profile image" width="50"/>
                 <span id="userName">
                     <b>{{ User.user.userName }}</b>
                 </span>
@@ -17,34 +17,27 @@
             </v-card-title>
           </v-col>
         </v-row>
+
         <div id="barEmoji">
-          <!-- v-bind:buffer-value="userScore" -->
           <v-progress-linear
             v-model="User.user.userScore"
             color="#D0836E"
             background-color="#F4E3D7"
             height="15"
           ></v-progress-linear>
-          <br />
           <div class="emoji">
-            <img src="@/assets/sad.png" alt="sad_emoji" />
-            <img src="@/assets/neutral.png" alt="neutral" />
-            <img src="@/assets/laughing.png" alt="laughing_emojiss" />
+            <p>:(</p>
+            <p>:|</p>
+            <p>:)</p>
+            <p>:D</p>
           </div>
         </div>
-        <div id="review">
-          <span>
-          </span>
-          <button
-            id="review-btn"
-            class="btn d-flex align-center"
-            type="button"
-            @click="checkReviews()"
-          >
-            Check reviews
-          </button>
+
+        <div id="review" @click="checkReviews"> 
+          <RouterLink :to="{ name: 'ReviewList', params: { userId: User.user.userId }}">
+            <h5 class="pb-3" id="eng-font">{{ reviews.length }} Reviews</h5>
+          </RouterLink>
         </div>
-        <v-divider dark></v-divider>
       </v-card>
     </div>
     <hr id="hrline" />
@@ -59,6 +52,7 @@ export default {
     return {
       person: null,
       reviews: [],
+      reviews_num: null,
     };
   },
   props: {
@@ -82,7 +76,8 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          console.log(this.reviews);
+          this.reviews_num = this.reviews.length
+          console.log('리뷰갯수에요',this.reviews_num);
         })
         .catch((err) => {
           console.log(err);
@@ -95,7 +90,7 @@ export default {
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getProfile();
+      this.checkReviews;
     } else {
       this.$router.push({ name: "Login" });
     }
@@ -110,11 +105,12 @@ export default {
 .emoji {
   display: flex;
   justify-content: space-between;
+  font-weight: bold;
+  color: white;
 }
-#review-btn {
-  width: 150px;
-  margin: auto;
-  padding: 0;
+#userName {
+  font-family: "IBMPlexSansKR-Regular";
+  color:white
 }
 #barEmoji {
   width: 85%;
@@ -122,10 +118,8 @@ export default {
   margin-bottom: 1.2rem;
 }
 #review {
-  margin-left: 2rem;
-  background-color: rgb(212, 212, 212);
-  margin-right: 2rem;
-  /* border-radius: 30px; */
+  margin-left: 10px;
+  color:white
 }
 #hrline {
   height: 1px;

@@ -9,7 +9,7 @@
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/logowhite.png" width="42" class="pt-2">
+          <img src="@/assets/logoa.png" width="42" class="pt-2">
         </RouterLink>
 
         <v-spacer></v-spacer>
@@ -49,7 +49,6 @@
       <v-content>
         <RouterView></RouterView>
       </v-content>
-    </v-app>
     <div v-if="isLogin" class="row" style="margin-top:60px">
       <footer
         app
@@ -57,19 +56,20 @@
         light 
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/Home.png" width="40" style="margin-left:1.2rem;">
+          <img src="@/assets/Home.png" width="35" style="margin-left:1.2rem;">
         </RouterLink>
         <RouterLink :to="{ name: 'AllLiveList' }">
-          <img src="@/assets/live.png" width="40">
+          <img src="@/assets/myLive.png" width="35">
         </RouterLink>
         <RouterLink :to="{ name: 'Chatlist' }">
-          <img src="@/assets/Chat.png" width="30">
+          <img src="@/assets/chat.png" width="30">
         </RouterLink>
         <RouterLink :to="{ name: 'MyPage' }">
           <img src="@/assets/profile.png" width="30"  style="margin-right:1.2rem">
         </RouterLink>
       </footer>
     </div>
+    </v-app>
   </div>
 </template>
 
@@ -146,5 +146,8 @@ footer{
 }
 #app-bar {
   background-color: #3c3f44;
+}
+.gold-color {
+  color: #dfb772;
 }
 </style>

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card height="300" tile :elevation="0" v-bind="attrs"
+        <v-card height="280" tile :elevation="0" v-bind="attrs"
             v-on="on">
           <!-- Image -->
           <v-img
@@ -204,14 +204,14 @@ export default {
 
 <style scoped>
 #card-content {
-  background-color: #FDF4F4;
-  opacity: 0.8;
+  background-color: #3c3f44;
+  color: #dfb772
 }
 #card-title {
   font-size: 1rem;
   padding-bottom: 0;
   padding-top: 0;
-  color:black;
+  color:#dfb772;
 }
 </style>
 

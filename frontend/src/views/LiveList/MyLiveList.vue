@@ -11,10 +11,10 @@
           <v-tab>방송종료</v-tab>
 
           <v-tabs-items v-model="tabs">
-            <v-tab-item>
-              <v-container fluid>
-                <div>
-                  <span id="kor-font" style="font-size:20px;"><b>{{ userName }}의 라이브</b></span>
+            <v-tab-item style="background-color:#151618">
+              <v-container fluid style="background-color:#151618">
+                <div class="mb-3">
+                  <span class="gold-color" id="kor-font" style="font-size:20px;"><b>{{ userName }}의 라이브</b></span>
                 </div>
                 <v-row dense>
                   <MyLiveListCard v-for="(live, idx) in will_lives" :key="idx" :live="live"/>
@@ -22,9 +22,9 @@
               </v-container>
             </v-tab-item>
             <v-tab-item>
-              <v-container fluid>
-                <div>
-                  <span id="kor-font" style="font-size:20px; margin-bottom:20px"><b>{{ userName }}의 종료된 라이브</b></span>
+              <v-container fluid style="background-color:#151618">
+                <div class="mb-3">
+                  <span class="gold-color" id="kor-font" style="font-size:20px;"><b>{{ userName }}의 종료된 라이브</b></span>
                 </div>
                 <v-row dense class="mt-2">
                   <MyLiveListEnd v-for="(live, idx) in end_lives" :key="idx" :live="live"/>

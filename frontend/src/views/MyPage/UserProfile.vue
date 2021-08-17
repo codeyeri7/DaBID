@@ -37,7 +37,7 @@ export default {
       userId: null,
       items: [
         {
-          src: require("@/assets/mylive.png"),
+          src: require("@/assets/myLive.png"),
           text: "Live",
           action: "goMyLive",
         },
@@ -46,11 +46,11 @@ export default {
           text: "Review",
           action: "goReview",
         },
-        {
-          src: require("@/assets/mynotice_40.png"),
-          text: "Notice",
-          action: "goNotice",
-        },
+        // {
+        //   src: require("@/assets/mynotice_40.png"),
+        //   text: "Notice",
+        //   action: "goNotice",
+        // },
         {
           src: require("@/assets/myhelp_40.png"),
           text: "Help",

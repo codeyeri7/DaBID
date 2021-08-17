@@ -6,8 +6,8 @@
       lazy-validation>
       <v-row>
         <v-col>
-          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
-          <div style="font-family: 'IBMPlexSansKR-Regular';">
+          <h3 style="font-size:17px; font-weight:bold" id="eng-font">01 Product Info</h3>
+          <div id="kor-font">
             <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
@@ -17,8 +17,8 @@
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
           </div>
           <hr id="top-hr">
-          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>
-          <div style="font-family: 'IBMPlexSansKR-Regular';">
+          <h3 style="font-size:17px; font-weight:bold" id="eng-font">02 Live Info</h3>
+          <div id="kor-font">
             <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
@@ -92,6 +92,7 @@
           <v-row
             align="center"
             justify="space-around"
+            class="mb-4"
           >
             <v-btn
               tile
@@ -289,5 +290,8 @@ export default {
 
 #check-img:hover{
   color:red
+}
+.container {
+  width: 90%;
 }
 </style>

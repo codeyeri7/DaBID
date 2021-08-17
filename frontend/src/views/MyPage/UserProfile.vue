@@ -2,7 +2,7 @@
   <div class="body main-back">
     <UserProfile :User="person"/>
     
-    <v-card color="secondary" class="mx-auto" max-width="290">
+    <v-card class="mx-auto" max-width="290">
           <v-simple-table>
           <template v-slot:default>
             <tbody style="background-color:#3c3f44;">
@@ -38,13 +38,13 @@ export default {
       reviews: [],
       items: [
         {
-          src: require("@/assets/myLive.png"),
+          
           text: "Live",
           action: "goMyLive",
         },
         {
-          src: require("@/assets/myreview_40.png"),
-          text: "Write Review",
+          
+          text: "Review",
           action: "goReview",
         },
       ],
@@ -82,7 +82,6 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          console.log('리뷰갯수에요',this.reviews.length);
         })
         .catch((err) => {
           console.log(err);
@@ -92,7 +91,7 @@ export default {
       if (action === "goMyLive") {
         this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
       } else if (action === "goReview") {
-        this.$router.push({ name: "ReviewCreate" });
+        this.$router.push({ name: 'ReviewList', params: { userId: this.userId }});
       } else if (action === "goNotice") {
         this.$router.push({ name: "Notice" });
       } else if (action === "goHelp") {

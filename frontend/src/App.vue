@@ -114,6 +114,7 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+
 footer{ 
   border-top: 1px solid #292938;
   position:fixed; 
@@ -125,13 +126,15 @@ footer{
   display:flex; 
   justify-content:space-between;
   align-items: center;
-  }
+}
 .v-toolbar__content, .v-toolbar__extension {
   border-bottom: 1px solid #292938;
 }
-
 #eng-font {
   font-family: 'Lora', serif;
+}
+#kor-font {
+  font-family: 'InfinitySans-RegularA1';
 }
 
 @font-face {
@@ -140,9 +143,6 @@ footer{
     format("woff");
   font-weight: normal;
   font-style: normal;
-}
-#kor-font {
-  font-family: "InfinitySans-RegularA1";
 }
 #app-bar {
   background-color: #3c3f44;

@@ -6,7 +6,7 @@
       lazy-validation>
       <v-row>
         <v-col>
-          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info></h3>
+          <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">01 Product Info</h3>
           <div style="font-family: 'IBMPlexSansKR-Regular';">
             <v-text-field v-model.trim="productName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="productNumber" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
@@ -15,7 +15,6 @@
               사진 업로드
             </h5>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-              <v-btn class="black--text" elevation="0" @click="upload" color="secondary" flat>업로드</v-btn>
           </div>
           <hr id="top-hr">
           <h3 style="font-family: 'Lora', serif;font-size:15px; font-weight:bold">02 Live Info</h3>

@@ -20,12 +20,14 @@
           <!-- <p>{{ room.live }}</p> -->
         </div>
 
+        <!-- 확인 때문에 임시로 같다로 조건 바꿔뒀어요 --> 
         <div v-if="endlive.seller.userName == sender">
             <v-btn
               tile
               x-small
               color="primary"
               class="black--text mt-5 ml-3"
+              width="80px"
               id="kor-font"
               @click="goReview(room.live.prdId)"
             >
@@ -34,6 +36,53 @@
               </v-icon>
               리뷰작성
             </v-btn>
+
+
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <!-- <RouterLink :to="{ name: 'TheCheat' }"> -->
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                tile
+                x-small
+                color="primary"
+                class="black--text mt-5 ml-3"
+                width="80px"
+                id="kor-font">
+                더치트 확인</v-btn>
+             </template>
+             <!-- modal --> 
+             <div class=" d-flex align-center text-center">
+             <v-card tile class="ap-card" style="color:#dfb772; background-color: #151618" >
+              <v-card-title  tile class="text-h5">
+                Accident Policy
+              </v-card-title>
+
+              <v-card-text style="padding-top: 2.5rem;color:#dfb772" id="kor-font">
+                다비드는 원활한 거래 연결을 위해<br>
+                더치트 계좌 조회 서비스를 지원합니다.
+                <v-btn color="#3c3f44" tile class="mt-4 link-button" onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') ">위험 계좌조회 더치트 바로가기</v-btn>
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  text
+                  @click="dialog = false"
+                >
+                  확인
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+            </div>
+          </v-dialog>
         </div>
       </div>
     </v-card>
@@ -90,7 +139,9 @@ export default {
       messages: [],
       stompClient: undefined,
       pre_diffHeight: 0,
-      bottom_flag: true
+      bottom_flag: true,
+
+      dialog: false,
     }
   },
   created() {
@@ -227,5 +278,8 @@ div.comments_wrap {
   color: white;
   overscroll-behavior: none;
   will-change: bottom;
+}
+.link-button {
+  color: #dfb772;
 }
 </style>

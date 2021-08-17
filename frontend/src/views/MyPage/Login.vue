@@ -2,7 +2,7 @@
   <div class="container" id="back">
     <div>
       <v-container align-center>
-        <img src="@/assets/LOGO.png" width="150px" class="mb-5 logo" style="margin-top: 120px;"><br>
+        <!-- <img src="@/assets/LOGO.png" width="150px" class="mb-5 logo" style="margin-top: 120px;"><br> -->
           <div class="card-body">
             <div v-if="isLogin">
               <img src="@/assets/loading.png" alt="loading" style="margin-top:60px;width:90px;text-align:center">

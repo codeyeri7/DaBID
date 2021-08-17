@@ -5,7 +5,6 @@ import Login from '../views/MyPage/Login.vue'
 import MyPage from '../views/MyPage/MyPage.vue'
 import LiveInfo from '../views/Live/LiveInfo.vue'
 import session from '../views/Live/Session.vue'
-import Seller from '../views/Live/Seller.vue'
 import MyLiveList from '../views/LiveList/MyLiveList.vue'
 import UpdateMyLiveList from '../views/LiveList/UpdateMyLiveList.vue'
 import MyWishList from '../views/LiveList/MyWishList.vue'
@@ -15,7 +14,6 @@ import ReviewCreate from '../views/MyPage/ReviewCreate.vue'
 import ReviewList from '../views/MyPage/ReviewList.vue'
 import Chatroom from '../views/MyPage/Chatroom.vue'
 import Chatlist from '../views/MyPage/Chatlist.vue'
-import TheCheat from '../views/MyPage/TheCheat.vue'
 import UserProfile from '../views/MyPage/UserProfile.vue'
 
 
@@ -46,11 +44,6 @@ const routes = [
     path: '/session',
     name: 'session',
     component: session
-  },
-  {
-    path: '/Seller',
-    name: 'Seller',
-    component: Seller
   },
   {
     path: '/MyLiveList',
@@ -96,11 +89,6 @@ const routes = [
     path: '/Chatlist',
     name: 'Chatlist',
     component: Chatlist
-  },
-  {
-    path: '/TheCheat',
-    name: 'TheCheat',
-    component: TheCheat
   },
   {
     path: '/UserProfile',

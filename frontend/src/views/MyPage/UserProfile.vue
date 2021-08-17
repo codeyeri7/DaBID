@@ -38,12 +38,12 @@ export default {
       reviews: [],
       items: [
         {
-          src: require("@/assets/myLive.png"),
+          
           text: "Live",
           action: "goMyLive",
         },
         {
-          src: require("@/assets/myreview_40.png"),
+          
           text: "Review",
           action: "goReview",
         },

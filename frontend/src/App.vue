@@ -152,8 +152,6 @@ footer{
 .gold-color {
   color: #dfb772;
 }
-.main-back {
-  height: 100%;
-}
+
 
 </style>

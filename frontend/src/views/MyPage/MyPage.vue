@@ -50,24 +50,24 @@ export default {
       userId: null,
       items: [
         {
-          src: require("@/assets/myLive.png"),
+          // src: require("@/assets/myLive.png"),
           text: "My B-Live",
           action: "goMyLive",
         },
         {
-          src: require("@/assets/mywish.png"),
+          // src: require("@/assets/mywish.png"),
           text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          src: require("@/assets/mynotice.png"),
-          text: "Notice",
-          action: "goNotice",
+          // src: require("@/assets/mynotice.png"),
+          text: "My Review",
+          action: "goReview",
         },
         {
-          src: require("@/assets/mynotice.png"),
-          text: "Review",
-          action: "goReview",
+          // src: require("@/assets/mynotice.png"),
+          text: "Notice",
+          action: "goNotice",
         },
       ],
     };

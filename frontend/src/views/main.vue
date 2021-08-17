@@ -220,9 +220,9 @@ export default {
 .classify {
   display:flex; 
   justify-content:space-between;
-  /* margin-bottom: 0.6rem; */
+  margin-bottom: 0.6rem;
   color: #ffffff;
-  font-family: "InfinitySans-RegularA1";
+  /* font-family: "InfinitySans-RegularA1"; */
 }
 #card-title {
   font-size: 1rem;

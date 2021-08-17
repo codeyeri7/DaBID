@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import rest from "../../js/httpCommon.js"
 
 export default {

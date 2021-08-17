@@ -97,7 +97,7 @@ input.btn {
 	color: #ccc;
 }
 
-.openvidu-logo {
+/* .openvidu-logo {
 	height: 35px;
 	float: right;
 	margin: 12px 0;
@@ -140,10 +140,10 @@ a:hover .demo-logo {
 	text-align: center;
 	margin-top: 3em;
 	margin-bottom: 3em;
-	/*position: relative;
+	position: relative;
 	top: 20%;
 	left: 50%;
-	transform: translate(-50%, -50%);*/
+	transform: translate(-50%, -50%);
 }
 
 #img-div img {
@@ -227,7 +227,7 @@ video {
 	cursor: pointer;
 	object-fit: cover;
 	height: 180px;
-}
+} */
 
 
 /* xs ans md screen resolutions*/

@@ -50,7 +50,7 @@ export default {
       userId: null,
       items: [
         {
-          src: require("@/assets/mylive.png"),
+          src: require("@/assets/myLive.png"),
           text: "My B-Live",
           action: "goMyLive",
         },

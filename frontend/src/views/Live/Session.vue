@@ -93,9 +93,9 @@
 			<div class="chat">
 				<div class="chat-list">
 					<p v-for="(chat, idx) in chatList" :key="idx">
-						<span>{{ chat.from }}: </span>
+						<span>{{ JSON.parse(chat.from.data).clientData }}: </span>
 						<v-text>{{ chat.data }}</v-text>
-						</p>
+					</p>
 				</div>
 
 				<v-row style="width: 80%; margin-left:1.5rem">
@@ -165,9 +165,10 @@ export default {
 
 			bid: '',
 			currentPrice: 0,
+			currentUser: '',
 			PriceRules: [
-			v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
-      ],
+				v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
+			],
 		}
 	},
 	filters: {
@@ -177,57 +178,51 @@ export default {
 	},
 	methods: {
 		sendMsg() {
-			return new Promise((resolve, reject) => {
-				axios({
-					method: "post",
-					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
-					auth: {
-						username: 'OPENVIDUAPP',
-						password: OPENVIDU_SERVER_SECRET,
-					},
-					data: {
-						session: this.mySessionId,
-						data: this.chatMsg,
-						type: "CHAT",
-					}
-				})
-				.then(response => response.data)
-				.then(data => resolve(data.token))
-				.catch(error => reject(error.response));
+			this.session.signal({
+				session: this.mySessionId,
+				data: this.chatMsg,
+				type: "CHAT",
+			})
+			.then(() => {
+				this.chatMsg='';
+			})
+			.catch(error => {
+				console.error(error);
 			});
 		},
 		bidding() {
-			return new Promise((resolve, reject) => {
-				axios({
+			this.session.signal({
+				data: this.bid,
+				type: "BID",
+			})
+			.then(() => {
+				rest.axios({
+					url: "/dabid/live/log",
 					method: "post",
-					url: `${OPENVIDU_SERVER_URL}/openvidu/api/signal`,
-					auth: {
-						username: 'OPENVIDUAPP',
-						password: OPENVIDU_SERVER_SECRET,
-					},
 					data: {
-						session: this.mySessionId,
-						data: this.bid,
-						type: "BID",
+						prdId: this.prdId,
+						bidPrice: this.currentPrice,
+						bidder: this.currentUser,
 					}
 				})
-				.then(response => response.data)
-				.then(data => resolve(data.token))
-				.catch(error => reject(error.response));
+				this.bid='';
+			})
+			.catch(error => {
+				console.error(error);
 			});
 		},
-    toggleAudio() {
-      this.publisher.properties.publishAudio =
-        !this.publisher.properties.publishAudio;
-      this.publisher.publishAudio(this.publisher.properties.publishAudio);
-    },
-    toggleVideo() {
-      //   this.publisher.stream.disposeWebRtcPeer();
-      //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
-      this.publisher.properties.publishVideo =
-        !this.publisher.properties.publishVideo;
-      this.publisher.publishVideo(this.publisher.properties.publishVideo);
-    },
+		toggleAudio() {
+			this.publisher.properties.publishAudio =
+				!this.publisher.properties.publishAudio;
+			this.publisher.publishAudio(this.publisher.properties.publishAudio);
+		},
+		toggleVideo() {
+			//   this.publisher.stream.disposeWebRtcPeer();
+			//   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
+			this.publisher.properties.publishVideo =
+				!this.publisher.properties.publishVideo;
+			this.publisher.publishVideo(this.publisher.properties.publishVideo);
+		},
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
@@ -261,28 +256,17 @@ export default {
 			// 'getToken' method is simulating what your server-side should do.
 			// 'token' parameter should be retrieved and returned by your own backend
 			this.getToken(this.mySessionId).then(token => {
-
-				// // Receiver of the message (usually before calling 'session.connect')
-				// this.session.on('signal:my-chat', (event) => {
-				// 	console.log(event.data); // Message
-				// 	console.log(event.from); // Connection object of the sender
-				// 	console.log(event.type); // The type of message ("my-chat")
-				// });
-
 				// Receiver of all messages (usually before calling 'session.connect')
 				this.session.on('signal', (event) => {
-					console.log(event.type + ": ")
-					console.log(event.data); // Message
 					if (event.type === "signal:BID") {
-						this.currentPrice = event.data;
+						this.currentPrice += Number(event.data);
+						this.currentUser = JSON.parse(event.from.data).userId;
 					} else {
 						this.chatList.push(event);
 					}
-					// console.log(event.from); // Connection object of the sender
-					// console.log(event.type); // The type of message
 				});
 
-				this.session.connect(token, { clientData: this.myUserName })
+				this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
@@ -400,6 +384,10 @@ export default {
 				// 방송 제목과  받아오기
 				this.mySessionId = this.prdId + ''
 				this.myUserName = localStorage.getItem('userName')
+				if (res.data.logList.length) {
+					this.currentPrice = res.data.logList[(res.data.logList.length-1)].bidPrice,
+					this.currentUser = res.data.logList[(res.data.logList.length-1)].bidder
+				}
 			})
 			.catch((err) => {
 				console.log('라이브 정보 받아오기 오류: ' + err)

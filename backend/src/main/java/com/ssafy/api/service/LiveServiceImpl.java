@@ -1,13 +1,13 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
-import com.ssafy.db.entity.Live;
-import com.ssafy.db.entity.LiveStatus;
-import com.ssafy.db.entity.ProductCategory;
-import com.ssafy.db.entity.User;
+import com.ssafy.api.request.LogPostReq;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.LiveLogRepository;
 import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.LiveStatusRepository;
 import com.ssafy.db.repository.ProductCategoryRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +29,8 @@ public class LiveServiceImpl implements LiveService {
 	ProductCategoryRepository productCategoryRepository;
 	@Autowired
 	LiveStatusRepository liveStatusRepository;
+	@Autowired
+	LiveLogRepository liveLogRepository;
 
 	@Override
 	public void createLive(User user, LiveRegisterPostReq liveInfo) {
@@ -169,5 +171,14 @@ public class LiveServiceImpl implements LiveService {
 		// Front에서 받아온 keyword로
 		// 라이브 제목, 상품명 like %keyword% 검색
 		return liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null);
+	}
+
+	public void createLog(LogPostReq logInfo) {
+		LiveLog log = new LiveLog();
+		log.setBidder(logInfo.getBidder());
+		log.setBidPrice(logInfo.getBidPrice());
+		log.setLive(liveRepository.findByPrdId(logInfo.getPrdId()).get());
+
+		liveLogRepository.save(log);
 	}
 }

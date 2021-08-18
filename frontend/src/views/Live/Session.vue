@@ -283,31 +283,18 @@ export default {
 
       bid: "",
       currentPrice: 0,
-<<<<<<< HEAD
-      currentUser: "",
-      PriceRules: {
-        // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
-        min: (v) => v >= 5000 || "최소 금액은 5,000원 입니다.",
-        max: (v) => v <= 50000 || "최대 금액은 50,000원 입니다.",
-      },
       loginId: localStorage.getItem("userId"),
       dialog: false,
       isChat: true,
       timerStop: true,
       timerShow: false,
-    };
-=======
       currentUser: '',
 
       valid: true,
       doublebetting: false,
-      loginId: localStorage.getItem('userId'),
-      dialog: false,
-      isChat: true,
-
       countDown: 10,
-    }
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
+      success: false,
+    };
   },
   filters: {
     comma: function (value) {
@@ -321,6 +308,13 @@ export default {
           this.countDown -= 1
           this.countDownTimer()
         }, 1000)
+      }
+      // 0초 되면 
+      else if (this.countDown == 0) {
+        // 입찰 축하 멘트 
+        this.success = true
+        // 세션 강제 종료 
+        // 채팅 이동
       }
     },
     sendMsg: function () {
@@ -467,14 +461,6 @@ export default {
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
-<<<<<<< HEAD
-      this.getToken(this.mySessionId).then((token) => {
-        // Receiver of all messages (usually before calling 'session.connect')
-        this.session.on("signal", (event) => {
-          if (event.type === "signal:BID") {
-            this.currentPrice += Number(event.data);
-            this.currentUser = JSON.parse(event.from.data).userId;
-=======
       this.getToken(this.mySessionId).then(token => {
       // Receiver of all messages (usually before calling 'session.connect')
       this.session.on('signal', (event) => {
@@ -517,7 +503,6 @@ export default {
   
             this.session.publish(this.publisher);
 
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
           } else {
             this.chatList.push(event);
           }
@@ -689,12 +674,6 @@ export default {
           console.log("라이브 정보 받아오기 오류: " + err);
         });
     },
-<<<<<<< HEAD
-    goProfile() {
-      this.$router.push({ name: "MyPage" });
-    },
-=======
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
     unLoadEvent: function (event) {
       if (this.canLeaveSite) return;
 
@@ -709,15 +688,8 @@ export default {
     },
   },
   created: function () {
-<<<<<<< HEAD
-    this.prdId = this.$route.params.prdId;
-    console.log(this.prdId + "번 방송입니다.");
-    this.getLiveInfo();
-    // this.joinSession()
-=======
     this.prdId = this.$route.params.prdId
     this.getLiveInfo()
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
@@ -796,7 +768,7 @@ div.button {
 }
 
 #chatList {
-  height: 7rem;
+  /* height: 7rem; */
   /* border-radius: 30px; */
   /* border: 0.2rem solid; */
   margin-bottom: 1.5rem;
@@ -836,13 +808,10 @@ div.button {
   /* background-color: #151618; */
   background-color: rgba(21, 22, 24, 0.75);
 }
-<<<<<<< HEAD
-=======
 .warning-word {
   color:red;
   background-color: white;
   font-size: 6px;
 }
 
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
 </style>

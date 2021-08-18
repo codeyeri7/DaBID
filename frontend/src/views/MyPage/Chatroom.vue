@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="chat-back">
     <v-card color="secondary" tile elevation="1">
       <div class="d-flex justify-content mx-3">
         <div>
           <v-img
             :src="room.live.prdPhoto"
-            class="white--text align-center mx-2"
+            class="white--text align-center mx-2 mt-4"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
             height="50px"
             width="60px"
@@ -16,32 +16,29 @@
 
         <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
           <p>상품명 : {{ room.live.prdName }}</p>
-          <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
-          <!-- <p>{{ room.live }}</p> -->
+          <p>최종낙찰가 : {{ endlive.resPriceEnd | comma }}원</p>
         </div>
 
         <!-- 확인 때문에 임시로 같다로 조건 바꿔뒀어요 --> 
-        <div v-if="endlive.seller.userName == sender">
-            <v-btn
-              tile
-              x-small
-              color="primary"
-              class="black--text mt-5 ml-3"
-              width="80px"
-              id="kor-font"
-              @click="goReview(room.live.prdId)"
-            >
-              <v-icon left color="black">
-                mdi-pencil
-              </v-icon>
-              리뷰작성
-            </v-btn>
-
-
-            <v-dialog
-              v-model="dialog"
-              width="500"
-            >
+        <div v-if="endlive.seller.userName != sender">
+          <v-btn
+            tile
+            x-small
+            color="primary"
+            class="black--text mt-5 ml-3"
+            width="80px"
+            id="kor-font"
+            @click="goReview(room.live.prdId)"
+          >
+            <v-icon left color="black">
+              mdi-pencil
+            </v-icon>
+            리뷰작성
+          </v-btn>
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
             <template v-slot:activator="{ on, attrs }">
               <!-- <RouterLink :to="{ name: 'TheCheat' }"> -->
               <v-btn
@@ -53,72 +50,76 @@
                 class="black--text mt-5 ml-3"
                 width="80px"
                 id="kor-font">
-                더치트 확인</v-btn>
-             </template>
-             <!-- modal --> 
-             <div class=" d-flex align-center text-center">
-             <v-card tile class="ap-card" style="color:#dfb772; background-color: #151618" >
-              <v-card-title  tile class="text-h5">
-                Accident Policy
-              </v-card-title>
+                더치트 확인
+              </v-btn>
+            </template>
+              <!-- modal --> 
+            <div class=" d-flex align-center text-center">
+              <v-card tile class="ap-card" style="color:#dfb772; background-color: #151618" >
+                <v-card-title  tile class="text-h5">
+                  Accident Policy
+                </v-card-title>
 
-              <v-card-text style="padding-top: 2.5rem;color:#dfb772" id="kor-font">
-                다비드는 원활한 거래 연결을 위해<br>
-                더치트 계좌 조회 서비스를 지원합니다.
-                <v-btn color="#3c3f44" tile class="mt-4 link-button" onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') ">위험 계좌조회 더치트 바로가기</v-btn>
-              </v-card-text>
-
-              <v-divider></v-divider>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="primary"
-                  text
-                  @click="dialog = false"
-                >
-                  확인
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+                <v-card-text style="padding-top: 2.5rem;color:#dfb772" id="kor-font">
+                  다비드는 원활한 거래 연결을 위해<br>
+                  더치트 계좌 조회 서비스를 지원합니다.
+                  <v-btn 
+                    color="#3c3f44" 
+                    tile 
+                    class="mt-4 link-button" 
+                    onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') "
+                  >
+                    위험 계좌조회 더치트 바로가기
+                  </v-btn>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                  >
+                    확인
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
             </div>
           </v-dialog>
         </div>
       </div>
     </v-card>
 
-      <v-container class="fill-height" style="background-color:#3c3f44">
-        <v-row class="fill-height pb-14" align="end">
-          <v-col>
-            <div class="comments_wrap" id="chatList" @scroll="chatOnScroll()">
-              <div v-for="(message, index) in messages" :key="index" id="kor-font"
-                  :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
-                <span v-if="message.sender == sender" class="white--text mr-3 chat">{{ message.message }}</span>
+    <v-container style="background-color:#3c3f44">
+      <v-row align="end">
+        <v-col>
+          <div class="comments_wrap" id="chatList" @scroll="chatOnScroll()">
+            <div v-for="(message, index) in messages" :key="index" id="kor-font"
+              :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
+              <span v-if="message.sender == sender" class="white--text mr-3 chat">{{ message.message }}</span>
 
-                <v-avatar :color="message.sender == sender ? 'primary': 'cardcolor'" size="36">
-                  <span v-if="message.sender == sender" class="white--text">{{ message.sender[0] }}</span>
-                  <span v-else class="black--text">{{ message.sender[0] }}</span>
+                <v-avatar v-if="message.sender != sender" color="primary" size="36">
+                  <span class="white--text">{{ message.sender[0] }}</span>
                 </v-avatar>
-
-                <span v-if="message.sender != sender" class="white--text ml-3 chat">{{ message.message }}</span>
-              </div>
-            </div>      
+              <span v-if="message.sender != sender" class="white--text ml-3 chat">{{ message.message }}</span>
+              
+            </div>
+          </div>      
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="fixedchat">
+      <v-container style="padding-top:0">
+        <v-row no-gutters>
+          <v-col>
+            <div class="d-flex flex-row align-center">
+              <v-text-field class="gold-color" v-model="message" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
+              <v-btn icon class="ml-4" @click="sendMessage"><v-icon color="primary">mdi-send</v-icon></v-btn>
+            </div>
           </v-col>
         </v-row>
       </v-container>
-      <div class="fixedchat">
-        <v-container>
-          <v-row no-gutters>
-            <v-col>
-              <div class="d-flex flex-row align-center">
-                <v-text-field class="gold-color" v-model="message" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
-                <v-btn icon class="ml-4" @click="sendMessage"><v-icon color="primary">mdi-send</v-icon></v-btn>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-    
+    </div>
   </div>
 </template>
 
@@ -151,6 +152,11 @@ export default {
     this.findRoom();
     this.getEndLive();
     this.connect();
+  },
+  filters: {
+    comma: function (value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
     findRoom: function() {
@@ -258,21 +264,25 @@ export default {
 .fixedchat {
   position: fixed;
   bottom: 30px;
+  background-color: white;
+  height: 90px;
 }
 .chat {
   background-color: #151618;
   padding: 10px;
   border-radius: 10px;
 }
-div.comments_wrap {
+.chat-back {
+  background-color: #3c3f44;
+  min-height: 100%;
+  margin-bottom: 50px;
+}
+.comments_wrap {
   margin-bottom: 1.5rem;
-  /* bottom: 94px;
-  left: 15px; */
+  background-color: #3c3f44;
   z-index: 2;
-  width: 95%;
-  position: absolute;
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 350px;
   line-height: 1.3;
   font-size: 14px;
   color: white;
@@ -281,5 +291,8 @@ div.comments_wrap {
 }
 .link-button {
   color: #dfb772;
+}
+.v-application--wrap {
+  min-height: 0vh !important;
 }
 </style>

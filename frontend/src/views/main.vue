@@ -241,6 +241,7 @@ export default {
    */
   background-color: #151618;
   height: 100%;
+  margin-bottom: 50px;
   /* background-color: rgba(46,48,53,0.7) */
 }
 .live-time {

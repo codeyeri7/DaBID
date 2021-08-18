@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="main-back">
     <!-- top2 carousel -->
     <div id="kor-font">
       <div class="main-card">
@@ -23,9 +23,9 @@
     </div>
 
     <!-- 검색 카테고리 창 -->
-    <v-expansion-panels id="panel">
+    <v-expansion-panels v-model="openedPanel" id="panel">
       <v-expansion-panel>
-        <v-expansion-panel-header id="eng-font">
+        <v-expansion-panel-header id="eng-font" @click="openPanel()">
           Search
         </v-expansion-panel-header>
 
@@ -54,7 +54,7 @@
               <v-btn light color="beige" @click="reset" style="color: black"
                 >초기화</v-btn
               >
-              <v-btn dark color="primary" @click="search">검색</v-btn>
+              <v-btn dark color="primary" @click="search(), closeAllPanels()">검색</v-btn>
             </div>
           </v-col>
         </v-expansion-panel-content>
@@ -114,7 +114,8 @@ export default {
       items1: ["의류", "가방", "신발", "악세사리"],
       items2: ["방송종료", "방송중", "방송예정"],
       page: 0,
-      scrollNo: false
+      scrollNo: false,
+      openedPanel: null
     };
   },
   filters: {
@@ -129,6 +130,12 @@ export default {
         Authorization: `Bearer ${jwtToken}`,
       };
       return config;
+    },
+    closeAllPanels () {
+      this.openedPanel = null
+    },
+    openPanel (index) {
+      this.openedPanel = index
     },
     getAllLiveList: function () {
       rest

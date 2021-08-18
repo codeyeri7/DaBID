@@ -79,18 +79,30 @@
         </div>
         <div>
           <!-- <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p> -->
+          <!-- 입찰자가 없을 경우 조건 추가 --> 
           <MARQUEE
             scrolldelay="200"
             behavior="scroll"
-            v-if="liveInfo.user.userId != loginId"
+            v-if="liveInfo.user.userId != loginId && !success"
             id="notice"
           >
             연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.
           </MARQUEE>
         </div>
-        <p v-if="success" id="noticeCount">축하합니다!! 거래 마무리 되었습니다 <br> 채팅방으로 자동 이동합니다.  </p>
+
+        <!-- 입찰자 생기고 보이기 --> 
+        <MARQUEE
+            scrolldelay="200"
+            behavior="scroll"
+            v-if="success"
+            id="notice"
+          >
+          <p v-if="success">거래 완료. 채팅방으로 자동 이동합니다. </p>
+        </MARQUEE>
+
         <br>
-        <p v-if="countDown != 0" id="noticeCount">{{ countDown }}초 </p>
+        <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
+        <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
 
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
@@ -310,7 +322,6 @@ export default {
         data: "auctionStart",
         type: "AUCTION",
       })
-
     },
     countDownTimer() {
       if(this.countDown > 0) {
@@ -323,6 +334,7 @@ export default {
       else if (this.countDown == 0) {
         // 입찰 축하 멘트 뜸
         this.success = true
+        console.log('이제 30초후에 넌 아웃')
         //30초 후 실행 
         setTimeout(() => {
           // 세션 강제 종료 
@@ -485,12 +497,13 @@ export default {
           // 경매 입찰 돌아감 
           this.currentPrice += Number(event.data);
           this.currentUser = JSON.parse(event.from.data).userId;
-          console.log('카운트다운 다시 해야해')
           this.countDown = 10
         } else if (event.type === "signal:CHAT") {
           this.chatList.push(event);
         } else {
           // this.auction = true;
+          console.log('거래시작함여')
+          this.countDownTimer()
         }
       });
       this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
@@ -742,6 +755,11 @@ export default {
 };
 </script>
 <style scoped>
+celebrate-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
 * {
   font-family: "InfinitySans-RegularA1";
 }
@@ -802,7 +820,8 @@ div.button {
   /* 잠시 박아놓기 */
   position: absolute;
   top: 120px;
-  font-size: 10px;
+  margin-left: 30px;
+  font-size: 25px;
 }
 .inputTypeToggle {
   position: absolute;

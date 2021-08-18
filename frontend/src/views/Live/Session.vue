@@ -72,10 +72,22 @@
             :notify-every="'minute'"
         ></CircularCountDownTimer>
           
-          <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
-            <v-btn style="top:10%" @click="endSession">방종</v-btn>
-            <v-btn style="top:20%" @click="goChat">임시 채팅가기</v-btn>
+          <span v-if="liveInfo.user.userId == loginId">
+            <v-btn id="exitBtn" icon @click="endSession">X</v-btn>
+            <v-btn v-if="!auction" id="goChatBtn" @click="startAuction">경매시작</v-btn>
+            <v-btn v-else id="goChatBtn" @click="goChat">경매종료</v-btn>
           </span>
+        </div>
+        <div>
+          <!-- <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p> -->
+          <MARQUEE
+            scrolldelay="200"
+            behavior="scroll"
+            v-if="liveInfo.user.userId != loginId"
+            id="notice"
+          >
+            연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.
+          </MARQUEE>
         </div>
         <p id="notice">{{ countDown }}초 남음</p>
         <user-video :stream-manager="publisher"/>
@@ -99,7 +111,7 @@
                   dense
                   @keyup.enter="sendMsg"
                   @click:append-outer="sendMsg"
-                  placeholder="질문을 남겨주세요"
+                  placeholder="채팅을 입력해주세요."
                 ></v-text-field>
                 <!-- mdi-send
                   rounded outlined dense  -->
@@ -179,31 +191,24 @@
           </div>
         </div>
         <div class="inputTypeToggle" v-if="liveInfo.user.userId != loginId">
-          <v-btn class="mx-1" icon @click="isChat=true"><img src="@/assets/chat.png" width="20"></v-btn>
-          <v-btn icon @click="isChat=false"><img src="@/assets/bidding.png" width="20"></v-btn>
+          <v-btn color="secondary" class="mx-1" icon @click="isChat=true"><img src="@/assets/chat.png" width="20"></v-btn>
+          <!-- <v-btn color="secondary" icon @click="isChat=false" :disabled="auction"><img src="@/assets/bidding.png" width="20"></v-btn> -->
+          <v-btn color="secondary" icon @click="isChat=false"><img src="@/assets/bidding.png" width="20"></v-btn>
         </div>
       </div>
       <div style="margin-left: 1.2rem">
-        <!-- <span v-if="liveInfo.user.userId != loginId">
-          <p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
-        </span>
-        <span v-else> -->
-        <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
-          <!-- <v-btn @click="endSession">방종</v-btn>
-          <v-btn @click="goChat">임시 채팅가기</v-btn> -->
+        <span class="streamToggle" v-if="liveInfo.user.userId == loginId">
           <!-- 마이크 on/off 버튼 -->   
           <v-btn
             icon
             v-if="this.publisher.properties.publishAudio"
             @click="toggleAudio"
-            class="toggleBtn"
+            class="mx-1"
           >
-            <v-icon>mdi-microphone</v-icon>
-            <!-- <i class="fas fa-microphone"></i> -->
+            <v-icon color="primary">mdi-microphone</v-icon>
           </v-btn>
-          <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
-              <v-icon>mdi-microphone-off </v-icon>
-              <!-- <i class="fas fa-microphone-slash"></i> -->
+          <v-btn icon v-else @click="toggleAudio" class="mx-1">
+              <v-icon color="primary">mdi-microphone-off </v-icon>
           </v-btn>
 
           <!-- 카메라 on/off 버튼 -->
@@ -211,14 +216,11 @@
             icon
             v-if="this.publisher.properties.publishVideo"
             @click="toggleVideo"
-            class="toggleBtn video"
           >
-            <v-icon>mdi-video</v-icon>
-            <!-- <i class="fas fa-video"></i> -->
+            <v-icon color="primary">mdi-video</v-icon>
           </v-btn>
-          <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
-            <v-icon>mdi-video-off</v-icon>
-            <!-- <i class="fas fa-video-slash"></i> -->
+          <v-btn icon v-else @click="toggleVideo">
+            <v-icon color="primary">mdi-video-off</v-icon>
           </v-btn>
         </span>
       </div>
@@ -286,6 +288,8 @@ export default {
       loginId: localStorage.getItem("userId"),
       dialog: false,
       isChat: true,
+
+      auction: false,
       timerStop: true,
       timerShow: false,
       currentUser: '',
@@ -302,6 +306,13 @@ export default {
     },
   },
   methods: {
+    startAuction() {
+      this.auction = true;
+      this.session.signal({
+        data: "auctionStart",
+        type: "AUCTION",
+      })
+    },
     countDownTimer() {
       if(this.countDown > 1) {
         setTimeout(() => {
@@ -471,8 +482,10 @@ export default {
           this.currentUser = JSON.parse(event.from.data).userId;
           console.log('카운트다운 다시 해야해')
           this.countDown = 10
-        } else {
+        } else if (event.type === "signal:CHAT") {
           this.chatList.push(event);
+        } else {
+          // this.auction = true;
         }
       });
       this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
@@ -687,6 +700,10 @@ export default {
   created: function () {
     this.prdId = this.$route.params.prdId
     this.getLiveInfo()
+    // this.joinSession()
+    if (this.currentPrice) {
+      this.auction = true;
+    }
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
@@ -756,6 +773,7 @@ div.button {
   position: absolute;
   bottom: 10%;
   margin-left: 15px;
+  width: 230px;
 }
 
 .timer {
@@ -768,7 +786,7 @@ div.button {
   /* height: 7rem; */
   /* border-radius: 30px; */
   /* border: 0.2rem solid; */
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
   right: 95px;
   left: 15px;
   z-index: 2;
@@ -794,6 +812,13 @@ div.button {
   top: 100px;
 }
 
+/* .streamBtn {
+  position: absolute;
+  right: 5%;
+  top: 10%; */
+  /* display: flex; */
+/* } */
+
 .inputTypeToggle {
   position: absolute;
   right: 5%;
@@ -802,13 +827,34 @@ div.button {
 }
 
 .inputTypeToggle button {
-  /* background-color: #151618; */
-  background-color: rgba(21, 22, 24, 0.75);
+  background-color: #151618;
 }
 .warning-word {
   color:red;
   background-color: white;
   font-size: 6px;
 }
+
+.streamToggle {
+  position: absolute;
+  right: 5%;
+  bottom: 13%;
+  display: flex;
+}
+
+#exitBtn {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+}
+
+#goChatBtn {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  background-color: #f97d54;
+  color: white;
+}
+
 
 </style>

@@ -146,6 +146,17 @@ export default {
       return live.user.userId == userId;
     },
     goLive(prdId) {
+      rest
+        .axios({
+          method: "patch",
+          url: `/dabid/live/start/${this.prdId}`,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       this.$router.push({
         name: "session",
         params: {

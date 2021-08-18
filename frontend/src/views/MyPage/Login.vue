@@ -95,6 +95,7 @@ export default {
 }
 .dabid {
   font-size: 1rem;
+  color: #dfb772;
 }
 .dabid h5 {
   color: #dfb772;

@@ -17,7 +17,7 @@
         </p>
         <hr>
         <p class="text-center">
-          <button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+          <button class="btn btn-lg gold-color" id="eng-font" @click="joinSession()">Join!</button>
           <h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
         </p>
         </div>
@@ -36,11 +36,17 @@
             id="kor-font"
           >
             <v-list-item three-line>
-              <v-list-item-avatar
-                tile
-                size="70"
-                @click="goProfile()"
-              ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
+                <RouterLink :to="{
+                  name: 'UserProfile',
+                  params: { userId: liveInfo.user.userId },
+                }">
+                <v-list-item-avatar
+                  tile
+                  size="70"
+                >
+                  <img src="@/assets/profileImg.png" alt="profile image"/>
+                </v-list-item-avatar>
+              </RouterLink>
               <v-list-item-content>
                 <v-list-item-title class="font-weight-bold text-h6 mb-1">{{ liveInfo.liveTitle }}</v-list-item-title>
                 <v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
@@ -71,7 +77,7 @@
             <v-btn style="top:20%" @click="goChat">임시 채팅가기</v-btn>
           </span>
         </div>
-        <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
+        <p id="notice">{{ countDown }}초 남음</p>
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -79,7 +85,7 @@
           <div id="chatList" @scroll="chatOnScroll()">
             <p v-for="(chat, idx) in chatList" :key="idx">
               <span>{{ JSON.parse(chat.from.data).clientData }} </span>
-              <v-text><strong>{{ chat.data }}</strong></v-text>
+              <v-text>{{ chat.data }}</v-text>
             </p>
           </div>
           <div v-if="isChat">
@@ -105,7 +111,6 @@
             <!-- <span v-if="liveInfo.user.userId != loginId"> -->
               <!-- <v-row> -->
                 <v-text-field
-                  :rules="[PriceRules.min, PriceRules.max]"
                   :append-outer-icon="bid ? 'mdi-check-circle' : ''"
                   type="number"
                   v-model="bid"
@@ -142,13 +147,15 @@
                       추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
                       <hr>
                       최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
+                      <p v-if="valid == false" class="warning-word">가격 범위 조건을 만족하지 못할 시 입찰 불가합니다. 취소 버튼을 눌러주세요.</p>
+                      <p v-if="doublebetting == true" class="warning-word">연속 베팅은 불가합니다. 취소 버튼을 눌러주세요.</p>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
                         dark
                         color="primary"
-                        @click="dialog = false"
+                        @click="cancelBid()"
                       >
                         취소
                       </v-btn>
@@ -276,6 +283,7 @@ export default {
 
       bid: "",
       currentPrice: 0,
+<<<<<<< HEAD
       currentUser: "",
       PriceRules: {
         // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
@@ -288,6 +296,18 @@ export default {
       timerStop: true,
       timerShow: false,
     };
+=======
+      currentUser: '',
+
+      valid: true,
+      doublebetting: false,
+      loginId: localStorage.getItem('userId'),
+      dialog: false,
+      isChat: true,
+
+      countDown: 10,
+    }
+>>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
   },
   filters: {
     comma: function (value) {
@@ -295,6 +315,14 @@ export default {
     },
   },
   methods: {
+    countDownTimer() {
+      if(this.countDown > 1) {
+        setTimeout(() => {
+          this.countDown -= 1
+          this.countDownTimer()
+        }, 1000)
+      }
+    },
     sendMsg: function () {
       this.session
         .signal({
@@ -320,8 +348,13 @@ export default {
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight;
     },
     bidding: function () {
+      if (this.bid < 5000 || this.bid > 50000) {
+      this.valid = false  
+      console.log("가격 범위 안 맞아요")
+      }
       if (this.currentUser == localStorage.getItem("userId")) {
-        console.log("연속 베팅은 불가능합니다.");
+        this.doublebetting = true
+        console.log("연속 베팅은 불가능합니다.")
       } else {
         this.session
           .signal({
@@ -345,6 +378,13 @@ export default {
             console.error(error);
           });
       }
+    },
+    // 취소 버튼 누르면 초기화 시키기  
+    cancelBid() {
+      this.bid = ''
+      this.dialog = false
+      this.valid = true
+      this.doublebetting = false
     },
     goChat() {
       rest
@@ -427,12 +467,57 @@ export default {
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
+<<<<<<< HEAD
       this.getToken(this.mySessionId).then((token) => {
         // Receiver of all messages (usually before calling 'session.connect')
         this.session.on("signal", (event) => {
           if (event.type === "signal:BID") {
             this.currentPrice += Number(event.data);
             this.currentUser = JSON.parse(event.from.data).userId;
+=======
+      this.getToken(this.mySessionId).then(token => {
+      // Receiver of all messages (usually before calling 'session.connect')
+      this.session.on('signal', (event) => {
+        if (event.type === "signal:BID") {
+          // 맨처음 비드면 돌리기 
+          if (!this.currentUser) {
+            this.countDownTimer()
+          }
+          // 경매 입찰 돌아감 
+          this.currentPrice += Number(event.data);
+          this.currentUser = JSON.parse(event.from.data).userId;
+          console.log('카운트다운 다시 해야해')
+          this.countDown = 10
+        } else {
+          this.chatList.push(event);
+        }
+      });
+      this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
+        .then(() => {
+          if(this.isPublisher()){
+            // --- Get your own camera stream with the desired properties ---
+            let publisher = this.OV.initPublisher(undefined, {
+              audioSource: undefined, // The source of audio. If undefined default microphone
+              videoSource: undefined, // The source of video. If undefined default webcam
+              publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: true,     // Whether you want to start publishing with your video enabled or not
+              resolution: '360x550',  // The resolution of your video
+              // 480x640
+              // 320x540
+              // 360x640
+              frameRate: 30,         // The frame rate of your video
+              insertMode: 'APPEND',   // How the video is inserted in the target element 'video-container'
+              mirror: false          // Whether to mirror your local video or not
+            });
+  
+            this.mainStreamManager = publisher;
+            this.publisher = publisher;
+  
+            // --- Publish your stream ---
+  
+            this.session.publish(this.publisher);
+
+>>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
           } else {
             this.chatList.push(event);
           }
@@ -604,9 +689,12 @@ export default {
           console.log("라이브 정보 받아오기 오류: " + err);
         });
     },
+<<<<<<< HEAD
     goProfile() {
       this.$router.push({ name: "MyPage" });
     },
+=======
+>>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
     unLoadEvent: function (event) {
       if (this.canLeaveSite) return;
 
@@ -621,10 +709,15 @@ export default {
     },
   },
   created: function () {
+<<<<<<< HEAD
     this.prdId = this.$route.params.prdId;
     console.log(this.prdId + "번 방송입니다.");
     this.getLiveInfo();
     // this.joinSession()
+=======
+    this.prdId = this.$route.params.prdId
+    this.getLiveInfo()
+>>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
@@ -743,4 +836,13 @@ div.button {
   /* background-color: #151618; */
   background-color: rgba(21, 22, 24, 0.75);
 }
+<<<<<<< HEAD
+=======
+.warning-word {
+  color:red;
+  background-color: white;
+  font-size: 6px;
+}
+
+>>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
 </style>

@@ -98,12 +98,17 @@
             v-if="success"
             id="notice"
           >
-          <p v-if="success">거래 완료. 채팅방으로 자동 이동합니다. </p>
-        </MARQUEE>
+          <!-- 판매자한테 보임 --> 
+          <p v-if="success || liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
+
+          <!-- 구매자한테 보임 --> 
+          <p v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
 
         <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
         <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
 
+        <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>
+        <img v-if="success" class="celebrate-img" src="@/assets/celebration.png" alt="celebrate-img">
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -189,15 +194,13 @@
                         dark
                         color="primary"
                         @click="bidding"
+                        :disabled='doublebetting == true || valid == false'
                       >
                         확인
                       </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-              <!-- </v-row> -->
-              <!-- <h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5> -->
-            <!-- </span> -->
           </div>
         </div>
         <div class="inputTypeToggle" v-if="liveInfo.user.userId != loginId">
@@ -369,10 +372,6 @@ export default {
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight;
     },
     bidding: function () {
-      if (this.bid < 5000 || this.bid > 50000) {
-        this.valid = false;
-        console.log("가격 범위 안 맞아요");
-      }
       if (this.currentUser == localStorage.getItem("userId")) {
         this.doublebetting = true;
         console.log("연속 베팅은 불가능합니다.");
@@ -691,6 +690,12 @@ export default {
     if (this.bottom_flag) {
       objDiv.scrollTop = objDiv.scrollHeight;
     }
+    if (this.dialog == true) {
+      if (this.bid < 5000 || this.bid > 50000) {
+      this.valid = false  
+      console.log("가격 범위 안 맞아요")
+      }
+    }
   },
   // mounted() {
   //   window.addEventListener('beforeunload', this.unLoadEvent);
@@ -718,11 +723,6 @@ export default {
 };
 </script>
 <style scoped>
-celebrate-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
 * {
   font-family: "InfinitySans-RegularA1";
 }
@@ -765,7 +765,7 @@ div.button {
   overflow-y: scroll;
   max-height: 160px;
   line-height: 1.3;
-  font-size: 14px;
+  font-size: 20px;
   color: white;
   overscroll-behavior: none;
   will-change: bottom;
@@ -801,6 +801,12 @@ div.button {
   color: red;
   background-color: white;
   font-size: 6px;
+}
+.celebrate-img {
+  z-index: 2;
+  width: 30%;
+  margin-left:120px;
+  margin-top:210px
 }
 
 .streamToggle {

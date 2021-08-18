@@ -98,6 +98,7 @@
             v-if="success"
             id="notice"
           >
+          </MARQUEE>
           <!-- 판매자한테 보임 --> 
           <p v-if="success || liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
 

@@ -52,7 +52,6 @@ export default {
   },
   data: function () {
     return {
-      Info: null,
       lives: [],
       tabs: null,
       userId: null,
@@ -76,9 +75,8 @@ export default {
         headers: this.setToken()
       })
         .then((res) => {
-          this.Info = res.data
-          this.lives = res.data.liveList
-          this.userName = this.Info.user.userName
+          this.lives = res.data;
+          this.userName = localStorage.getItem("userName");
           //라이브 분류 작업 
           for (var i=0; i < this.lives.length; i++) {
              const one_live = this.lives[i]

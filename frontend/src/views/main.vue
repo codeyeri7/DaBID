@@ -32,7 +32,7 @@
               <v-card height="280" class="section1" @click="goLive(card.prdId)" tile :elevation="0">
                 <!-- Image -->
                 <v-img
-                  src= "card.prdPhoto"
+                  :src= "card.prdPhoto"
                   class="white--text align-center"
                   height="180px"
                   style="padding: 40px"
@@ -63,7 +63,7 @@
                 
                 <div>
                   <v-img
-                    src= "card.prdPhoto"
+                    :src= "card.prdPhoto"
                     class="white--text d-flex justify-center"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     height="180px"
@@ -96,7 +96,7 @@
               <v-card height="280" class="section3" tile :elevation="0">
                 <!-- Image -->
                 <v-img
-                  src= "card.prdPhoto"
+                  :src= "card.prdPhoto"
                   class="white--text align-center"
                   gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                   height="180px"

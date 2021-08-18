@@ -100,7 +100,6 @@
           <p v-if="success">거래 완료. 채팅방으로 자동 이동합니다. </p>
         </MARQUEE>
 
-        <br>
         <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
         <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
 
@@ -535,46 +534,6 @@ export default {
             this.chatList.push(event);
           }
         });
-        this.session
-          .connect(token, {
-            clientData: this.myUserName,
-            userId: localStorage.getItem("userId"),
-          })
-          .then(() => {
-            if (this.isPublisher()) {
-              // --- Get your own camera stream with the desired properties ---
-              let publisher = this.OV.initPublisher(undefined, {
-                audioSource: undefined, // The source of audio. If undefined default microphone
-                videoSource: undefined, // The source of video. If undefined default webcam
-                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                resolution: "360x550", // The resolution of your video
-                // 480x640
-                // 320x540
-                // 360x640
-                frameRate: 30, // The frame rate of your video
-                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-                mirror: false, // Whether to mirror your local video or not
-              });
-
-              this.mainStreamManager = publisher;
-              this.publisher = publisher;
-
-              // --- Publish your stream ---
-
-              this.session.publish(this.publisher);
-            } else {
-              // this.mainStreamManager = publisher;
-              console.log("Subscriber입니다....");
-            }
-          })
-          .catch((error) => {
-            console.log(
-              "There was an error connecting to the session:",
-              error.code,
-              error.message
-            );
-          });
       });
       window.addEventListener("beforeunload", this.leaveSession);
     },
@@ -848,13 +807,13 @@ div.button {
 #exitBtn {
   position: absolute;
   right: 5%;
-  top: 10%;
+  top: 5%;
 }
 
 #goChatBtn {
   position: absolute;
   right: 5%;
-  top: 50%;
+  top: 20%;
   background-color: #f97d54;
   color: white;
 }

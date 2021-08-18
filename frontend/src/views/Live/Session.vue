@@ -659,6 +659,8 @@ export default {
               res.data.logList[res.data.logList.length - 1].bidPrice),
               (this.currentUser =
                 res.data.logList[res.data.logList.length - 1].bidder);
+          } else {
+            (this.currentPrice = this.liveInfo.prdPriceStart)
           }
         })
         .catch((err) => {

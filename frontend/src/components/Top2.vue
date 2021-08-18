@@ -27,7 +27,6 @@
               }}</span>
             </div>
           </v-card-title>
-
           <v-card-text class="card-text" id="kor-font">
             <p class="mb-3">
               <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>

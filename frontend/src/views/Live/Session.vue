@@ -68,7 +68,7 @@
           <div id="chatList" @scroll="chatOnScroll()">
             <p v-for="(chat, idx) in chatList" :key="idx">
               <span>{{ JSON.parse(chat.from.data).clientData }} </span>
-              <v-text><strong>{{ chat.data }}</strong></v-text>
+              <v-text>{{ chat.data }}</v-text>
             </p>
           </div>
           <div v-if="isChat">
@@ -151,7 +151,6 @@
                         color="primary"
                         @click="bidding"
                       >
-                        <!-- :disabled="doublebetting|| !valid" -->
                         확인
                       </v-btn>
                     </v-card-actions>
@@ -283,7 +282,7 @@ export default {
   },
   methods: {
     countDownTimer() {
-      if(this.countDown > 0) {
+      if(this.countDown > 1) {
         setTimeout(() => {
           this.countDown -= 1
           this.countDownTimer()
@@ -454,9 +453,15 @@ export default {
       // Receiver of all messages (usually before calling 'session.connect')
       this.session.on('signal', (event) => {
         if (event.type === "signal:BID") {
+          // 맨처음 비드면 돌리기 
+          if (!this.currentUser) {
+            this.countDownTimer()
+          }
+          // 경매 입찰 돌아감 
           this.currentPrice += Number(event.data);
           this.currentUser = JSON.parse(event.from.data).userId;
-          this.countDownTimer()
+          console.log('카운트다운 다시 해야해')
+          this.countDown = 10
         } else {
           this.chatList.push(event);
         }

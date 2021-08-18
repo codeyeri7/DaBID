@@ -461,6 +461,7 @@ export default {
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
+        this.$router.push({ name: "Main" })
       });
 
       // On every asynchronous exception...

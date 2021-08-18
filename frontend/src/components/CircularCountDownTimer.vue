@@ -156,6 +156,7 @@
         }"
       >
         <div
+          class="itemIn"
           :style="{
             width: inner_size + 'px',
             height: inner_size + 'px',
@@ -167,17 +168,20 @@
           {{ factor * seconds }}
         </div>
         <svg
+          class="itemIn2"
           :width="inner_size"
           :height="inner_size"
           xmlns="http://www.w3.org/2000/svg"
         >
           <circle
+            class="itemCircle"
             :r="r"
             :cy="cx"
             :cx="cy"
             :stroke-width="strokeWidth"
             :stroke="underneathStrokeColor"
-            :fill="secondsFillColor"
+            :fill="white"
+            :fill-opacity="0"
           />
           <circle
             :transform="'rotate(-90, ' + cx + ', ' + cy + ')'"
@@ -194,9 +198,9 @@
             fill="transparent"
           />
         </svg>
-        <div v-if="secondLabel" :style="{ fontSize: label_font_size + 'px' }">
+        <!-- <div v-if="secondLabel" :style="{ fontSize: label_font_size + 'px' }">
           {{ secondLabel }}
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -216,7 +220,7 @@ export default {
     },
     secondsStrokeColor: {
       type: String,
-      default: "#acdb28",
+      default: "#729adb",
     },
     minutesStrokeColor: {
       type: String,
@@ -224,23 +228,23 @@ export default {
     },
     hoursStrokeColor: {
       type: String,
-      default: "#db47a0",
+      default: "#729adb",
     },
     underneathStrokeColor: {
       type: String,
-      default: "#eee",
+      default: "#729adb",
     },
     secondsFillColor: {
       type: String,
-      default: "none",
+      default: "#729adb",
     },
     minutesFillColor: {
       type: String,
-      default: "none",
+      default: "#729adb",
     },
     hoursFillColor: {
       type: String,
-      default: "none",
+      default: "#729adb",
     },
     size: {
       type: Number,
@@ -252,11 +256,11 @@ export default {
     },
     hourLabel: {
       type: String,
-      default: "hours",
+      default: "#729adb",
     },
     minuteLabel: {
       type: String,
-      default: "minutes",
+      default: "#729adb",
     },
     secondLabel: {
       type: String,
@@ -307,7 +311,7 @@ export default {
         ? this.steps
           ? Math.max(this.steps, this.initialValue)
           : this.initialValue
-        : 60;
+        : 1;
     },
     is_single() {
       return this.steps !== undefined || (!this.showHour && !this.showMinute);
@@ -371,7 +375,7 @@ export default {
         this.size === 0 && this.isMounted
           ? this.$refs.wrapper.parentElement.clientHeight
           : this.size;
-      return this.has_label ? size - size * this.labelFontRatio : size;
+      return this.has_label ? size * 1.5 - size * this.labelFontRatio : size;
     },
     container_height() {
       return this.size === 0 && this.isMounted
@@ -402,7 +406,7 @@ export default {
       return this.circle_size * this.labelFontRatio;
     },
     number_font_size() {
-      return this.circle_size * this.numberFontRatio;
+      return this.circle_size * this.numberFontRatio * 3;
     },
   },
   methods: {
@@ -478,5 +482,23 @@ circle {
   -ms-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
+}
+
+/* 숫자 */
+.itemIn {
+  margin-left: 30%;
+  color: #f97d54;
+}
+
+.itemIn2 {
+  color: brown;
+}
+
+.itemCircle {
+  color: coral;
+}
+
+.circle_animation {
+  color: #dfb772;
 }
 </style>

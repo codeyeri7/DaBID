@@ -30,12 +30,12 @@
       </v-col>
     </template>
     <v-card :id="prdId">
-      <v-card-title class="headline grey lighten-2">
+      <v-card-title class="headline secondary">
         <h4>{{ live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn icon v-on:click="clicked = !clicked" @click="wish()">
-              <v-icon>mdi-heart</v-icon>
+              <v-icon style="color: #CDCDCD">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
@@ -47,7 +47,9 @@
             </v-btn>
           </v-col>
         </span>
-        <v-btn color="primary" text @click="dialog = false"> X </v-btn>
+        <div class="close">
+          <img src="@/assets/close.png" @click="dialog = false">
+        </div>
       </v-card-title>
       <v-card-text>
         <img :src="live.prdPhoto" width="200px" class="mt-5" />
@@ -72,12 +74,15 @@
       <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
-        <div v-if="checkUser(live)">
-          <v-btn color="primary" text @click="goLive(live.prdId)">
-            Start Live
-          </v-btn>
-          <v-btn color="blue darken-1" text @click="edit()"> edit </v-btn>
-          <v-btn color="red" text @click="remove()"> delete </v-btn>
+        <div class="d-flex justify-space-between pa-0" v-if="checkUser(live)">
+          <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)"> Start Live </v-btn>
+          <v-btn class="pa-0" color="blue darken-1" text @click="edit()"> edit </v-btn>
+          <v-btn class="pa-0" color="red" text @click="remove()"> delete </v-btn>
+        </div>
+        <div v-else>
+          <div v-if="live.liveStatus.liveStatus == 1">
+            <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)"> Go Live </v-btn>
+          </div>
         </div>
       </v-card-actions>
     </v-card>
@@ -224,6 +229,15 @@ export default {
   padding-bottom: 0;
   padding-top: 0;
   color: #dfb772;
+}
+.headline {
+  color: #dfb772;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: inherit;
 }
 </style>
 

@@ -16,12 +16,11 @@
 
         <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
           <p>상품명 : {{ room.live.prdName }}</p>
-          <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
-          <!-- <p>{{ room.live }}</p> -->
+          <p>최종낙찰가 : {{ endlive.resPriceEnd | comma }}원</p>
         </div>
 
         <!-- 확인 때문에 임시로 같다로 조건 바꿔뒀어요 --> 
-        <div v-if="endlive.seller.userName == sender">
+        <div v-if="endlive.seller.userName != sender">
             <v-btn
               tile
               x-small
@@ -106,6 +105,7 @@
           </v-col>
         </v-row>
       </v-container>
+
       <div class="fixedchat">
         <v-container>
           <v-row no-gutters>
@@ -151,6 +151,11 @@ export default {
     this.findRoom();
     this.getEndLive();
     this.connect();
+  },
+  filters: {
+    comma: function (value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
     findRoom: function() {
@@ -258,6 +263,8 @@ export default {
 .fixedchat {
   position: fixed;
   bottom: 30px;
+  background-color: white;
+  height: 90px;
 }
 .chat {
   background-color: #151618;
@@ -266,10 +273,12 @@ export default {
 }
 div.comments_wrap {
   margin-bottom: 1.5rem;
+  background-color: #3c3f44;
   /* bottom: 94px;
   left: 15px; */
   z-index: 2;
   width: 95%;
+  /* padding: 10px; */
   position: absolute;
   overflow-y: scroll;
   max-height: 400px;

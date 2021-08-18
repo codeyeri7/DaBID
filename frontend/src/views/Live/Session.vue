@@ -24,6 +24,7 @@
       </div>
     </div>
     <div id="session" v-if="session">
+    <!-- <div id="session"> -->
       <!-- 참가자(Publisher) 화면 -->
       <!-- <div id="video-container" class="col-md-6"> -->
       <div id="video-container">
@@ -35,39 +36,137 @@
             id="kor-font"
           >
             <v-list-item three-line>
-            <v-list-item-content>
-              <div class="text-overline mb-2">
-              {{ liveInfo.productCategory.prdCategoryName }}
-              </div>
-              <v-list-item-title class="text-h6 mb-1">
-              {{ liveInfo.liveTitle }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
-            </v-list-item-content>
-            <v-list-item-avatar
-              tile
-              size="70"
-              @click="goProfile()"
-            ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
+              <v-list-item-avatar
+                tile
+                size="70"
+                @click="goProfile()"
+              ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title class="font-weight-bold text-h6 mb-1">{{ liveInfo.liveTitle }}</v-list-item-title>
+                <v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
+                <v-list-item-subtitle>현재가: {{ currentPrice | comma }}</v-list-item-subtitle>
+              </v-list-item-content>
             </v-list-item>
           </v-card>
+          
+          <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
+            <v-btn style="top:10%" @click="endSession">방종</v-btn>
+            <v-btn style="top:20%" @click="goChat">임시 채팅가기</v-btn>
+          </span>
         </div>
+        <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+        
+        <div class="d-flex flex-column comments_wrap">
+          <div id="chatList" @scroll="chatOnScroll()">
+            <p v-for="(chat, idx) in chatList" :key="idx">
+              <span>{{ JSON.parse(chat.from.data).clientData }} </span>
+              <v-text><strong>{{ chat.data }}</strong></v-text>
+            </p>
+          </div>
+          <div v-if="isChat">
+            <!-- <v-row> -->
+              <!-- <v-text-field rounded outlined clearable dense v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요"></v-text-field> -->
+              <!-- <v-col cols="12"> -->
+                <v-text-field
+                  v-model="chatMsg"
+                  :append-outer-icon="chatMsg ? 'mdi-arrow-up-circle' : ''"
+                  type="text"
+                  dense
+                  @keyup.enter="sendMsg"
+                  @click:append-outer="sendMsg"
+                  placeholder="질문을 남겨주세요"
+                ></v-text-field>
+                <!-- mdi-send
+                  rounded outlined dense  -->
+              <!-- </v-col> -->
+              <!-- <v-btn dark elevation="0" color="primary" @click="sendMsg()" style="height:2rem">전송</v-btn> -->
+            <!-- </v-row> -->
+          </div>
+          <div v-else>
+            <!-- <span v-if="liveInfo.user.userId != loginId"> -->
+              <!-- <v-row> -->
+                <v-text-field
+                  :rules="[PriceRules.min, PriceRules.max]"
+                  :append-outer-icon="bid ? 'mdi-check-circle' : ''"
+                  type="number"
+                  v-model="bid"
+                  dense
+                  @keyup.enter="dialog=true"
+                  @click:append-outer="dialog=true"
+                  placeholder="금액을 입력하세요"
+                  hint="최소 5,000원 최대 50,000원"
+                  persistent-hint
+                  suffix="원"
+                ></v-text-field>
+                <!-- <h4 style="text-align:center">원</h4> -->
+                <!-- <v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn> -->
+                <v-dialog
+                  v-model="dialog"
+                  persistent
+                  max-width="290"
+                >
+                  <!-- <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      dark elevation="0" color="primary" style="height:2rem"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      입찰
+                    </v-btn>
+                  </template> -->
+                  <v-card>
+                    <v-card-title class="text-h5">
+                      가격을 확인해 주세요.
+                    </v-card-title>
+                    <v-card-text>
+                      현재 입찰가: <strong>{{ this.currentPrice | comma }}</strong>원<br>
+                      추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
+                      <hr>
+                      최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        dark
+                        color="primary"
+                        @click="dialog = false"
+                      >
+                        취소
+                      </v-btn>
+                      <!-- <v-btn
+                        color="green darken-1"
+                        @click="dialog = false"
+                      > -->
+                      <v-btn
+                        dark
+                        color="primary"
+                        @click="bidding"
+                      >
+                        확인
+                      </v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              <!-- </v-row> -->
+              <!-- <h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5> -->
+            <!-- </span> -->
+          </div>
+        </div>
+        <div class="inputTypeToggle" v-if="liveInfo.user.userId != loginId">
+          <v-btn class="mx-1" icon @click="isChat=true"><img src="@/assets/chat.png" width="20"></v-btn>
+          <v-btn icon @click="isChat=false"><img src="@/assets/bidding.png" width="20"></v-btn>
+        </div>
       </div>
-      <!-- 본인 화면 --> 
-      <!-- <div class="video col-md-6" id="main-video" height="400px">
-        <user-video :stream-manager="mainStreamManager"/> -->
-      <!-- </div> -->
-      <div class="button" style="margin-left: 1.2rem">
-            <span v-if="liveInfo.user.userId != loginId">
-          <p id="currentPrice">현재가: {{ currentPrice | comma }}</p>
-          <p>참여자 수: {{ subscribers.length }}</p>
+      <div style="margin-left: 1.2rem">
+        <!-- <span v-if="liveInfo.user.userId != loginId">
           <p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
         </span>
-        <span v-else>
-          <v-btn @click="endSession">방종</v-btn>
-          <v-btn @click="goChat">임시 채팅가기</v-btn>
+        <span v-else> -->
+        <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
+          <!-- <v-btn @click="endSession">방종</v-btn>
+          <v-btn @click="goChat">임시 채팅가기</v-btn> -->
           <!-- 마이크 on/off 버튼 -->   
           <v-btn
             icon
@@ -75,10 +174,12 @@
             @click="toggleAudio"
             class="toggleBtn"
           >
-            <i class="fas fa-microphone"></i>
+            <v-icon>mdi-microphone</v-icon>
+            <!-- <i class="fas fa-microphone"></i> -->
           </v-btn>
           <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
-              <i class="fas fa-microphone-slash"></i>
+              <v-icon>mdi-microphone-off </v-icon>
+              <!-- <i class="fas fa-microphone-slash"></i> -->
           </v-btn>
 
           <!-- 카메라 on/off 버튼 -->
@@ -88,93 +189,23 @@
             @click="toggleVideo"
             class="toggleBtn video"
           >
-            <i class="fas fa-video"></i>
+            <v-icon>mdi-video</v-icon>
+            <!-- <i class="fas fa-video"></i> -->
           </v-btn>
           <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
-            <i class="fas fa-video-slash"></i>
+            <v-icon>mdi-video-off</v-icon>
+            <!-- <i class="fas fa-video-slash"></i> -->
           </v-btn>
-        </span>      
+        </span>
       </div>
       <!-- 본인 화면 
       <div class="video col-md-6" id="main-video">
         <user-video :stream-manager="mainStreamManager"/>
       </div> -->
-      <div>
-        <div class="d-flex flex-column">
-          <div class="comments_wrap" id="chatList" @scroll="chatOnScroll()">
-            <p v-for="(chat, idx) in chatList" :key="idx">
-              <span>{{ JSON.parse(chat.from.data).clientData }}: </span>
-              <v-text>{{ chat.data }}</v-text>
-            </p>
-          </div>
-          <div>
-            <v-row style="width: 80%; margin-left:1.5rem">
-              <v-text-field type="text" style="width:60%" v-model="chatMsg" @keyup.enter="sendMsg" placeholder="질문을 남겨주세요"></v-text-field>
-              <v-btn dark elevation="0" color="primary" @click="sendMsg()" style="height:2rem">전송</v-btn>
-            </v-row>
-          </div>
-        </div>
-        <br>
-        <span v-if="liveInfo.user.userId != loginId">
-          <v-row style="width: 80%; margin-left:1.5rem">
-            <v-text-field :rules="PriceRules" type="text" style="width:60%" v-model="bid" @keyup.enter="dialog=true" placeholder="금액을 입력하세요"></v-text-field>
-            <h4 style="text-align:center">원</h4>
-            <!-- <v-btn dark elevation="0" color="primary" @click="bidding()" style="margin-left:1rem; height:2rem">입찰</v-btn> -->
-            <v-dialog
-              v-model="dialog"
-              persistent
-              max-width="290"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  dark elevation="0" color="primary" style="margin-left:1rem; height:2rem"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  입찰
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="text-h5">
-                  가격을 확인해 주세요.
-                </v-card-title>
-                <v-card-text>
-                  현재 입찰가: <strong>{{ this.currentPrice | comma }}</strong>원<br>
-                  추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
-                  <hr>
-                  최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    dark
-                    color="primary"
-                    @click="dialog = false"
-                  >
-                    취소
-                  </v-btn>
-                  <!-- <v-btn
-                    color="green darken-1"
-                    @click="dialog = false"
-                  > -->
-                  <v-btn
-                    dark
-                    color="primary"
-                    @click="bidding"
-                  >
-                    확인
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-          <h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5>
-        </span>
-      </div>
     <!-- session 닫히는 태그 -->    
     </div>
 
-    <div class="fixedbutton" style="float: right">
+    <!-- <div class="fixedbutton" style="float: right">
       <RouterLink :to="{ name: 'Main' }">
         <v-btn 
           class="ma-2"
@@ -185,7 +216,7 @@
           <v-icon light left>mdi-arrow-left</v-icon> Back
         </v-btn>
       </RouterLink>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -217,6 +248,7 @@ export default {
       prdId: '',
       mySessionId: '',
       myUserName: '',
+      myRole: '',
 
       chatMsg: '',
       chatList: [],
@@ -226,11 +258,14 @@ export default {
       bid: '',
       currentPrice: 0,
       currentUser: '',
-      PriceRules: [
-        v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
-      ],
+      PriceRules: {
+        // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
+        min: v => v >= 5000 || '최소 금액은 5,000원 입니다.',
+        max: v => v <= 50000 || '최대 금액은 50,000원 입니다.'
+      },
       loginId: localStorage.getItem('userId'),
       dialog: false,
+      isChat: true,
     }
   },
   filters: {
@@ -263,27 +298,31 @@ export default {
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight
     },
     bidding: function () {
-         this.session.signal({
-            data: this.bid,
-            type: "BID",
-         })
-         .then(() => {
-            rest.axios({
-               url: "/dabid/live/log",
-               method: "post",
-               data: {
-                  prdId: this.prdId,
-                  bidPrice: this.currentPrice,
-                  bidder: this.currentUser,
-               }
-            })
-            this.bid='';
-        this.dialog = false;
-         })
-         .catch(error => {
-            console.error(error);
-         });
-      },
+      if (this.currentUser == localStorage.getItem("userId")) {
+        console.log("연속 베팅은 불가능합니다.")
+      } else {
+        this.session.signal({
+          data: this.bid,
+          type: "BID",
+        })
+        .then(() => {
+          rest.axios({
+            url: "/dabid/live/log",
+            method: "post",
+            data: {
+              prdId: this.prdId,
+              bidPrice: this.currentPrice,
+              bidder: this.currentUser,
+            }
+          })
+          this.bid='';
+          this.dialog = false;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+    },
     goChat() {
       rest.axios({
         url: "/dabid/chat/end/"+this.prdId,
@@ -311,6 +350,9 @@ export default {
     endSession() {
       // 사람들 다 내쫓고 
       if (this.session) this.session.forceDisconnect();
+      // streamDestroyed : dispatched by Session object of every other remote user connected to the session. Automatically cleans the remote video.
+      // connectionDestroyed : dispatched by Session object of every other remote user connected to the session.
+      // this.session.connectionDestroyed();
       // 방송도 아예 종료 
 
       var _this = this;
@@ -336,17 +378,17 @@ export default {
       });
     },
     toggleAudio() {
-    this.publisher.properties.publishAudio =
-      !this.publisher.properties.publishAudio;
-    this.publisher.publishAudio(this.publisher.properties.publishAudio);
-    },
+      this.publisher.properties.publishAudio =
+        !this.publisher.properties.publishAudio;
+      this.publisher.publishAudio(this.publisher.properties.publishAudio);
+      },
     toggleVideo() {
-    //   this.publisher.stream.disposeWebRtcPeer();
-    //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
-    this.publisher.properties.publishVideo =
-      !this.publisher.properties.publishVideo;
-    this.publisher.publishVideo(this.publisher.properties.publishVideo);
-    },
+      //   this.publisher.stream.disposeWebRtcPeer();
+      //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
+      this.publisher.properties.publishVideo =
+        !this.publisher.properties.publishVideo;
+      this.publisher.publishVideo(this.publisher.properties.publishVideo);
+      },
     joinSession () {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
@@ -368,6 +410,7 @@ export default {
         if (index >= 0) {
             this.subscribers.splice(index, 1);
         }
+        console.log("방 폭파ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
       });
 
       // On every asynchronous exception...
@@ -398,7 +441,7 @@ export default {
               videoSource: undefined, // The source of video. If undefined default webcam
               publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
               publishVideo: true,     // Whether you want to start publishing with your video enabled or not
-              resolution: '360x640',  // The resolution of your video
+              resolution: '360x550',  // The resolution of your video
               // 480x640
               // 320x540
               // 360x640
@@ -426,7 +469,12 @@ export default {
       window.addEventListener('beforeunload', this.leaveSession)
     },
     isPublisher() {
-      return this.liveInfo.user.userId == localStorage.getItem("userId");
+      if (this.liveInfo.user.userId == localStorage.getItem("userId")) {
+        this.myRole = 'PUBLISHER'
+      } else {
+        this.myRole = "SUBSCRIBER"
+      }
+      return this.myRole == 'PUBLISHER';
     },
     leaveSession () {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
@@ -438,6 +486,7 @@ export default {
       this.subscribers = [];
       this.OV = undefined;
       window.removeEventListener('beforeunload', this.leaveSession);
+      // this.$router.push({ name: 'Main' })
     },
 
     updateMainVideoStreamManager (stream) {
@@ -526,38 +575,69 @@ export default {
     },
     goProfile () {
       this.$router.push({ name: "MyPage" });
-    }
+    },
+    unLoadEvent: function (event) {
+      if (this.canLeaveSite) return;
+
+      event.preventDefault();
+      event.returnValue = '';
+    },
   },
   created: function () {
     this.prdId = this.$route.params.prdId
     console.log(this.prdId+ '번 방송입니다.')
     this.getLiveInfo()
+    // this.joinSession()
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
     if(this.bottom_flag){
       objDiv.scrollTop = objDiv.scrollHeight;
     }
-  }
+  },
+  // mounted() {
+  //   window.addEventListener('beforeunload', this.unLoadEvent);
+  //   // beforeunload 이벤트는 구체적으로 다음과 같은 상황에서 발생
+  //   // 사이트 창을 닫으려고 할 때
+  //   // 다른 주소로 이동하려고 할 때
+  //   // 같은 주소여도 새로고침하려고 할 때
+  // },
+  // beforeUnmount() {
+  //   window.removeEventListener('beforeunload', this.unLoadEvent);
+  // },
+  beforeRouteLeave(to, from, next) {
+    // to: 이동할 라우터 정보
+    // from: 현재 라우터 정보
+    // next: 함수.
+    // if (this.myRole == 'SUBSCRIBER') {
+      // this.leaveSession();
+      // next();
+
+    // } else if (confirm('이 사이트에서 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.')) {
+      this.leaveSession();
+      next();
+    // }
+  },
 }
 </script>
 <style scoped>
-.form-group {
-  margin-top :2rem;
-  margin-left: 1rem;
-}
-#currentPrice {
-  font-size: 1rem;
-  color: red;
-  font-weight: bold;
-  width: 50%;
-  margin-top: 2rem;
-  text-align: center;
+* {
   font-family: "InfinitySans-RegularA1";
 }
+
+.form-group {
+  /* margin-top :2rem; */
+  /* margin-left: 1rem; */
+}
+/* #currentPrice {
+  font-size: 1rem;
+  width: 50%;
+  font-family: "InfinitySans-RegularA1";
+} */
 #main-container {
   /* padding-bottom: 0; */
   padding: 0px;
+  /* margin-bottom: 60px; */
 }
 div.video {
   position: absolute;
@@ -572,27 +652,53 @@ div.prdInfo {
 div.button {
   z-index: 1;
 }
-div.comments_wrap {
+
+.comments_wrap {
+  position: absolute;
+  bottom: 10%;
+  margin-left: 15px;
+}
+
+#chatList{
   height: 7rem;
-  border-radius: 30px;
-  border: 0.2rem solid;
+  /* border-radius: 30px; */
+  /* border: 0.2rem solid; */
   margin-bottom: 1.5rem;
   right: 95px;
-  bottom: 94px;
   left: 15px;
   z-index: 2;
-  max-width: 200px;
-  position: absolute;
+  max-width: 230px;
   overflow-y: scroll;
   max-height: 160px;
   line-height: 1.3;
   font-size: 14px;
-  color: black;
+  color: white;
   overscroll-behavior: none;
   will-change: bottom;
 }
 
 .liveInfoCard {
   background-color: rgba(255, 255, 255, 0);
+  border-color: transparent;
 }
+
+#notice {
+  color: red;
+  /* 잠시 박아놓기 */
+  position: absolute;
+  top: 100px;
+}
+
+.inputTypeToggle {
+  position: absolute;
+  right: 5%;
+  bottom: 13%;
+  display: flex;
+}
+
+.inputTypeToggle button {
+  /* background-color: #151618; */
+  background-color: rgba(21, 22, 24, 0.75);
+}
+
 </style>

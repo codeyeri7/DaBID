@@ -310,6 +310,7 @@ export default {
         data: "auctionStart",
         type: "AUCTION",
       })
+
     },
     countDownTimer() {
       if(this.countDown > 0) {
@@ -478,9 +479,9 @@ export default {
       this.session.on('signal', (event) => {
         if (event.type === "signal:BID") {
           // 맨처음 비드면 돌리기 
-          if (!this.currentUser) {
-            this.countDownTimer()
-          }
+          // if (!this.currentUser) {
+          //   this.countDownTimer()
+          // }
           // 경매 입찰 돌아감 
           this.currentPrice += Number(event.data);
           this.currentUser = JSON.parse(event.from.data).userId;

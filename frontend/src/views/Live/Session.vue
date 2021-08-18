@@ -255,7 +255,7 @@ import CircularCountDownTimer from "../../components/CircularCountDownTimer.vue"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
+const OPENVIDU_SERVER_URL = "https://coach48.p.ssafy.io:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
@@ -458,6 +458,7 @@ export default {
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
+        this.$router.push({ name: "Main" })
       });
 
       // On every asynchronous exception...

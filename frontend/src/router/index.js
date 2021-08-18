@@ -70,7 +70,7 @@ const routes = [
     name: 'UpdateMyLiveList',
     component: UpdateMyLiveList,
     meta: {
-      title: "UpdateMyLive",
+      title: "Update",
     },
   },
   {

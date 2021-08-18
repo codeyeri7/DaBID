@@ -273,6 +273,7 @@ export default {
       isChat: true,
 
       countDown: 10,
+      success: false,
     }
   },
   filters: {
@@ -287,6 +288,13 @@ export default {
           this.countDown -= 1
           this.countDownTimer()
         }, 1000)
+      }
+      // 0초 되면 
+      else if (this.countDown == 0) {
+        // 입찰 축하 멘트 
+        this.success = true
+        // 세션 강제 종료 
+        // 채팅 이동
       }
     },
     sendMsg: function () {

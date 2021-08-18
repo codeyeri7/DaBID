@@ -17,7 +17,7 @@
         </p>
         <hr>
         <p class="text-center">
-          <button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+          <button class="btn btn-lg gold-color" id="eng-font" @click="joinSession()">Join!</button>
           <h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
         </p>
         </div>
@@ -36,11 +36,17 @@
             id="kor-font"
           >
             <v-list-item three-line>
-              <v-list-item-avatar
-                tile
-                size="70"
-                @click="goProfile()"
-              ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
+                <RouterLink :to="{
+                  name: 'UserProfile',
+                  params: { userId: liveInfo.user.userId },
+                }">
+                <v-list-item-avatar
+                  tile
+                  size="70"
+                >
+                  <img src="@/assets/profileImg.png" alt="profile image"/>
+                </v-list-item-avatar>
+              </RouterLink>
               <v-list-item-content>
                 <v-list-item-title class="font-weight-bold text-h6 mb-1">{{ liveInfo.liveTitle }}</v-list-item-title>
                 <v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
@@ -48,13 +54,42 @@
               </v-list-item-content>
             </v-list-item>
           </v-card>
+
           
-          <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
-            <v-btn style="top:10%" @click="endSession">방종</v-btn>
-            <v-btn style="top:20%" @click="goChat">임시 채팅가기</v-btn>
+          <CircularCountDownTimer
+            ref="countDown"
+            :initial-value="10"
+            :stroke-width="5"
+            :seconds-stroke-color="'#f00'"
+            :underneath-stroke-color="'lightgrey'"
+            :seconds-fill-color="'#00ffff66'"
+            :size="200"
+            :padding="14"
+            :second-label="'seconds'"
+            :show-second="timerShow"
+            :show-negatives="true"
+            :paused="timerStop"
+            :notify-every="'minute'"
+        ></CircularCountDownTimer>
+          
+          <span v-if="liveInfo.user.userId == loginId">
+            <v-btn id="exitBtn" icon @click="endSession">X</v-btn>
+            <v-btn v-if="!auction" id="goChatBtn" @click="startAuction">경매시작</v-btn>
+            <v-btn v-else id="goChatBtn" @click="goChat">경매종료</v-btn>
           </span>
         </div>
-        <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
+        <div>
+          <!-- <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p> -->
+          <MARQUEE
+            scrolldelay="200"
+            behavior="scroll"
+            v-if="liveInfo.user.userId != loginId"
+            id="notice"
+          >
+            연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.
+          </MARQUEE>
+        </div>
+        <p id="notice">{{ countDown }}초 남음</p>
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -62,7 +97,7 @@
           <div id="chatList" @scroll="chatOnScroll()">
             <p v-for="(chat, idx) in chatList" :key="idx">
               <span>{{ JSON.parse(chat.from.data).clientData }} </span>
-              <v-text><strong>{{ chat.data }}</strong></v-text>
+              <v-text>{{ chat.data }}</v-text>
             </p>
           </div>
           <div v-if="isChat">
@@ -76,7 +111,7 @@
                   dense
                   @keyup.enter="sendMsg"
                   @click:append-outer="sendMsg"
-                  placeholder="질문을 남겨주세요"
+                  placeholder="채팅을 입력해주세요."
                 ></v-text-field>
                 <!-- mdi-send
                   rounded outlined dense  -->
@@ -88,7 +123,6 @@
             <!-- <span v-if="liveInfo.user.userId != loginId"> -->
               <!-- <v-row> -->
                 <v-text-field
-                  :rules="[PriceRules.min, PriceRules.max]"
                   :append-outer-icon="bid ? 'mdi-check-circle' : ''"
                   type="number"
                   v-model="bid"
@@ -125,13 +159,15 @@
                       추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
                       <hr>
                       최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
+                      <p v-if="valid == false" class="warning-word">가격 범위 조건을 만족하지 못할 시 입찰 불가합니다. 취소 버튼을 눌러주세요.</p>
+                      <p v-if="doublebetting == true" class="warning-word">연속 베팅은 불가합니다. 취소 버튼을 눌러주세요.</p>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
                         dark
                         color="primary"
-                        @click="dialog = false"
+                        @click="cancelBid()"
                       >
                         취소
                       </v-btn>
@@ -155,31 +191,24 @@
           </div>
         </div>
         <div class="inputTypeToggle" v-if="liveInfo.user.userId != loginId">
-          <v-btn class="mx-1" icon @click="isChat=true"><img src="@/assets/chat.png" width="20"></v-btn>
-          <v-btn icon @click="isChat=false"><img src="@/assets/bidding.png" width="20"></v-btn>
+          <v-btn color="secondary" class="mx-1" icon @click="isChat=true"><img src="@/assets/chat.png" width="20"></v-btn>
+          <!-- <v-btn color="secondary" icon @click="isChat=false" :disabled="auction"><img src="@/assets/bidding.png" width="20"></v-btn> -->
+          <v-btn color="secondary" icon @click="isChat=false"><img src="@/assets/bidding.png" width="20"></v-btn>
         </div>
       </div>
       <div style="margin-left: 1.2rem">
-        <!-- <span v-if="liveInfo.user.userId != loginId">
-          <p style="color:red">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
-        </span>
-        <span v-else> -->
-        <span class="inputTypeToggle" v-if="liveInfo.user.userId == loginId">
-          <!-- <v-btn @click="endSession">방종</v-btn>
-          <v-btn @click="goChat">임시 채팅가기</v-btn> -->
+        <span class="streamToggle" v-if="liveInfo.user.userId == loginId">
           <!-- 마이크 on/off 버튼 -->   
           <v-btn
             icon
             v-if="this.publisher.properties.publishAudio"
             @click="toggleAudio"
-            class="toggleBtn"
+            class="mx-1"
           >
-            <v-icon>mdi-microphone</v-icon>
-            <!-- <i class="fas fa-microphone"></i> -->
+            <v-icon color="primary">mdi-microphone</v-icon>
           </v-btn>
-          <v-btn icon v-else @click="toggleAudio" class="toggleBtn">
-              <v-icon>mdi-microphone-off </v-icon>
-              <!-- <i class="fas fa-microphone-slash"></i> -->
+          <v-btn icon v-else @click="toggleAudio" class="mx-1">
+              <v-icon color="primary">mdi-microphone-off </v-icon>
           </v-btn>
 
           <!-- 카메라 on/off 버튼 -->
@@ -187,14 +216,11 @@
             icon
             v-if="this.publisher.properties.publishVideo"
             @click="toggleVideo"
-            class="toggleBtn video"
           >
-            <v-icon>mdi-video</v-icon>
-            <!-- <i class="fas fa-video"></i> -->
+            <v-icon color="primary">mdi-video</v-icon>
           </v-btn>
-          <v-btn icon v-else @click="toggleVideo" class="toggleBtn video">
-            <v-icon>mdi-video-off</v-icon>
-            <!-- <i class="fas fa-video-slash"></i> -->
+          <v-btn icon v-else @click="toggleVideo">
+            <v-icon color="primary">mdi-video-off</v-icon>
           </v-btn>
         </span>
       </div>
@@ -221,22 +247,24 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '../../components/UserVideo.vue';
-import rest from "../../js/httpCommon.js"
+import axios from "axios";
+import { OpenVidu } from "openvidu-browser";
+import UserVideo from "../../components/UserVideo.vue";
+import rest from "../../js/httpCommon.js";
+import CircularCountDownTimer from "../../components/CircularCountDownTimer.vue";
 
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const OPENVIDU_SERVER_URL = "https://dabid.ga:443";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     UserVideo,
+    CircularCountDownTimer,
   },
-  data () {
+  data() {
     return {
       OV: undefined,
       session: undefined,
@@ -244,152 +272,172 @@ export default {
       publisher: undefined,
       subscribers: [],
 
-      liveInfo: '',
-      prdId: '',
-      mySessionId: '',
-      myUserName: '',
-      myRole: '',
+      liveInfo: "",
+      prdId: "",
+      mySessionId: "",
+      myUserName: "",
+      myRole: "",
 
-      chatMsg: '',
+      chatMsg: "",
       chatList: [],
       pre_diffHeight: 0,
       bottom_flag: true,
 
-      bid: '',
+      bid: "",
       currentPrice: 0,
-      currentUser: '',
-      PriceRules: {
-        // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
-        min: v => v >= 5000 || '최소 금액은 5,000원 입니다.',
-        max: v => v <= 50000 || '최대 금액은 50,000원 입니다.'
-      },
-      loginId: localStorage.getItem('userId'),
+      loginId: localStorage.getItem("userId"),
       dialog: false,
       isChat: true,
-    }
+
+      auction: false,
+      timerStop: true,
+      timerShow: false,
+      currentUser: '',
+
+      valid: true,
+      doublebetting: false,
+      countDown: 10,
+      success: false,
+    };
   },
   filters: {
     comma: function (value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    },
   },
   methods: {
-    sendMsg: function () {
+    startAuction() {
+      this.auction = true;
       this.session.signal({
-        session: this.mySessionId,
-        data: this.chatMsg,
-        type: "CHAT",
+        data: "auctionStart",
+        type: "AUCTION",
       })
-      .then(() => {
-        this.chatMsg='';
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    },
+    countDownTimer() {
+      if(this.countDown > 1) {
+        setTimeout(() => {
+          this.countDown -= 1
+          this.countDownTimer()
+        }, 1000)
+      }
+      // 0초 되면 
+      else if (this.countDown == 0) {
+        // 입찰 축하 멘트 
+        this.success = true
+        // 세션 강제 종료 
+        // 채팅 이동
+      }
+    },
+    sendMsg: function () {
+      this.session
+        .signal({
+          session: this.mySessionId,
+          data: this.chatMsg,
+          type: "CHAT",
+        })
+        .then(() => {
+          this.chatMsg = "";
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     chatOnScroll: function () {
       const objDiv = document.getElementById("chatList");
-      if((objDiv.scrollTop + objDiv.clientHeight) == objDiv.scrollHeight) {
+      if (objDiv.scrollTop + objDiv.clientHeight == objDiv.scrollHeight) {
         this.bottom_flag = true;
       }
-      if(this.pre_diffHeight > objDiv.scrollTop + objDiv.clientHeight) {
+      if (this.pre_diffHeight > objDiv.scrollTop + objDiv.clientHeight) {
         this.bottom_flag = false;
       }
-      this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight
+      this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight;
     },
     bidding: function () {
+      if (this.bid < 5000 || this.bid > 50000) {
+      this.valid = false  
+      console.log("가격 범위 안 맞아요")
+      }
       if (this.currentUser == localStorage.getItem("userId")) {
+        this.doublebetting = true
         console.log("연속 베팅은 불가능합니다.")
       } else {
-        this.session.signal({
-          data: this.bid,
-          type: "BID",
-        })
-        .then(() => {
-          rest.axios({
-            url: "/dabid/live/log",
-            method: "post",
-            data: {
-              prdId: this.prdId,
-              bidPrice: this.currentPrice,
-              bidder: this.currentUser,
-            }
+        this.session
+          .signal({
+            data: this.bid,
+            type: "BID",
           })
-          this.bid='';
-          this.dialog = false;
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .then(() => {
+            rest.axios({
+              url: "/dabid/live/log",
+              method: "post",
+              data: {
+                prdId: this.prdId,
+                bidPrice: this.currentPrice,
+                bidder: this.currentUser,
+              },
+            });
+            this.bid = "";
+            this.dialog = false;
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     },
+    // 취소 버튼 누르면 초기화 시키기  
+    cancelBid() {
+      this.bid = ''
+      this.dialog = false
+      this.valid = true
+      this.doublebetting = false
+    },
     goChat() {
-      rest.axios({
-        url: "/dabid/chat/end/"+this.prdId,
-        method: "post",
-        data: {
-          sellerId: this.liveInfo.user.userId,
-          buyerId: this.currentUser,
-          // buyerId: "P1628131859142",
-          resPriceEnd: this.currentPrice,
-          // resPriceEnd: 700000,
-        }
-      })
-      .then(res => {
-        this.leaveSession();
-        // this.$router.push("Chatlist");
-        this.$router.push({
-          name: "Chatroom",
-          params: {
-            prdId: this.prdId,
-          }
+      rest
+        .axios({
+          url: "/dabid/chat/end/" + this.prdId,
+          method: "post",
+          data: {
+            sellerId: this.liveInfo.user.userId,
+            buyerId: this.currentUser,
+            // buyerId: "P1628131859142",
+            resPriceEnd: this.currentPrice,
+            // resPriceEnd: 700000,
+          },
         })
-      })
+        .then((res) => {
+          this.leaveSession();
+          // this.$router.push("Chatlist");
+          this.$router.push({
+            name: "Chatroom",
+            params: {
+              prdId: this.prdId,
+            },
+          });
+        });
     },
     //publisher 입장에서 방송 강제 종료
     endSession() {
-      // 사람들 다 내쫓고 
-      if (this.session) this.session.forceDisconnect();
-      // streamDestroyed : dispatched by Session object of every other remote user connected to the session. Automatically cleans the remote video.
-      // connectionDestroyed : dispatched by Session object of every other remote user connected to the session.
-      // this.session.connectionDestroyed();
-      // 방송도 아예 종료 
+      this.timerShow = true;
+      this.timerStop = false;
 
-      var _this = this;
-      return new Promise(function (resolve, reject) {
-        if (!_this.sessionConnected()) {
-          reject(_this.notConnectedError());
-        }
-        _this.openvidu.sendRequest('forceDisconnect', { connectionId: connection.connectionId }, function (error, response) {
-          if (error) {
-            console.log('Error forcing disconnect for Connection ' + connection.connectionId, error);
-            if (error.code === 401) {
-              reject(new OpenViduError_1.OpenViduError(OpenViduError_1.OpenViduErrorName.OPENVIDU_PERMISSION_DENIED, "You don't have permissions to force a disconnection"));
-            }
-            else {
-              reject(error);
-            }
-          }
-          else {
-            console.log('Forcing disconnect correctly for Connection ' + connection.connectionId);
-            resolve();
-          }
-        });
-      });
+      setTimeout(() => {
+        this.session.disconnect();
+        this.$router.push({ name: "MyPage" });
+      }, 10000);
     },
     toggleAudio() {
       this.publisher.properties.publishAudio =
         !this.publisher.properties.publishAudio;
       this.publisher.publishAudio(this.publisher.properties.publishAudio);
-      },
+    },
     toggleVideo() {
       //   this.publisher.stream.disposeWebRtcPeer();
       //   this.publisher.stream.disposeMediaStream(); //그냥 아예 종료
       this.publisher.properties.publishVideo =
         !this.publisher.properties.publishVideo;
       this.publisher.publishVideo(this.publisher.properties.publishVideo);
-      },
-    joinSession () {
+    },
+    joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -399,22 +447,21 @@ export default {
       // --- Specify the actions when events take place in the session ---
 
       // On every new Stream received...
-      this.session.on('streamCreated', ({ stream }) => {
+      this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
       });
 
       // On every Stream destroyed...
-      this.session.on('streamDestroyed', ({ stream }) => {
+      this.session.on("streamDestroyed", ({ stream }) => {
         const index = this.subscribers.indexOf(stream.streamManager, 0);
         if (index >= 0) {
-            this.subscribers.splice(index, 1);
+          this.subscribers.splice(index, 1);
         }
-        console.log("방 폭파ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ")
       });
 
       // On every asynchronous exception...
-      this.session.on('exception', ({ exception }) => {
+      this.session.on("exception", ({ exception }) => {
         console.warn(exception);
       });
 
@@ -426,10 +473,19 @@ export default {
       // Receiver of all messages (usually before calling 'session.connect')
       this.session.on('signal', (event) => {
         if (event.type === "signal:BID") {
+          // 맨처음 비드면 돌리기 
+          if (!this.currentUser) {
+            this.countDownTimer()
+          }
+          // 경매 입찰 돌아감 
           this.currentPrice += Number(event.data);
           this.currentUser = JSON.parse(event.from.data).userId;
-        } else {
+          console.log('카운트다운 다시 해야해')
+          this.countDown = 10
+        } else if (event.type === "signal:CHAT") {
           this.chatList.push(event);
+        } else {
+          // this.auction = true;
         }
       });
       this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
@@ -458,25 +514,61 @@ export default {
             this.session.publish(this.publisher);
 
           } else {
-            // this.mainStreamManager = publisher;
-            console.log("Subscriber입니다....")
+            this.chatList.push(event);
           }
-        })
-        .catch(error => {
-          console.log('There was an error connecting to the session:', error.code, error.message);
         });
+        this.session
+          .connect(token, {
+            clientData: this.myUserName,
+            userId: localStorage.getItem("userId"),
+          })
+          .then(() => {
+            if (this.isPublisher()) {
+              // --- Get your own camera stream with the desired properties ---
+              let publisher = this.OV.initPublisher(undefined, {
+                audioSource: undefined, // The source of audio. If undefined default microphone
+                videoSource: undefined, // The source of video. If undefined default webcam
+                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                resolution: "360x550", // The resolution of your video
+                // 480x640
+                // 320x540
+                // 360x640
+                frameRate: 30, // The frame rate of your video
+                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                mirror: false, // Whether to mirror your local video or not
+              });
+
+              this.mainStreamManager = publisher;
+              this.publisher = publisher;
+
+              // --- Publish your stream ---
+
+              this.session.publish(this.publisher);
+            } else {
+              // this.mainStreamManager = publisher;
+              console.log("Subscriber입니다....");
+            }
+          })
+          .catch((error) => {
+            console.log(
+              "There was an error connecting to the session:",
+              error.code,
+              error.message
+            );
+          });
       });
-      window.addEventListener('beforeunload', this.leaveSession)
+      window.addEventListener("beforeunload", this.leaveSession);
     },
     isPublisher() {
       if (this.liveInfo.user.userId == localStorage.getItem("userId")) {
-        this.myRole = 'PUBLISHER'
+        this.myRole = "PUBLISHER";
       } else {
-        this.myRole = "SUBSCRIBER"
+        this.myRole = "SUBSCRIBER";
       }
-      return this.myRole == 'PUBLISHER';
+      return this.myRole == "PUBLISHER";
     },
-    leaveSession () {
+    leaveSession() {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       if (this.session) this.session.disconnect();
 
@@ -485,11 +577,11 @@ export default {
       this.publisher = undefined;
       this.subscribers = [];
       this.OV = undefined;
-      window.removeEventListener('beforeunload', this.leaveSession);
+      window.removeEventListener("beforeunload", this.leaveSession);
       // this.$router.push({ name: 'Main' })
     },
 
-    updateMainVideoStreamManager (stream) {
+    updateMainVideoStreamManager(stream) {
       if (this.mainStreamManager === stream) return;
       this.mainStreamManager = stream;
     },
@@ -506,92 +598,116 @@ export default {
      *   3) The Connection.token must be consumed in Session.connect() method
      */
 
-    getToken (mySessionId) {
-      return this.createSession(mySessionId).then(sessionId => this.createToken(sessionId));
+    getToken(mySessionId) {
+      return this.createSession(mySessionId).then((sessionId) =>
+        this.createToken(sessionId)
+      );
     },
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessions
-    createSession (sessionId) {
+    createSession(sessionId) {
       return new Promise((resolve, reject) => {
         axios
-          .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions`, JSON.stringify({
-            customSessionId: sessionId,
-          }), {
-            auth: {
-              username: 'OPENVIDUAPP',
-              password: OPENVIDU_SERVER_SECRET,
-            },
-          })
-          .then(response => response.data)
-          .then(data => resolve(data.id))
-          .catch(error => {
+          .post(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions`,
+            JSON.stringify({
+              customSessionId: sessionId,
+            }),
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.id))
+          .catch((error) => {
             if (error.response.status === 409) {
               resolve(sessionId);
             } else {
-              console.warn(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`);
-              if (window.confirm(`No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`)) {
+              console.warn(
+                `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}`
+              );
+              if (
+                window.confirm(
+                  `No connection to OpenVidu Server. This may be a certificate error at ${OPENVIDU_SERVER_URL}\n\nClick OK to navigate and accept it. If no certificate warning is shown, then check that your OpenVidu Server is up and running at "${OPENVIDU_SERVER_URL}"`
+                )
+              ) {
                 location.assign(`${OPENVIDU_SERVER_URL}/accept-certificate`);
               }
               reject(error.response);
             }
           });
-        });
+      });
     },
 
     // See https://docs.openvidu.io/en/stable/reference-docs/REST-API/#post-openviduapisessionsltsession_idgtconnection
-    createToken (sessionId) {
+    createToken(sessionId) {
       return new Promise((resolve, reject) => {
         axios
-          .post(`${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`, {}, {
-            auth: {
-              username: 'OPENVIDUAPP',
-              password: OPENVIDU_SERVER_SECRET,
-            },
-          })
-          .then(response => response.data)
-          .then(data => resolve(data.token))
-          .catch(error => reject(error.response));
+          .post(
+            `${OPENVIDU_SERVER_URL}/openvidu/api/sessions/${sessionId}/connection`,
+            {},
+            {
+              auth: {
+                username: "OPENVIDUAPP",
+                password: OPENVIDU_SERVER_SECRET,
+              },
+            }
+          )
+          .then((response) => response.data)
+          .then((data) => resolve(data.token))
+          .catch((error) => reject(error.response));
       });
     },
-    getLiveInfo () {
-      rest.axios({
-      method: 'get',
-      url:  `/dabid/live/${this.prdId}`,
-      })
-      .then((res) => {
-        console.log('방송 정보', res.data)
-        this.liveInfo = res.data
-        // 방송 제목과  받아오기
-        this.mySessionId = this.prdId + ''
-        this.myUserName = localStorage.getItem('userName')
-        if (res.data.logList.length) {
-					this.currentPrice = res.data.logList[(res.data.logList.length-1)].bidPrice,
-					this.currentUser = res.data.logList[(res.data.logList.length-1)].bidder
-				}
-      })
-      .catch((err) => {
-        console.log('라이브 정보 받아오기 오류: ' + err)
-      })
-    },
-    goProfile () {
-      this.$router.push({ name: "MyPage" });
+    getLiveInfo() {
+      rest
+        .axios({
+          method: "get",
+          url: `/dabid/live/${this.prdId}`,
+        })
+        .then((res) => {
+          console.log("방송 정보", res.data);
+          this.liveInfo = res.data;
+          // 방송 제목과  받아오기
+          this.mySessionId = this.prdId + "";
+          this.myUserName = localStorage.getItem("userName");
+          if (res.data.logList.length) {
+            (this.currentPrice =
+              res.data.logList[res.data.logList.length - 1].bidPrice),
+              (this.currentUser =
+                res.data.logList[res.data.logList.length - 1].bidder);
+          }
+        })
+        .catch((err) => {
+          console.log("라이브 정보 받아오기 오류: " + err);
+        });
     },
     unLoadEvent: function (event) {
       if (this.canLeaveSite) return;
 
       event.preventDefault();
-      event.returnValue = '';
+      event.returnValue = "";
+    },
+    finished: () => {
+      console.log("finished");
+    },
+    updated: (status) => {
+      console.log(status); //{"value": 144, "seconds": 24, "minutes": 2, "hours": 0}
     },
   },
   created: function () {
     this.prdId = this.$route.params.prdId
-    console.log(this.prdId+ '번 방송입니다.')
     this.getLiveInfo()
     // this.joinSession()
+    if (this.currentPrice) {
+      this.auction = true;
+    }
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
-    if(this.bottom_flag){
+    if (this.bottom_flag) {
       objDiv.scrollTop = objDiv.scrollHeight;
     }
   },
@@ -610,15 +726,15 @@ export default {
     // from: 현재 라우터 정보
     // next: 함수.
     // if (this.myRole == 'SUBSCRIBER') {
-      // this.leaveSession();
-      // next();
+    // this.leaveSession();
+    // next();
 
     // } else if (confirm('이 사이트에서 나가시겠습니까?\n변경사항이 저장되지 않을 수 있습니다.')) {
-      this.leaveSession();
-      next();
+    this.leaveSession();
+    next();
     // }
   },
-}
+};
 </script>
 <style scoped>
 * {
@@ -657,13 +773,20 @@ div.button {
   position: absolute;
   bottom: 10%;
   margin-left: 15px;
+  width: 230px;
 }
 
-#chatList{
-  height: 7rem;
+.timer {
+  height: 500px;
+  width: 500px;
+  z-index: 1;
+}
+
+#chatList {
+  /* height: 7rem; */
   /* border-radius: 30px; */
   /* border: 0.2rem solid; */
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
   right: 95px;
   left: 15px;
   z-index: 2;
@@ -689,6 +812,13 @@ div.button {
   top: 100px;
 }
 
+/* .streamBtn {
+  position: absolute;
+  right: 5%;
+  top: 10%; */
+  /* display: flex; */
+/* } */
+
 .inputTypeToggle {
   position: absolute;
   right: 5%;
@@ -697,8 +827,34 @@ div.button {
 }
 
 .inputTypeToggle button {
-  /* background-color: #151618; */
-  background-color: rgba(21, 22, 24, 0.75);
+  background-color: #151618;
 }
+.warning-word {
+  color:red;
+  background-color: white;
+  font-size: 6px;
+}
+
+.streamToggle {
+  position: absolute;
+  right: 5%;
+  bottom: 13%;
+  display: flex;
+}
+
+#exitBtn {
+  position: absolute;
+  right: 5%;
+  top: 10%;
+}
+
+#goChatBtn {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  background-color: #f97d54;
+  color: white;
+}
+
 
 </style>

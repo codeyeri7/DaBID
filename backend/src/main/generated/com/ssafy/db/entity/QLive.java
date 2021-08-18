@@ -30,6 +30,8 @@ public class QLive extends EntityPathBase<Live> {
 
     public final StringPath liveTitle = createString("liveTitle");
 
+    public final ListPath<LiveLog, QLiveLog> logList = this.<LiveLog, QLiveLog>createList("logList", LiveLog.class, QLiveLog.class, PathInits.DIRECT2);
+
     public final NumberPath<Integer> prdId = createNumber("prdId", Integer.class);
 
     public final StringPath prdName = createString("prdName");

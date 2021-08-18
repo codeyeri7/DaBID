@@ -697,7 +697,7 @@ div.button {
 }
 
 #chatList{
-  height: 7rem;
+  /* height: 7rem; */
   /* border-radius: 30px; */
   /* border: 0.2rem solid; */
   margin-bottom: 1.5rem;

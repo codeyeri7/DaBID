@@ -36,11 +36,17 @@
             id="kor-font"
           >
             <v-list-item three-line>
-              <v-list-item-avatar
-                tile
-                size="70"
-                @click="goProfile()"
-              ><img src="@/assets/profileImg.png" alt="profile image"/></v-list-item-avatar>
+                <RouterLink :to="{
+                  name: 'UserProfile',
+                  params: { userId: liveInfo.user.userId },
+                }">
+                <v-list-item-avatar
+                  tile
+                  size="70"
+                >
+                  <img src="@/assets/profileImg.png" alt="profile image"/>
+                </v-list-item-avatar>
+              </RouterLink>
               <v-list-item-content>
                 <v-list-item-title class="font-weight-bold text-h6 mb-1">{{ liveInfo.liveTitle }}</v-list-item-title>
                 <v-list-item-subtitle>{{ liveInfo.liveDesc }}</v-list-item-subtitle>
@@ -54,7 +60,7 @@
             <v-btn style="top:20%" @click="goChat">임시 채팅가기</v-btn>
           </span>
         </div>
-        <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p>
+        <p id="notice">{{ countDown }}초 남음</p>
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -88,7 +94,6 @@
             <!-- <span v-if="liveInfo.user.userId != loginId"> -->
               <!-- <v-row> -->
                 <v-text-field
-                  :rules="[PriceRules.min, PriceRules.max]"
                   :append-outer-icon="bid ? 'mdi-check-circle' : ''"
                   type="number"
                   v-model="bid"
@@ -125,13 +130,15 @@
                       추가 입찰가: <strong>{{ this.bid | comma }}</strong>원<br>
                       <hr>
                       최종 입찰가: <strong>{{ this.currentPrice + Number(this.bid) | comma }}</strong>원
+                      <p v-if="valid == false" class="warning-word">가격 범위 조건을 만족하지 못할 시 입찰 불가합니다. 취소 버튼을 눌러주세요.</p>
+                      <p v-if="doublebetting == true" class="warning-word">연속 베팅은 불가합니다. 취소 버튼을 눌러주세요.</p>
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn
                         dark
                         color="primary"
-                        @click="dialog = false"
+                        @click="cancelBid()"
                       >
                         취소
                       </v-btn>
@@ -144,6 +151,7 @@
                         color="primary"
                         @click="bidding"
                       >
+                        <!-- :disabled="doublebetting|| !valid" -->
                         확인
                       </v-btn>
                     </v-card-actions>
@@ -258,14 +266,14 @@ export default {
       bid: '',
       currentPrice: 0,
       currentUser: '',
-      PriceRules: {
-        // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
-        min: v => v >= 5000 || '최소 금액은 5,000원 입니다.',
-        max: v => v <= 50000 || '최대 금액은 50,000원 입니다.'
-      },
+
+      valid: true,
+      doublebetting: false,
       loginId: localStorage.getItem('userId'),
       dialog: false,
       isChat: true,
+
+      countDown: 10,
     }
   },
   filters: {
@@ -274,6 +282,14 @@ export default {
     }
   },
   methods: {
+    countDownTimer() {
+      if(this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1
+          this.countDownTimer()
+        }, 1000)
+      }
+    },
     sendMsg: function () {
       this.session.signal({
         session: this.mySessionId,
@@ -298,7 +314,12 @@ export default {
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight
     },
     bidding: function () {
+      if (this.bid < 5000 || this.bid > 50000) {
+      this.valid = false  
+      console.log("가격 범위 안 맞아요")
+      }
       if (this.currentUser == localStorage.getItem("userId")) {
+        this.doublebetting = true
         console.log("연속 베팅은 불가능합니다.")
       } else {
         this.session.signal({
@@ -322,6 +343,13 @@ export default {
           console.error(error);
         });
       }
+    },
+    // 취소 버튼 누르면 초기화 시키기  
+    cancelBid() {
+      this.bid = ''
+      this.dialog = false
+      this.valid = true
+      this.doublebetting = false
     },
     goChat() {
       rest.axios({
@@ -428,6 +456,7 @@ export default {
         if (event.type === "signal:BID") {
           this.currentPrice += Number(event.data);
           this.currentUser = JSON.parse(event.from.data).userId;
+          this.countDownTimer()
         } else {
           this.chatList.push(event);
         }
@@ -573,9 +602,6 @@ export default {
         console.log('라이브 정보 받아오기 오류: ' + err)
       })
     },
-    goProfile () {
-      this.$router.push({ name: "MyPage" });
-    },
     unLoadEvent: function (event) {
       if (this.canLeaveSite) return;
 
@@ -585,9 +611,7 @@ export default {
   },
   created: function () {
     this.prdId = this.$route.params.prdId
-    console.log(this.prdId+ '번 방송입니다.')
     this.getLiveInfo()
-    // this.joinSession()
   },
   updated: function () {
     const objDiv = document.getElementById("chatList");
@@ -700,6 +724,10 @@ div.button {
   /* background-color: #151618; */
   background-color: rgba(21, 22, 24, 0.75);
 }
-
+.warning-word {
+  color:red;
+  background-color: white;
+  font-size: 6px;
+}
 
 </style>

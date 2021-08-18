@@ -80,16 +80,31 @@
         </div>
         <div>
           <!-- <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p> -->
+          <!-- 입찰자가 없을 경우 조건 추가 --> 
           <MARQUEE
             scrolldelay="200"
             behavior="scroll"
-            v-if="liveInfo.user.userId != loginId"
+            v-if="liveInfo.user.userId != loginId && !success"
             id="notice"
           >
             연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.
           </MARQUEE>
         </div>
-        <p id="notice">{{ countDown }}초 남음</p>
+
+        <!-- 입찰자 생기고 보이기 --> 
+        <MARQUEE
+            scrolldelay="200"
+            behavior="scroll"
+            v-if="success"
+            id="notice"
+          >
+          <p v-if="success">거래 완료. 채팅방으로 자동 이동합니다. </p>
+        </MARQUEE>
+
+        <br>
+        <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
+        <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
+
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -171,10 +186,6 @@
                       >
                         취소
                       </v-btn>
-                      <!-- <v-btn
-                        color="green darken-1"
-                        @click="dialog = false"
-                      > -->
                       <v-btn
                         dark
                         color="primary"
@@ -314,7 +325,7 @@ export default {
       });
     },
     countDownTimer() {
-      if (this.countDown > 1) {
+      if (this.countDown > 0) {
         setTimeout(() => {
           this.countDown -= 1;
           this.countDownTimer();
@@ -322,10 +333,16 @@ export default {
       }
       // 0초 되면
       else if (this.countDown == 0) {
-        // 입찰 축하 멘트
+        // 입찰 축하 멘트 뜸
         this.success = true;
-        // 세션 강제 종료
-        // 채팅 이동
+        console.log("이제 30초후에 넌 아웃");
+        //30초 후 실행
+        setTimeout(() => {
+          // 세션 강제 종료
+          this.session.disconnect();
+          // 채팅 이동
+          this.goChat();
+        }, 30000);
       }
     },
     sendMsg: function () {
@@ -475,20 +492,53 @@ export default {
         this.session.on("signal", (event) => {
           if (event.type === "signal:BID") {
             // 맨처음 비드면 돌리기
-            if (!this.currentUser) {
-              this.countDownTimer();
-            }
+            // if (!this.currentUser) {
+            //   this.countDownTimer()
+            // }
             // 경매 입찰 돌아감
             this.currentPrice += Number(event.data);
             this.currentUser = JSON.parse(event.from.data).userId;
-            console.log("카운트다운 다시 해야해");
             this.countDown = 10;
           } else if (event.type === "signal:CHAT") {
             this.chatList.push(event);
           } else {
             // this.auction = true;
+            console.log("거래시작함여");
+            this.countDownTimer();
           }
         });
+        this.session
+          .connect(token, {
+            clientData: this.myUserName,
+            userId: localStorage.getItem("userId"),
+          })
+          .then(() => {
+            if (this.isPublisher()) {
+              // --- Get your own camera stream with the desired properties ---
+              let publisher = this.OV.initPublisher(undefined, {
+                audioSource: undefined, // The source of audio. If undefined default microphone
+                videoSource: undefined, // The source of video. If undefined default webcam
+                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                resolution: "360x550", // The resolution of your video
+                // 480x640
+                // 320x540
+                // 360x640
+                frameRate: 30, // The frame rate of your video
+                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+                mirror: false, // Whether to mirror your local video or not
+              });
+
+              this.mainStreamManager = publisher;
+              this.publisher = publisher;
+
+              // --- Publish your stream ---
+
+              this.session.publish(this.publisher);
+            } else {
+              this.chatList.push(event);
+            }
+          });
         this.session
           .connect(token, {
             clientData: this.myUserName,
@@ -741,19 +791,14 @@ export default {
 };
 </script>
 <style scoped>
+celebrate-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
 * {
   font-family: "InfinitySans-RegularA1";
 }
-
-.form-group {
-  /* margin-top :2rem; */
-  /* margin-left: 1rem; */
-}
-/* #currentPrice {
-  font-size: 1rem;
-  width: 50%;
-  font-family: "InfinitySans-RegularA1";
-} */
 #main-container {
   /* padding-bottom: 0; */
   padding: 0px;
@@ -772,7 +817,6 @@ div.prdInfo {
 div.button {
   z-index: 1;
 }
-
 .comments_wrap {
   position: absolute;
   bottom: 10%;
@@ -786,12 +830,7 @@ div.button {
   margin-left: 10%;
   margin-top: 15%;
 }
-
 #chatList {
-  /* height: 7rem; */
-  /* border-radius: 30px; */
-  /* border: 0.2rem solid; */
-  /* margin-bottom: 1.5rem; */
   right: 95px;
   left: 15px;
   z-index: 2;
@@ -804,33 +843,30 @@ div.button {
   overscroll-behavior: none;
   will-change: bottom;
 }
-
 .liveInfoCard {
   background-color: rgba(255, 255, 255, 0);
   border-color: transparent;
 }
-
 #notice {
   color: red;
   /* 잠시 박아놓기 */
   position: absolute;
   top: 100px;
 }
-
-/* .streamBtn {
+#noticeCount {
+  color: red;
+  /* 잠시 박아놓기 */
   position: absolute;
-  right: 5%;
-  top: 10%; */
-/* display: flex; */
-/* } */
-
+  top: 120px;
+  margin-left: 30px;
+  font-size: 25px;
+}
 .inputTypeToggle {
   position: absolute;
   right: 5%;
   bottom: 13%;
   display: flex;
 }
-
 .inputTypeToggle button {
   background-color: #151618;
 }

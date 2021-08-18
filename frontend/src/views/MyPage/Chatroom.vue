@@ -107,7 +107,7 @@
       </v-container>
 
       <div class="fixedchat">
-        <v-container>
+        <v-container style="padding-top:0">
           <v-row no-gutters>
             <v-col>
               <div class="d-flex flex-row align-center">
@@ -274,14 +274,9 @@ export default {
 div.comments_wrap {
   margin-bottom: 1.5rem;
   background-color: #3c3f44;
-  /* bottom: 94px;
-  left: 15px; */
   z-index: 2;
-  width: 95%;
-  /* padding: 10px; */
-  position: absolute;
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 350px;
   line-height: 1.3;
   font-size: 14px;
   color: white;

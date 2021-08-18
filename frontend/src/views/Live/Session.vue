@@ -17,7 +17,7 @@
         </p>
         <hr>
         <p class="text-center">
-          <button class="btn btn-lg btn-primary" id="eng-font" @click="joinSession()">Join!</button>
+          <button class="btn btn-lg gold-color" id="eng-font" @click="joinSession()">Join!</button>
           <h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
         </p>
         </div>
@@ -700,5 +700,6 @@ div.button {
   /* background-color: #151618; */
   background-color: rgba(21, 22, 24, 0.75);
 }
+
 
 </style>

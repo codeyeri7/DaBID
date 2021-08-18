@@ -103,6 +103,7 @@
 
           <!-- 구매자한테 보임 --> 
           <p v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
+        </MARQUEE>
 
         <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
         <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">

@@ -22,10 +22,7 @@
             <v-text-field v-model.trim="title" label="Live 제목" rows="5" :rules="titleRules" placeholder="Live 제목을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="liveInfo" label="Live 상세 정보 (선택)" :counter="100" rows="5" placeholder="100자 이내로 상세 방송 정보를 입력해주세요"></v-text-field>
             <v-text-field v-model.trim="startPrice" label="경매 시작가" rows="5" :rules="startPriceRules" placeholder="경매 시작가를 입력해주세요" required="required"></v-text-field>
-<<<<<<< HEAD
-=======
             
->>>>>>> 4120019bcb2d4b36188376d4ac62ef5f78cc58b3
             <v-dialog
               ref="dialog"
               v-model="menu2"

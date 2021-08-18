@@ -187,8 +187,8 @@ export default {
         .then((res) => {
           this.cards = res.data;
           console.log(this.cards)
-          this.now_live = this.cards.slice(0, 2)
-          this.will_live = this.cards.slice(2, 4)
+          this.will_live = this.cards.slice(0, 2)
+          this.now_live = this.cards.slice(2, 4)
           this.end_live = this.cards.slice(4, 6)
         })
         .catch((err) => {

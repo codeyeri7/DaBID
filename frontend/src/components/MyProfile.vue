@@ -75,11 +75,11 @@
           </div>
         </div>
 
-        <div id="review" @click="checkReviews"> 
+        <!-- <div id="review" @click="checkReviews"> 
            <RouterLink :to="{ name: 'ReviewList', params: { userId: userId }}">
             <h5 class="pb-3" id="eng-font">{{ reviews_num }} Reviews</h5>
           </RouterLink>
-        </div>
+        </div> -->
 
       </v-card>
     </div>
@@ -93,7 +93,6 @@ export default {
     return {
       dialog: false,
       reviews: [],
-      reviews_num: null,
       userName: null,
       userId: null,
     };
@@ -118,8 +117,6 @@ export default {
         })
         .then((res) => {
           this.reviews = res.data;
-          console.log(this.reviews.length, '리뷰 갯수다')
-          this.reviews_num = this.reviews.length 
         })
         .catch((err) => {
           console.log(err);

@@ -7,7 +7,6 @@ import com.ssafy.db.repository.LiveLogRepository;
 import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.LiveStatusRepository;
 import com.ssafy.db.repository.ProductCategoryRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -180,5 +179,11 @@ public class LiveServiceImpl implements LiveService {
 		log.setLive(liveRepository.findByPrdId(logInfo.getPrdId()).get());
 
 		liveLogRepository.save(log);
+	}
+
+	public void updateStatus(int prdId){
+		Live live = liveRepository.findByPrdId(prdId).get();
+		live.setLiveStatus(liveStatusRepository.getOne(1));
+		liveRepository.save(live);
 	}
 }

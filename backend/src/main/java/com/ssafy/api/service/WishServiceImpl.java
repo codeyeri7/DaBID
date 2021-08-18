@@ -75,14 +75,12 @@ public class WishServiceImpl implements WishService{
 
     @Override
     public int getLiveHearts(Live live) {
-        System.out.println("ㅇㅕ기 안들어와??!");
        int cnt = wishListRepository.countByLive(live);
         return cnt;
     }
 
     @Override
     public void putWishLive(User user, int prdId) {
-        System.out.println("여기들어와2");
         WishList wishList = new WishList();
         Live live = liveService.getLiveByPrdId(prdId);
         wishList.setLive(live);

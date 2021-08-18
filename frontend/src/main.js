@@ -25,7 +25,7 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-var filter = function(text, length, clamp){
+var filter = function (text, length, clamp) {
   clamp = clamp || '...';
   var node = document.createElement('div');
   node.innerHTML = text;

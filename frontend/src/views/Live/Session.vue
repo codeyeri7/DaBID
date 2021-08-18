@@ -283,7 +283,6 @@ export default {
 
       bid: "",
       currentPrice: 0,
-<<<<<<< HEAD
       currentUser: "",
       PriceRules: {
         // v => /^[0-9]*$/ .test(v) || '금액만 입력해주세요 (20,000원 → 20000)'
@@ -296,18 +295,6 @@ export default {
       timerStop: true,
       timerShow: false,
     };
-=======
-      currentUser: '',
-
-      valid: true,
-      doublebetting: false,
-      loginId: localStorage.getItem('userId'),
-      dialog: false,
-      isChat: true,
-
-      countDown: 10,
-    }
->>>>>>> 69d0c3c3958b1cd7c549ba69d517bf8b4daefb32
   },
   filters: {
     comma: function (value) {

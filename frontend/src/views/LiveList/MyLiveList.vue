@@ -72,7 +72,7 @@ export default {
     getLiveList: function (userId) {
       rest.axios({
         method: 'get',
-        url: `/dabid/users/${userId}`,
+        url: `/dabid/users/getLive/${userId}`,
         headers: this.setToken()
       })
         .then((res) => {
@@ -97,7 +97,7 @@ export default {
   },
   created: function () {
     if (localStorage.getItem('jwt')) {
-      this.userId = this.$route.params.userId
+      this.userId = localStorage.getItem('userId')
       this.getLiveList(this.userId)
     } else {
       this.$router.push({ name: 'Login' })

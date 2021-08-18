@@ -55,13 +55,14 @@
             </v-list-item>
           </v-card>
 
-          <CircularCountDownTimer
+           <CircularCountDownTimer
+            class ="countDown"
             ref="countDown"
             :initial-value="10"
             :stroke-width="5"
-            :seconds-stroke-color="'#f00'"
-            :underneath-stroke-color="'lightgrey'"
-            :seconds-fill-color="'#00ffff66'"
+            :seconds-stroke-color="'#f97d54'"
+            :underneath-stroke-color="'white'"
+            :seconds-fill-color="'#f97d54'"
             :size="200"
             :padding="14"
             :second-label="'seconds'"
@@ -69,7 +70,7 @@
             :show-negatives="true"
             :paused="timerStop"
             :notify-every="'minute'"
-        ></CircularCountDownTimer>
+        ></CircularCountDownTimer> 
           
           <span v-if="liveInfo.user.userId == loginId">
             <v-btn id="exitBtn" icon @click="endSession">X</v-btn>
@@ -97,13 +98,17 @@
             v-if="success"
             id="notice"
           >
-          <p v-if="success">거래 완료. 채팅방으로 자동 이동합니다. </p>
-        </MARQUEE>
+          <!-- 판매자한테 보임 --> 
+          <p v-if="success || liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
 
-        <br>
+          <!-- 구매자한테 보임 --> 
+          <p v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
+
         <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
         <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
 
+        <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>
+        <img v-if="success" class="celebrate-img" src="@/assets/celebration.png" alt="celebrate-img">
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -189,15 +194,13 @@
                         dark
                         color="primary"
                         @click="bidding"
+                        :disabled='doublebetting == true || valid == false'
                       >
                         확인
                       </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
-              <!-- </v-row> -->
-              <!-- <h5 style="color:red">최소 5,000원 최대 50,000원 까지 입력해주세요.</h5> -->
-            <!-- </span> -->
           </div>
         </div>
         <div class="inputTypeToggle" v-if="liveInfo.user.userId != loginId">
@@ -302,7 +305,7 @@ export default {
       auction: false,
       timerStop: true,
       timerShow: false,
-      currentUser: '',
+      currentUser: "",
 
       valid: true,
       doublebetting: false,
@@ -321,27 +324,27 @@ export default {
       this.session.signal({
         data: "auctionStart",
         type: "AUCTION",
-      })
+      });
     },
     countDownTimer() {
-      if(this.countDown > 0) {
+      if (this.countDown > 0) {
         setTimeout(() => {
-          this.countDown -= 1
-          this.countDownTimer()
-        }, 1000)
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
       }
-      // 0초 되면 
+      // 0초 되면
       else if (this.countDown == 0) {
         // 입찰 축하 멘트 뜸
-        this.success = true
-        console.log('이제 30초후에 넌 아웃')
-        //30초 후 실행 
+        this.success = true;
+        console.log("이제 30초후에 넌 아웃");
+        //30초 후 실행
         setTimeout(() => {
-          // 세션 강제 종료 
+          // 세션 강제 종료
           this.session.disconnect();
           // 채팅 이동
-          this.goChat()
-        }, 30000)
+          this.goChat();
+        }, 30000);
       }
     },
     sendMsg: function () {
@@ -369,13 +372,9 @@ export default {
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight;
     },
     bidding: function () {
-      if (this.bid < 5000 || this.bid > 50000) {
-      this.valid = false  
-      console.log("가격 범위 안 맞아요")
-      }
       if (this.currentUser == localStorage.getItem("userId")) {
-        this.doublebetting = true
-        console.log("연속 베팅은 불가능합니다.")
+        this.doublebetting = true;
+        console.log("연속 베팅은 불가능합니다.");
       } else {
         this.session
           .signal({
@@ -400,12 +399,12 @@ export default {
           });
       }
     },
-    // 취소 버튼 누르면 초기화 시키기  
+    // 취소 버튼 누르면 초기화 시키기
     cancelBid() {
-      this.bid = ''
-      this.dialog = false
-      this.valid = true
-      this.doublebetting = false
+      this.bid = "";
+      this.dialog = false;
+      this.valid = true;
+      this.doublebetting = false;
     },
     goChat() {
       rest
@@ -474,7 +473,7 @@ export default {
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
-        this.$router.push({ name: "Main" })
+        this.$router.push({ name: "Main" });
       });
 
       // On every asynchronous exception...
@@ -486,53 +485,24 @@ export default {
 
       // 'getToken' method is simulating what your server-side should do.
       // 'token' parameter should be retrieved and returned by your own backend
-      this.getToken(this.mySessionId).then(token => {
-      // Receiver of all messages (usually before calling 'session.connect')
-      this.session.on('signal', (event) => {
-        if (event.type === "signal:BID") {
-          // 맨처음 비드면 돌리기 
-          // if (!this.currentUser) {
-          //   this.countDownTimer()
-          // }
-          // 경매 입찰 돌아감 
-          this.currentPrice += Number(event.data);
-          this.currentUser = JSON.parse(event.from.data).userId;
-          this.countDown = 10
-        } else if (event.type === "signal:CHAT") {
-          this.chatList.push(event);
-        } else {
-          // this.auction = true;
-          console.log('거래시작함여')
-          this.countDownTimer()
-        }
-      });
-      this.session.connect(token, { clientData: this.myUserName, userId: localStorage.getItem("userId") })
-        .then(() => {
-          if(this.isPublisher()){
-            // --- Get your own camera stream with the desired properties ---
-            let publisher = this.OV.initPublisher(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true,     // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true,     // Whether you want to start publishing with your video enabled or not
-              resolution: '360x550',  // The resolution of your video
-              // 480x640
-              // 320x540
-              // 360x640
-              frameRate: 30,         // The frame rate of your video
-              insertMode: 'APPEND',   // How the video is inserted in the target element 'video-container'
-              mirror: false          // Whether to mirror your local video or not
-            });
-  
-            this.mainStreamManager = publisher;
-            this.publisher = publisher;
-  
-            // --- Publish your stream ---
-  
-            this.session.publish(this.publisher);
-
-          } else {
+      this.getToken(this.mySessionId).then((token) => {
+        // Receiver of all messages (usually before calling 'session.connect')
+        this.session.on("signal", (event) => {
+          if (event.type === "signal:BID") {
+            // 맨처음 비드면 돌리기
+            // if (!this.currentUser) {
+            //   this.countDownTimer()
+            // }
+            // 경매 입찰 돌아감
+            this.currentPrice += Number(event.data);
+            this.currentUser = JSON.parse(event.from.data).userId;
+            this.countDown = 10;
+          } else if (event.type === "signal:CHAT") {
             this.chatList.push(event);
+          } else {
+            // this.auction = true;
+            console.log("거래시작함여");
+            this.countDownTimer();
           }
         });
         this.session
@@ -564,16 +534,8 @@ export default {
 
               this.session.publish(this.publisher);
             } else {
-              // this.mainStreamManager = publisher;
-              console.log("Subscriber입니다....");
+              this.chatList.push(event);
             }
-          })
-          .catch((error) => {
-            console.log(
-              "There was an error connecting to the session:",
-              error.code,
-              error.message
-            );
           });
       });
       window.addEventListener("beforeunload", this.leaveSession);
@@ -718,9 +680,8 @@ export default {
     },
   },
   created: function () {
-    console.log(this.liveInfo)
-    this.prdId = this.$route.params.prdId
-    this.getLiveInfo()
+    this.prdId = this.$route.params.prdId;
+    this.getLiveInfo();
     // this.joinSession()
     if (this.currentPrice) {
       this.auction = true;
@@ -730,6 +691,12 @@ export default {
     const objDiv = document.getElementById("chatList");
     if (this.bottom_flag) {
       objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    if (this.dialog == true) {
+      if (this.bid < 5000 || this.bid > 50000) {
+      this.valid = false  
+      console.log("가격 범위 안 맞아요")
+      }
     }
   },
   // mounted() {
@@ -758,11 +725,6 @@ export default {
 };
 </script>
 <style scoped>
-celebrate-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
 * {
   font-family: "InfinitySans-RegularA1";
 }
@@ -790,10 +752,12 @@ div.button {
   margin-left: 15px;
   width: 230px;
 }
-.timer {
-  height: 500px;
-  width: 500px;
+
+.countDown {
   z-index: 1;
+  position: absolute;
+  margin-left: 10%;
+  margin-top: 15%;
 }
 #chatList {
   right: 95px;
@@ -803,7 +767,7 @@ div.button {
   overflow-y: scroll;
   max-height: 160px;
   line-height: 1.3;
-  font-size: 14px;
+  font-size: 20px;
   color: white;
   overscroll-behavior: none;
   will-change: bottom;
@@ -836,9 +800,15 @@ div.button {
   background-color: #151618;
 }
 .warning-word {
-  color:red;
+  color: red;
   background-color: white;
   font-size: 6px;
+}
+.celebrate-img {
+  z-index: 2;
+  width: 30%;
+  margin-left:120px;
+  margin-top:210px
 }
 
 .streamToggle {
@@ -851,16 +821,14 @@ div.button {
 #exitBtn {
   position: absolute;
   right: 5%;
-  top: 10%;
+  top: 5%;
 }
 
 #goChatBtn {
   position: absolute;
   right: 5%;
-  top: 50%;
+  top: 20%;
   background-color: #f97d54;
   color: white;
 }
-
-
 </style>

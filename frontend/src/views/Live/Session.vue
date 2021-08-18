@@ -447,9 +447,6 @@ export default {
         if (index >= 0) {
           this.subscribers.splice(index, 1);
         }
-        console.log(
-          "방 폭파ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ"
-        );
       });
 
       // On every asynchronous exception...

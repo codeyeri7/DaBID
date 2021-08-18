@@ -2,26 +2,39 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card color="#3c3f44" tile :elevation="0" light height="150" v-bind="attrs"
-          v-on="on">
-              <v-card-title class="pb-1">
-                <RouterLink :to="{ name: 'UserProfile', params: { userId : hot_live.user.userId}}">
-                  <h4 class="m-0">{{ hot_live.user.userName }}</h4>
-                </RouterLink>
-                <div class="ml-5">
-                  <v-icon class="mr-1" style="color: red"> mdi-heart </v-icon>
-                  <span class="subheading mr-2">{{ hot_live.hearts }}</span>
-                </div>
-              </v-card-title>
-
-              <v-card-text class="card-text" id="kor-font">
-                <p class="mb-3">
-                  <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
-                </p>
-                <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
-                <p>{{ hot_live.live.liveDate.slice(0, 10) }}</p>
-              </v-card-text>
-            </v-card>
+        <v-card
+          color="#3c3f44"
+          tile
+          :elevation="0"
+          light
+          height="150"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-card-title class="pb-1">
+            <RouterLink
+              :to="{
+                name: 'UserProfile',
+                params: { userId: hot_live.user.userId },
+              }"
+            >
+              <h4 class="m-0">{{ hot_live.user.userName | truncate(5, "..") }}</h4>
+            </RouterLink>
+            <div class="ml-5">
+              <v-icon class="mr-1" style="color: #dfb772"> mdi-heart </v-icon>
+              <span class="subheading mr-2" style="color: #f3e7d0">{{
+                hot_live.hearts
+              }}</span>
+            </div>
+          </v-card-title>
+          <v-card-text class="card-text" id="kor-font">
+            <p class="mb-3">
+              <b>{{ hot_live.live.liveTitle | truncate(9, "..") }}</b>
+            </p>
+            <p>₩ {{ hot_live.live.prdPriceStart | comma }}</p>
+            <p>{{ hot_live.live.liveDate.slice(0, 10) }}</p>
+          </v-card-text>
+        </v-card>
       </v-col>
     </template>
 
@@ -30,30 +43,22 @@
         <h4>{{ hot_live.live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
-            <v-btn
-              icon
-              v-on:click="clicked = !clicked"
-              @click="wish()"
-            >
+            <v-btn icon v-on:click="clicked = !clicked" @click="wish()">
               <v-icon>mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
         <span v-else>
           <v-col class="text-right">
-            <v-btn
-              icon
-              v-on:click="clicked = !clicked"
-              @click="unwish()"
-            >
-              <v-icon style="color:red">mdi-heart</v-icon>
+            <v-btn icon v-on:click="clicked = !clicked" @click="unwish()">
+              <v-icon style="color: #dfb772">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
       </v-card-title>
       <v-card-text>
         <img :src="hot_live.live.prdPhoto" width="200px" class="mt-5" />
-        <hr />        
+        <hr />
         <h5 style="margin-bottom: 10px" class="title-font">
           상품명 : {{ hot_live.live.prdName }}
         </h5>
@@ -64,7 +69,8 @@
           경매 시작가 : {{ hot_live.live.prdPriceStart | comma }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ hot_live.live.liveDate.slice(0,10) }} {{ hot_live.live.liveDate.slice(11, 16)}}
+          라이브 일시 : {{ hot_live.live.liveDate.slice(0, 10) }}
+          {{ hot_live.live.liveDate.slice(11, 16) }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
           설명 : {{ hot_live.live.liveDesc }}
@@ -96,7 +102,7 @@ export default {
       wishlist: [],
       dialog: false,
       clicked: false,
-      me: null
+      me: null,
     };
   },
   filters: {
@@ -113,24 +119,24 @@ export default {
       return config;
     },
     remove: function () {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem("userId");
       if (this.live.user.userId === userId) {
         rest
           .axios({
             method: "delete",
             url: `/dabid/live/${this.prdId}`,
-            headers: this.setToken()
+            headers: this.setToken(),
           })
           .then((res) => {
             this.refreshAll();
-            console.log(res)
-            console.log('삭제 성공')
+            console.log(res);
+            console.log("삭제 성공");
           })
           .catch((err) => {
-            console.log(err)
-          })
+            console.log(err);
+          });
       } else {
-        alert('본인이 작성한 글만 삭제 가능합니다!')
+        alert("본인이 작성한 글만 삭제 가능합니다!");
       }
     },
     refreshAll: function () {
@@ -138,36 +144,36 @@ export default {
       this.$router.go();
     },
     edit: function () {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem("userId");
       if (this.hot_live.user.userId === userId) {
         this.$router.push({
           name: "UpdateMyLiveList",
           params: { prdId: `${this.prdId}` },
         });
       } else {
-        alert("본인이 작성한 글만 수정 가능합니다!")
+        alert("본인이 작성한 글만 수정 가능합니다!");
       }
     },
-    remove: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.hot_live.user.userId === userId) {
-        rest
-          .axios({
-            method: "delete",
-            url: `/dabid/live/${this.prdId}`,
-            headers: this.setToken()
-          })
-          .then((res) => {
-            this.refreshAll();
-            console.log('삭제 성공')
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      } else {
-        alert('본인이 작성한 글만 삭제 가능합니다!')
-      }
-    },
+    // remove: function () {
+    //   const userId = localStorage.getItem("userId");
+    //   if (this.hot_live.user.userId === userId) {
+    //     rest
+    //       .axios({
+    //         method: "delete",
+    //         url: `/dabid/live/${this.prdId}`,
+    //         headers: this.setToken(),
+    //       })
+    //       .then((res) => {
+    //         this.refreshAll();
+    //         console.log("삭제 성공");
+    //       })
+    //       .catch((err) => {
+    //         console.log(err);
+    //       });
+    //   } else {
+    //     alert("본인이 작성한 글만 삭제 가능합니다!");
+    //   }
+    // },
     wish: function () {
       rest
         .axios({
@@ -214,14 +220,17 @@ export default {
           console.log(err);
         });
     },
-  }, 
+  },
+  created: function () {
+    this.checkPrdId();
+  },
 };
 </script>
 
 <style scoped>
 p {
-    margin-bottom: 0;
-    color: #f3e7d0;
+  margin-bottom: 0;
+  color: #f3e7d0;
 }
 </style>
 

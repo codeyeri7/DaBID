@@ -33,14 +33,13 @@
           </div>
         </div>
 
-        <div id="review" @click="checkReviews"> 
+        <!-- <div id="review" @click="checkReviews"> 
           <RouterLink :to="{ name: 'ReviewList', params: { userId: User.user.userId }}">
             <h5 class="pb-3" id="eng-font">{{ reviews.length }} Reviews</h5>
           </RouterLink>
-        </div>
+        </div> -->
       </v-card>
     </div>
-    <hr id="hrline" />
   </div>
 </template>
 

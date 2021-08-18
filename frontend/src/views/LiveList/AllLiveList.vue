@@ -177,6 +177,7 @@ export default {
         })
         .then((res) => {
           this.lives = res.data;
+          this.scrollNo = true
           console.log("검색결과", this.lives);
         })
         .catch((err) => {
@@ -233,6 +234,7 @@ export default {
 <style scoped>
 .body {
   background-color: #151618;
+  margin-bottom: 50px;
 }
 .gold-color {
   color: #dfb772;

@@ -16,16 +16,17 @@
 
         <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
           <p>상품명 : {{ room.live.prdName }}</p>
-          <p>최종낙찰가 : {{ endlive.resPriceEnd }}원</p>
-          <!-- <p>{{ room.live }}</p> -->
+          <p>최종낙찰가 : {{ endlive.resPriceEnd | comma }}원</p>
         </div>
 
-        <div v-if="endlive.seller.userName == sender">
+        <!-- 확인 때문에 임시로 같다로 조건 바꿔뒀어요 --> 
+        <div v-if="endlive.seller.userName != sender">
             <v-btn
               tile
               x-small
               color="primary"
               class="black--text mt-5 ml-3"
+              width="80px"
               id="kor-font"
               @click="goReview(room.live.prdId)"
             >
@@ -34,6 +35,53 @@
               </v-icon>
               리뷰작성
             </v-btn>
+
+
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <!-- <RouterLink :to="{ name: 'TheCheat' }"> -->
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                tile
+                x-small
+                color="primary"
+                class="black--text mt-5 ml-3"
+                width="80px"
+                id="kor-font">
+                더치트 확인</v-btn>
+             </template>
+             <!-- modal --> 
+             <div class=" d-flex align-center text-center">
+             <v-card tile class="ap-card" style="color:#dfb772; background-color: #151618" >
+              <v-card-title  tile class="text-h5">
+                Accident Policy
+              </v-card-title>
+
+              <v-card-text style="padding-top: 2.5rem;color:#dfb772" id="kor-font">
+                다비드는 원활한 거래 연결을 위해<br>
+                더치트 계좌 조회 서비스를 지원합니다.
+                <v-btn color="#3c3f44" tile class="mt-4 link-button" onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') ">위험 계좌조회 더치트 바로가기</v-btn>
+              </v-card-text>
+
+              <v-divider></v-divider>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  text
+                  @click="dialog = false"
+                >
+                  확인
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+            </div>
+          </v-dialog>
         </div>
       </div>
     </v-card>
@@ -57,8 +105,9 @@
           </v-col>
         </v-row>
       </v-container>
+
       <div class="fixedchat">
-        <v-container>
+        <v-container style="padding-top:0">
           <v-row no-gutters>
             <v-col>
               <div class="d-flex flex-row align-center">
@@ -90,7 +139,9 @@ export default {
       messages: [],
       stompClient: undefined,
       pre_diffHeight: 0,
-      bottom_flag: true
+      bottom_flag: true,
+
+      dialog: false,
     }
   },
   created() {
@@ -100,6 +151,11 @@ export default {
     this.findRoom();
     this.getEndLive();
     this.connect();
+  },
+  filters: {
+    comma: function (value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
     findRoom: function() {
@@ -207,6 +263,8 @@ export default {
 .fixedchat {
   position: fixed;
   bottom: 30px;
+  background-color: white;
+  height: 90px;
 }
 .chat {
   background-color: #151618;
@@ -215,17 +273,17 @@ export default {
 }
 div.comments_wrap {
   margin-bottom: 1.5rem;
-  /* bottom: 94px;
-  left: 15px; */
+  background-color: #3c3f44;
   z-index: 2;
-  width: 95%;
-  position: absolute;
   overflow-y: scroll;
-  max-height: 400px;
+  max-height: 350px;
   line-height: 1.3;
   font-size: 14px;
   color: white;
   overscroll-behavior: none;
   will-change: bottom;
+}
+.link-button {
+  color: #dfb772;
 }
 </style>

@@ -101,15 +101,12 @@
           <!-- 판매자한테 보임 --> 
           <p v-if="success || liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
 
-          <!-- 구매자한테 보임 --> 
-          <p v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
+          <!-- 시청자한테 보임 --> 
+          <p style="color:yello" v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
         </MARQUEE>
 
-        <p v-if="countDown != 0" id="noticeCount">{{ countDown }} </p>
-        <img class="celebrate-img" v-if="success" src="@/assets/celebration.png" alt="celebrate">
-
         <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>
-        <img v-if="success" class="celebrate-img" src="@/assets/celebration.png" alt="celebrate-img">
+
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
         
@@ -804,12 +801,6 @@ div.button {
   color: red;
   background-color: white;
   font-size: 6px;
-}
-.celebrate-img {
-  z-index: 2;
-  width: 30%;
-  margin-left:120px;
-  margin-top:210px
 }
 
 .streamToggle {

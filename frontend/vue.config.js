@@ -7,7 +7,8 @@ module.exports = {
             '/dabid': {
                 // target: 'http://localhost:8080/'
                 // target: 'http://localhost:8080/'
-                target: 'http://i5a506.p.ssafy.io:8080/'
+                // target: 'http://i5a506.p.ssafy.io:8080/'
+                target: 'http://i5a506.p.ssafy.io/'
             },
             '/webjars': {
                 // target: 'http://localhost:8080/'

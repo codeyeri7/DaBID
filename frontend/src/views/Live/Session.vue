@@ -99,10 +99,10 @@
             id="notice"
           >
           <!-- 판매자한테 보임 --> 
-          <p v-if="success || liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
+          <p v-if="success && liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
 
           <!-- 시청자한테 보임 --> 
-          <p style="color:yello" v-if="success || liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
+          <p style="color:yello" v-if="success && liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
         </MARQUEE>
 
         <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>
@@ -354,7 +354,11 @@ export default {
                 // 세션 강제 종료
                 this.session.disconnect();
                 // 채팅 이동
-                this.goChat();
+                if (this.currentUser == this.loginId || this.loginId == this.liveInfo.user.userId) {
+                  this.goChat();
+                } else {
+                  this.$router.push({ name: "Main" });
+                }
               }, 30000);
             }
     //     })
@@ -840,7 +844,7 @@ div.button {
   overflow-y: scroll;
   max-height: 160px;
   line-height: 1.3;
-  font-size: 20px;
+  font-size: 12px;
   color: white;
   overscroll-behavior: none;
   will-change: bottom;

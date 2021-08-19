@@ -137,18 +137,16 @@ export default {
           headers: config
         })
         .then((res) => {
+          localStorage.setItem('userName', this.userName)
           // this.nameChange = res.data
           // console.log('OK',this.nameChange)
           // console.log(res)
           this.dialog = false
+          this.$router.go()
         })
         .catch((err) => {
           console.log(err)
         })
-    },
-    refreshAll: function () {
-      // 새로고침
-      this.$router.go();
     },
   },
   created: function () {

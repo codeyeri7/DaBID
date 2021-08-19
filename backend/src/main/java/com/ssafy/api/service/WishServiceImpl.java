@@ -46,10 +46,11 @@ public class WishServiceImpl implements WishService{
 
     @Override
     public List<LiveRes> getBestLives() {
-       List<WishList> wishListList = wishListRepository.findAllGroupByPrdId();
+        long size = wishListRepository.count();
+        System.out.println("사이즈사이즈"+size);
        List<LiveRes> wishTop2List = new ArrayList<>();
 
-       if(wishListList.size()<2){ //하트수로 판별할 수 없는 경우 그냥 라이브 방송예정 중 방송에서 최신순 2개
+       if(size<2){ //하트수로 판별할 수 없는 경우 그냥 라이브 방송예정 중 방송에서 최신순 2개
            List<Live> liveList = liveService.getRecentLives(0);
            for (int i=0; i<2; i++){
                Live live = liveList.get(i);
@@ -59,6 +60,8 @@ public class WishServiceImpl implements WishService{
                wishTop2List.add(liveRes);
            }
        }else { //하트 수 가장많은 방송 2개
+           List<WishList> wishListList = wishListRepository.findAllGroupByPrdId();
+           System.out.println("여기묹["+wishListList.size());
            for (int i=0; i<2; i++){
                WishList wishList = wishListList.get(i);
                User user = wishList.getUser();

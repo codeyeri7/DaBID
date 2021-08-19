@@ -35,7 +35,7 @@
         <span v-if="clicked === false">
           <v-col class="text-right">
             <v-btn icon v-on:click="clicked = !clicked" @click="wish()">
-              <v-icon style="color: #CDCDCD">mdi-heart</v-icon>
+              <v-icon style="color: #cdcdcd">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
@@ -48,7 +48,7 @@
           </v-col>
         </span>
         <div class="close">
-          <img src="@/assets/close.png" @click="dialog = false">
+          <img src="@/assets/close.png" @click="dialog = false" />
         </div>
       </v-card-title>
       <v-card-text>
@@ -75,13 +75,26 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <div class="d-flex justify-space-between pa-0" v-if="checkUser(live)">
-          <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)"> Start Live </v-btn>
-          <v-btn class="pa-0" color="blue darken-1" text @click="edit()"> edit </v-btn>
-          <v-btn class="pa-0" color="red" text @click="remove()"> delete </v-btn>
+          <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)">
+            Start Live
+          </v-btn>
+          <v-btn class="pa-0" color="blue darken-1" text @click="edit()">
+            edit
+          </v-btn>
+          <v-btn class="pa-0" color="red" text @click="remove()">
+            delete
+          </v-btn>
         </div>
         <div v-else>
           <div v-if="live.liveStatus.liveStatus == 1">
-            <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)"> Go Live </v-btn>
+            <v-btn
+              class="pa-0"
+              color="primary"
+              text
+              @click="goLive(live.prdId)"
+            >
+              Go Live
+            </v-btn>
           </div>
         </div>
       </v-card-actions>
@@ -153,7 +166,7 @@ export default {
     goLive(prdId) {
       rest
         .axios({
-          method: "patch",
+          method: "put",
           url: `/dabid/live/start/${this.prdId}`,
         })
         .then((res) => {

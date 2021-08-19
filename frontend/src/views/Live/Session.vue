@@ -338,31 +338,31 @@ export default {
       //     type: "COUNTDOWN",
       //   })
       //   .then(() => {
-          if (this.countDown > 0) {
-              setTimeout(() => {
-                this.countDown -= 1;
-                this.countDownTimer();
-              }, 1000);
-            }
-          //0초 되면
-            else if (this.countDown == 0) {
-              // 입찰 축하 멘트 뜸
-              this.success = true;
-              console.log("이제 30초후에 넌 아웃");
-              //30초 후 실행
-              setTimeout(() => {
-                // 세션 강제 종료
-                this.session.disconnect();
-                // 채팅 이동
-                this.goChat();
-              }, 30000);
-            }
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
+      if (this.countDown > 0) {
+        setTimeout(() => {
+          this.countDown -= 1;
+          this.countDownTimer();
+        }, 1000);
+      }
+      //0초 되면
+      else if (this.countDown == 0) {
+        // 입찰 축하 멘트 뜸
+        this.success = true;
+        console.log("이제 30초후에 넌 아웃");
+        //30초 후 실행
+        setTimeout(() => {
+          // 세션 강제 종료
+          this.session.disconnect();
+          // 채팅 이동
+          this.goChat();
+        }, 30000);
+      }
+      //     })
+      //     .catch((error) => {
+      //       console.error(error);
+      //     });
     },
-  
+
     sendMsg: function () {
       this.session
         .signal({
@@ -371,7 +371,7 @@ export default {
           type: "CHAT",
         })
         .then(() => {
-          console.log('채팅 친 놈한테 보여')
+          console.log("채팅 친 놈한테 보여");
           // this.chatList.push(this.chatMsg);
           this.chatMsg = "";
         })
@@ -459,15 +459,15 @@ export default {
           type: "TIMER",
         })
         .then(() => {
-          console.log('모두에게 보일거야')
-          // 누른 사람만 
+          console.log("모두에게 보일거야");
+          // 누른 사람만
           setTimeout(() => {
             this.session.disconnect();
             this.$router.push({ name: "MyPage" });
           }, 10000);
         })
         .catch((error) => {
-          console.log('error 타이머')
+          console.log("error 타이머");
           console.error(error);
         });
     },
@@ -506,7 +506,6 @@ export default {
         }
         this.$router.push({ name: "Main" });
       });
-
       // On every asynchronous exception...
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
@@ -528,20 +527,18 @@ export default {
             this.currentPrice += Number(event.data);
             this.currentUser = JSON.parse(event.from.data).userId;
             this.countDown = 10;
-
           } else if (event.type === "signal:CHAT") {
-            console.log('나 채팅 받음', event)
+            console.log("나 채팅 받음", event);
             this.chatList.push(event);
-
-          } 
+          }
           // else if (event.type === "sinal:TIMER") {
-            // this.timerShow = true;
-            // this.timerStop = false;
-            // // 이용자도 강제 종료 후 메인 페이지로 
-            // setTimeout(() => {
-            //   this.session.disconnect();
-            //   this.$router.push({ name: "Main" });
-            // }, 10000);
+          // this.timerShow = true;
+          // this.timerStop = false;
+          // // 이용자도 강제 종료 후 메인 페이지로
+          // setTimeout(() => {
+          //   this.session.disconnect();
+          //   this.$router.push({ name: "Main" });
+          // }, 10000);
           // }
 
           // else if (event.type === "signal:COUNTDOWN") {
@@ -566,7 +563,7 @@ export default {
           //     }, 30000);
           //   }
           // }
-           else {
+          else {
             // this.auction = true;
             console.log("거래시작함여");
             this.countDownTimer();
@@ -726,7 +723,7 @@ export default {
               (this.currentUser =
                 res.data.logList[res.data.logList.length - 1].bidder);
           } else {
-            (this.currentPrice = this.liveInfo.prdPriceStart)
+            this.currentPrice = this.liveInfo.prdPriceStart;
           }
         })
         .catch((err) => {
@@ -761,8 +758,8 @@ export default {
     }
     if (this.dialog == true) {
       if (this.bid < 5000 || this.bid > 50000) {
-      this.valid = false  
-      console.log("가격 범위 안 맞아요")
+        this.valid = false;
+        console.log("가격 범위 안 맞아요");
       }
     }
   },
@@ -829,7 +826,7 @@ div.button {
 .countDownTimer {
   z-index: 1;
   padding: absolute;
-  margin-left:20%;
+  margin-left: 20%;
   margin-top: 18%;
 }
 #chatList {
@@ -886,7 +883,7 @@ div.button {
 }
 
 #exitBtn {
-  color:red;
+  color: red;
   /* z-index: 1;
   position: absolute;
   margin-left: 30%;
@@ -905,6 +902,6 @@ div.button {
   z-index: 1;
   position: absolute;
   margin-left: 60%;
-  margin-top: 32%
+  margin-top: 32%;
 }
 </style>

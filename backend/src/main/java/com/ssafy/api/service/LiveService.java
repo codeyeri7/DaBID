@@ -21,4 +21,5 @@ public interface LiveService {
     List<Live> searchLives(List<String> category, List<String> liveStatuses, String keyword);
     void createLog(LogPostReq logInfo);
     void updateStatus(int prdId);
+    void endLive(int prdId);
 }

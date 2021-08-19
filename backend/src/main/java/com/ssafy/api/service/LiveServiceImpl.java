@@ -187,4 +187,10 @@ public class LiveServiceImpl implements LiveService {
 		live.setLiveStatus(liveStatusRepository.getOne(1));
 		liveRepository.save(live);
 	}
+
+	public void endLive(int prdId){
+		Live live = liveRepository.findByPrdId(prdId).get();
+		live.setLiveStatus(liveStatusRepository.getOne(2));
+		liveRepository.save(live);
+	}
 }

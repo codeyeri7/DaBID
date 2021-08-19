@@ -3,8 +3,8 @@
     id="wrapper"
     ref="wrapper"
     :style="{
-      width: 'auto',
-      height: container_height + 'px',
+      width: 15 + 'px',
+      height: 15 + 'px',
       boxSizing: 'border-box',
       display: 'flex',
       justifyContent: 'center',
@@ -14,8 +14,8 @@
     <div
       id="container"
       :style="{
-        width: container_width + 'px',
-        height: container_height + 'px',
+        width: 10 + 'px',
+        height: 10 + 'px',
         paddingTop: padding + 'px',
         margin: '0 auto',
         boxSizing: 'border-box',

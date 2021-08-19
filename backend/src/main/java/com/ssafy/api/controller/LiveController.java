@@ -128,8 +128,27 @@ public class LiveController {
 
 
 	// 방송 시작시에 방송 예정에서 "방송중"으로 업데이트
-	@PatchMapping("/start/{prdId}")
+	@PutMapping("/start/{prdId}")
 	@ApiOperation(value="방송 시작", notes="방송 시작시 방송 예정에서 방송중으로 업데이트")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 400, message = "에러 발생"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<?> startLive(@PathVariable int prdId) {
+
+		try{
+			liveService.updateStatus(prdId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}catch (Exception e){
+			return ResponseEntity.status(200).body(BaseResponseBody.of(400, "Success"));
+		}
+
+	}
+
+	// 방송 중에서 "방송종료"로 업데이트
+	@PutMapping("/end/{prdId}")
+	@ApiOperation(value="방송 종료", notes="방송 중에서 방송 종료로 업데이트")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 400, message = "에러 발생"),
@@ -138,7 +157,7 @@ public class LiveController {
 	public ResponseEntity<?> endLive(@PathVariable int prdId) {
 
 		try{
-			liveService.updateStatus(prdId);
+			liveService.endLive(prdId);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}catch (Exception e){
 			return ResponseEntity.status(200).body(BaseResponseBody.of(400, "Success"));

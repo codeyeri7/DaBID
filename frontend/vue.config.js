@@ -12,15 +12,15 @@ module.exports = {
             },
             '/webjars': {
                 // target: 'http://localhost:8080/'
-                target: 'https://i5a506.p.ssafy.io:8443/'
+                target: 'http://i5a506.p.ssafy.io:8443/'
             },
             '/group-call': {
                 // target: 'http://localhost:8080/'
-                target: 'https://i5a506.p.ssafy.io:8443/'
+                target: 'http://i5a506.p.ssafy.io:8443/'
             },
             '/upload': {
                 // target: 'http://localhost:8080/'
-                target: 'https://i5a506.p.ssafy.io:8443/'
+                target: 'http://i5a506.p.ssafy.io:8443/'
             }
         },
         historyApiFallback: true,

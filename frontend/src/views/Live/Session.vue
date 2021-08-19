@@ -18,7 +18,7 @@
         <hr>
         <p class="text-center">
           <button class="btn btn-lg gold-color" id="eng-font" @click="joinSession()">Join!</button>
-          <h5 id="kor-font" class="text-center">{{ myUserName }}님이 입장하십니다</h5>
+          <h5 id="kor-font" class="text-center"> {{ myUserName }}님이 입장하십니다 </h5>
         </p>
         </div>
       </div>
@@ -102,7 +102,8 @@
           <p v-if="success && liveInfo.user.userId == loginId">거래 완료. [경매 종료] 버튼을 눌러 입찰자와 채팅을 시작하세요!</p>
 
           <!-- 시청자한테 보임 --> 
-          <p style="color:yello" v-if="success && liveInfo.user.userId != loginId">입찰이 완료되었습니다. [경매 종료] 후 자동 페이지 이동합니다.</p>
+          <p style="color:yello" v-if="success && currentUser == loginId">낙찰 성공하셨습니다!</p>
+          <p style="color:yello" v-if="success && liveInfo.user.userId != loginId">아쉽지만 경매가 종료되었습니다. 30초 후 자동 퇴장됩니다.</p>
         </MARQUEE>
 
         <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>

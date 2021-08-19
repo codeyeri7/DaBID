@@ -430,8 +430,18 @@ export default {
     },
     //publisher 입장에서 방송 강제 종료
     endSession() {
-      this.timerShow = true;
-      this.timerStop = false;
+      //this.session.signal();
+      rest
+        .axios({
+          method: "put",
+          url: `/dabid/live/end/${this.prdId}`,
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       setTimeout(() => {
         this.session.disconnect();
@@ -473,7 +483,6 @@ export default {
         }
         this.$router.push({ name: "Main" });
       });
-
       // On every asynchronous exception...
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
@@ -657,7 +666,7 @@ export default {
               (this.currentUser =
                 res.data.logList[res.data.logList.length - 1].bidder);
           } else {
-            (this.currentPrice = this.liveInfo.prdPriceStart)
+            this.currentPrice = this.liveInfo.prdPriceStart;
           }
         })
         .catch((err) => {
@@ -692,8 +701,8 @@ export default {
     }
     if (this.dialog == true) {
       if (this.bid < 5000 || this.bid > 50000) {
-      this.valid = false  
-      console.log("가격 범위 안 맞아요")
+        this.valid = false;
+        console.log("가격 범위 안 맞아요");
       }
     }
   },

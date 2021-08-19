@@ -5,7 +5,12 @@ module.exports = {
         https: true,
         proxy: {
             '/dabid': {
+<<<<<<< HEAD
+                // target: 'http://i5a506.p.ssafy.io/'
+                target: 'http://localhost:8080/'
+=======
                 // target: 'https://i5a506.p.ssafy.io/'
+>>>>>>> 3add40410c8192225e524b9294e81ca373d0a1d8
                 // target: 'http://localhost:8080/'
                 target: 'http://localhost:8080/'
                 // target: 'http://i5a506.p.ssafy.io:8080/'

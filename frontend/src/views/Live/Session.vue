@@ -70,7 +70,7 @@
             :show-negatives="true"
             :paused="timerStop"
             :notify-every="'minute'"
-        ></CircularCountDownTimer> 
+          ></CircularCountDownTimer> 
           
           <!-- <span v-if="liveInfo.user.userId == loginId">
             <v-btn id="exitBtn" icon @click="endSession">X</v-btn>

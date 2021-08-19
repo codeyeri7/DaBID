@@ -32,6 +32,7 @@
           <v-card
             class="mx-auto liveInfoCard"
             max-height="150"
+            max-width="360"
             outlined
             id="kor-font"
           >
@@ -56,14 +57,13 @@
           </v-card>
 
            <CircularCountDownTimer
-            class ="countDown"
+            class ="countDownTimer"
             ref="countDown"
             :initial-value="10"
             :stroke-width="5"
             :seconds-stroke-color="'#f97d54'"
             :underneath-stroke-color="'white'"
             :seconds-fill-color="'#f97d54'"
-            :size="200"
             :padding="14"
             :second-label="'seconds'"
             :show-second="timerShow"
@@ -72,11 +72,11 @@
             :notify-every="'minute'"
         ></CircularCountDownTimer> 
           
-          <span v-if="liveInfo.user.userId == loginId">
+          <!-- <span v-if="liveInfo.user.userId == loginId">
             <v-btn id="exitBtn" icon @click="endSession">X</v-btn>
             <v-btn v-if="!auction" id="goChatBtn" @click="startAuction">경매시작</v-btn>
             <v-btn v-else id="goChatBtn" @click="goChat">경매종료</v-btn>
-          </span>
+          </span> -->
         </div>
         <div>
           <!-- <p v-if="liveInfo.user.userId != loginId" id="notice">연속 베팅은 불가능합니다. 10초간 베팅이 없을 시 경매가 종료됩니다.</p> -->
@@ -106,6 +106,12 @@
         </MARQUEE>
 
         <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>
+
+        <span v-if="liveInfo.user.userId == loginId" class="fix-btn">
+            <v-btn v-if="!auction" id="goChatBtn" @click="startAuction">경매시작</v-btn>
+            <v-btn v-else id="goChatBtn" @click="goChat">경매종료</v-btn>
+            <v-btn id="exitBtn" icon @click="endSession">X</v-btn>
+          </span>
 
         <user-video :stream-manager="publisher"/>
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
@@ -325,13 +331,20 @@ export default {
       });
     },
     countDownTimer() {
+      // this.session
+      //   .signal({
+      //     session: this.mySessionId,
+      //     data: this.countDown,
+      //     type: "COUNTDOWN",
+      //   })
+      //   .then(() => {
       if (this.countDown > 0) {
         setTimeout(() => {
           this.countDown -= 1;
           this.countDownTimer();
         }, 1000);
       }
-      // 0초 되면
+      //0초 되면
       else if (this.countDown == 0) {
         // 입찰 축하 멘트 뜸
         this.success = true;
@@ -344,7 +357,12 @@ export default {
           this.goChat();
         }, 30000);
       }
+      //     })
+      //     .catch((error) => {
+      //       console.error(error);
+      //     });
     },
+
     sendMsg: function () {
       this.session
         .signal({
@@ -353,6 +371,8 @@ export default {
           type: "CHAT",
         })
         .then(() => {
+          console.log("채팅 친 놈한테 보여");
+          // this.chatList.push(this.chatMsg);
           this.chatMsg = "";
         })
         .catch((error) => {
@@ -430,23 +450,26 @@ export default {
     },
     //publisher 입장에서 방송 강제 종료
     endSession() {
-      //this.session.signal();
-      rest
-        .axios({
-          method: "put",
-          url: `/dabid/live/end/${this.prdId}`,
+      this.timerShow = true;
+      this.timerStop = false;
+      this.session
+        .signal({
+          session: this.mySessionId,
+          data: this.timershow,
+          type: "TIMER",
         })
-        .then((res) => {
-          console.log(res.data);
+        .then(() => {
+          console.log("모두에게 보일거야");
+          // 누른 사람만
+          setTimeout(() => {
+            this.session.disconnect();
+            this.$router.push({ name: "MyPage" });
+          }, 10000);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log("error 타이머");
+          console.error(error);
         });
-
-      setTimeout(() => {
-        this.session.disconnect();
-        this.$router.push({ name: "MyPage" });
-      }, 10000);
     },
     toggleAudio() {
       this.publisher.properties.publishAudio =
@@ -505,8 +528,42 @@ export default {
             this.currentUser = JSON.parse(event.from.data).userId;
             this.countDown = 10;
           } else if (event.type === "signal:CHAT") {
+            console.log("나 채팅 받음", event);
             this.chatList.push(event);
-          } else {
+          }
+          // else if (event.type === "sinal:TIMER") {
+          // this.timerShow = true;
+          // this.timerStop = false;
+          // // 이용자도 강제 종료 후 메인 페이지로
+          // setTimeout(() => {
+          //   this.session.disconnect();
+          //   this.$router.push({ name: "Main" });
+          // }, 10000);
+          // }
+
+          // else if (event.type === "signal:COUNTDOWN") {
+          //   this.countDown = 10
+          //   if (this.countDown > 0) {
+          //     setTimeout(() => {
+          //       this.countDown -= 1;
+          //       this.countDownTimer();
+          //     }, 1000);
+          //   }
+          // // 0초 되면
+          //   else if (this.countDown == 0) {
+          //     // 입찰 축하 멘트 뜸
+          //     this.success = true;
+          //     console.log("이제 30초후에 넌 아웃");
+          //     //30초 후 실행
+          //     setTimeout(() => {
+          //       // 세션 강제 종료
+          //       this.session.disconnect();
+          //       // 채팅 이동
+          //       this.goChat();
+          //     }, 30000);
+          //   }
+          // }
+          else {
             // this.auction = true;
             console.log("거래시작함여");
             this.countDownTimer();
@@ -541,7 +598,7 @@ export default {
 
               this.session.publish(this.publisher);
             } else {
-              this.chatList.push(event);
+              // this.chatList.push(event);
             }
           });
       });
@@ -766,6 +823,12 @@ div.button {
   margin-left: 10%;
   margin-top: 15%;
 }
+.countDownTimer {
+  z-index: 1;
+  padding: absolute;
+  margin-left: 20%;
+  margin-top: 18%;
+}
 #chatList {
   right: 95px;
   left: 15px;
@@ -820,16 +883,25 @@ div.button {
 }
 
 #exitBtn {
+  color: red;
+  /* z-index: 1;
   position: absolute;
-  right: 5%;
-  top: 5%;
+  margin-left: 30%;
+  margin-top: 15%; */
 }
 
 #goChatBtn {
+  /* z-index: 1;
   position: absolute;
-  right: 5%;
-  top: 20%;
+  margin-left: 30%;
+  margin-top: 15%; */
   background-color: #f97d54;
   color: white;
+}
+.fix-btn {
+  z-index: 1;
+  position: absolute;
+  margin-left: 60%;
+  margin-top: 32%;
 }
 </style>

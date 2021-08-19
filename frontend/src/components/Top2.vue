@@ -18,9 +18,9 @@
                 params: { userId: hot_live.user.userId },
               }"
             >
-              <h4 class="m-0">{{ hot_live.user.userName | truncate(5, "..") }}</h4>
+              <h4 class="m-0">{{ hot_live.user.userName | truncate(4, "..") }}</h4>
             </RouterLink>
-            <div class="ml-5">
+            <div class="ml-6">
               <v-icon class="mr-1" style="color: #dfb772"> mdi-heart </v-icon>
               <span class="subheading mr-2" style="color: #f3e7d0">{{
                 hot_live.hearts

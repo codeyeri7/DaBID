@@ -213,7 +213,7 @@ export default {
       // this.messages.push({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
     // },
     connect() {
-      const endPoint = "http://i5a506.p.ssafy.io/ws-stomp";
+      const endPoint = "https://i5a506.p.ssafy.io/api/ws-stomp";
       let sock = new SockJS(endPoint);
       let stompClient = Stomp.over(sock);
       console.log(stompClient);

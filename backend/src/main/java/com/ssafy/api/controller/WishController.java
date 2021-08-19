@@ -52,7 +52,7 @@ public class WishController {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
-
+		System.out.println("여기!"+prdId+" "+userId);
 		Boolean flg = false;
 		flg = wishService.checkWishLive(user,prdId);
 		return ResponseEntity.status(200).body(flg);

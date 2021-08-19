@@ -32,6 +32,7 @@
           <v-card
             class="mx-auto liveInfoCard"
             max-height="150"
+            max-width="360"
             outlined
             id="kor-font"
           >
@@ -55,7 +56,7 @@
             </v-list-item>
           </v-card>
 
-           <CircularCountDownTimer
+          <CircularCountDownTimer
             class ="countDown"
             ref="countDown"
             :initial-value="10"
@@ -63,14 +64,13 @@
             :seconds-stroke-color="'#f97d54'"
             :underneath-stroke-color="'white'"
             :seconds-fill-color="'#f97d54'"
-            :size="200"
             :padding="14"
             :second-label="'seconds'"
             :show-second="timerShow"
             :show-negatives="true"
             :paused="timerStop"
             :notify-every="'minute'"
-        ></CircularCountDownTimer> 
+          ></CircularCountDownTimer> 
           
           <span v-if="liveInfo.user.userId == loginId">
             <v-btn id="exitBtn" icon @click="endSession">X</v-btn>

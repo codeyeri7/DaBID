@@ -57,32 +57,11 @@
             <span @click="goSearchLive('방송예정')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in will_live" :key="card.title" :cols="6">
-              <v-card height="280" class="section2" tile :elevation="0">
-                <!-- Image -->
-                
-                <div>
-                  <v-img
-                    :src= "card.prdPhoto"
-                    class="white--text d-flex justify-center"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="180px"
-                    style="padding-left: 20px"
-                  >
-                  <div class="live-time d-flex flex-column">
-                    <span class="font">{{ card.liveDate.slice(5,10) }}</span>
-                    <span class="font">{{ card.liveDate.slice(11,16) }}</span>
-                  </div>
-                  </v-img>  
-                </div>
-                <!-- 카드 하단-->
-                <div class="card-content" id="kor-font">
-                   <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
-                  <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
-                </div>
-              </v-card>
-            </v-col>
+            <MainCard
+              v-for="(live, idx) in will_lives"
+              :key="idx"
+              :live="live"
+            />
           </v-row>
         </v-container>
 
@@ -92,26 +71,11 @@
             <span @click="goSearchLive('방송종료')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in end_live" :key="card.title" :cols="6">
-              <v-card height="280" class="section3" tile :elevation="0">
-                <!-- Image -->
-                <v-img
-                  :src= "card.prdPhoto"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="180px"
-                  style="padding-left: 25px"
-                >
-                <v-card-title>방송종료</v-card-title>
-                </v-img>
-                <!-- 카드 하단-->
-                <div class="card-content" id="kor-font">
-                  <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
-                  <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
-                </div>
-              </v-card>
-            </v-col>
+            <MainCard
+              v-for="(live, idx) in end_lives"
+              :key="idx"
+              :live="live"
+            />
           </v-row>
         </v-container>
       </div>
@@ -134,16 +98,23 @@
 
 <script>
 import rest from "../js/httpCommon.js"
+import MainCard from "../components/MainCard.vue"
 
 export default {
   name: "Main",
-  
+  components: {
+    MainCard,
+  },
   data() {
     return {
+      lives: [],
       cards: null,
       now_live: null,
-      will_live: null,
-      end_live: null
+      will_lives: [],
+      end_lives: [],
+      wishlist: [],
+      dialog: false,
+      clicked: false,
     };
   },
   filters: {
@@ -183,13 +154,21 @@ export default {
         .axios({
           method: "get",
           url: "/dabid/live/top2",
+          headers: this.setToken(),
         })
         .then((res) => {
           this.cards = res.data;
-          console.log(this.cards)
           this.will_live = this.cards.slice(0, 2)
           this.now_live = this.cards.slice(2, 4)
           this.end_live = this.cards.slice(4, 6)
+          for (var i=0; i < this.will_live.length; i++) {
+            const live = this.will_live[i]
+            this.will_lives.push(live)
+          }
+          for (var j=0; j < this.end_live.length; j++) {
+            const live = this.end_live[j]
+            this.end_lives.push(live)
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -199,6 +178,7 @@ export default {
   // 페이지 열리자마자 live 정보들 가져오기
   created: function () {
     this.getLive();
+    // this.getLiveList()
   },
 };
 </script>

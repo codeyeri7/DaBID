@@ -13,7 +13,6 @@
             <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-              <v-btn class="black--text" elevation="0" @click="upload" color="secondary" flat>업로드</v-btn>
             </div>
           </div>
           
@@ -222,7 +221,8 @@ export default {
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
-      console.log(this.file, '파일이 잘 업로드 되었습니다.')
+      // console.log(this.file, '파일이 잘 업로드 되었습니다.')
+      this.upload()
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')

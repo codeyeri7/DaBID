@@ -32,6 +32,7 @@
           <v-card
             class="mx-auto liveInfoCard"
             max-height="150"
+            max-width="360"
             outlined
             id="kor-font"
           >
@@ -63,7 +64,6 @@
             :seconds-stroke-color="'#f97d54'"
             :underneath-stroke-color="'white'"
             :seconds-fill-color="'#f97d54'"
-            :size="200"
             :padding="14"
             :second-label="'seconds'"
             :show-second="timerShow"
@@ -818,8 +818,8 @@ div.button {
 
 #goChatBtn {
   position: absolute;
-  right: 5%;
-  top: 20%;
+  right: 2%;
+  top: 120%;
   background-color: #f97d54;
   color: white;
 }

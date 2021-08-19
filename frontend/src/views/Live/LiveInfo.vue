@@ -15,6 +15,7 @@
               사진 업로드
             </h5>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
+              
           </div>
           <hr id="top-hr">
           <h3 style="font-size:17px; font-weight:bold" id="eng-font">02 Live Info</h3>

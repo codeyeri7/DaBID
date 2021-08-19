@@ -28,7 +28,7 @@
             <span @click="goSearchLive('방송중')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in now_live" :key="card.title" :cols="6">
+            <v-col v-for="card in now_lives" :key="card.title" :cols="6">
               <v-card height="280" class="section1" @click="goLive(card.prdId)" tile :elevation="0">
                 <!-- Image -->
                 <v-img
@@ -109,7 +109,7 @@ export default {
     return {
       lives: [],
       cards: null,
-      now_live: null,
+      now_lives: null,
       will_lives: [],
       end_lives: [],
       wishlist: [],
@@ -158,17 +158,30 @@ export default {
         })
         .then((res) => {
           this.cards = res.data;
-          this.will_live = this.cards.slice(0, 2)
-          this.now_live = this.cards.slice(2, 4)
-          this.end_live = this.cards.slice(4, 6)
-          for (var i=0; i < this.will_live.length; i++) {
-            const live = this.will_live[i]
-            this.will_lives.push(live)
-          }
-          for (var j=0; j < this.end_live.length; j++) {
-            const live = this.end_live[j]
-            this.end_lives.push(live)
-          }
+          // this.will_lives = this.cards.slice(0, 2)
+          // this.now_live = this.cards.slice(2, 4)
+          // this.end_lives = this.cards.slice(4, 6)
+          for (var i=0; i < this.cards.length; i++) {
+            const one_live = this.cards[i]
+            if (one_live.liveStatus.liveStatus == 0) {
+              this.will_lives.push(one_live)
+            }
+            else if (one_live.liveStatus.liveStatus == 2) {
+              this.end_lives.push(one_live)
+            } else {
+              this.now_lives.push(one_live)
+            }
+        }
+
+
+          // for (var i=0; i < this.will_live.length; i++) {
+          //   const live = this.will_live[i]
+          //   this.will_lives.push(live)
+          // }
+          // for (var j=0; j < this.end_live.length; j++) {
+          //   const live = this.end_live[j]
+          //   this.end_lives.push(live)
+          // }
         })
         .catch((err) => {
           console.log(err);
@@ -178,7 +191,6 @@ export default {
   // 페이지 열리자마자 live 정보들 가져오기
   created: function () {
     this.getLive();
-    // this.getLiveList()
   },
 };
 </script>

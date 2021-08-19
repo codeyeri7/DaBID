@@ -103,7 +103,7 @@
 
           <!-- 시청자한테 보임 --> 
           <p style="color:yello" v-if="success && currentUser == loginId">낙찰 성공하셨습니다!</p>
-          <p style="color:yello" v-if="success && liveInfo.user.userId != loginId">아쉽지만 경매가 종료되었습니다. 30초 후 자동 퇴장됩니다.</p>
+          <p style="color:yello" v-if="success && liveInfo.user.userId != loginId && currentUser != loginId ">아쉽지만 경매가 종료되었습니다. 30초 후 자동 퇴장됩니다.</p>
         </MARQUEE>
 
         <p v-if="countDown >= 0" id="noticeCount">{{ countDown }}</p>

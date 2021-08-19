@@ -244,11 +244,8 @@ export default {
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
-      console.log(this.file, '파일이 잘 업로드 되었습니다.')
+      // console.log(this.file, '파일이 잘 업로드 되었습니다.')
       this.upload()
-    },
-    calcDate() {
-      this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
@@ -277,9 +274,9 @@ export default {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        alert('사진 업로드에 성공했습니다');
+        // alert('사진 업로드에 성공했습니다');
         this.prdPhoto = data.Location
-        console.log(this.prdPhoto)
+        // console.log(this.prdPhoto)
       });
     }
   },

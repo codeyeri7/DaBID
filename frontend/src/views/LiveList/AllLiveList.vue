@@ -25,7 +25,7 @@
     <!-- 검색 카테고리 창 -->
     <v-expansion-panels v-model="openedPanel" id="panel">
       <v-expansion-panel>
-        <v-expansion-panel-header id="eng-font" @click="openPanel()">
+        <v-expansion-panel-header id="eng-font" @click="openPanel(), closeAllPanels()">
           Search
         </v-expansion-panel-header>
 
@@ -132,10 +132,16 @@ export default {
       return config;
     },
     closeAllPanels () {
-      this.openedPanel = null
+      console.log(this.openedPanel)
+      if (this.openedPanel !== null) {
+        this.openedPanel = null
+      }
     },
     openPanel (index) {
-      this.openedPanel = index
+      console.log(this.openedPanel)
+      if (this.openedPanel === null) {
+        this.openedPanel = index
+      }
     },
     getAllLiveList: function () {
       rest
@@ -151,6 +157,8 @@ export default {
           for (let live of res.data.content) {
             this.lives.push(live);
           }
+          console.log(res.data)
+          console.log(res.data.content)
           console.log("전체 라이브", this.lives);
         })
         .catch((err) => {

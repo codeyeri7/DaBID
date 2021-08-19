@@ -15,10 +15,10 @@
             <RouterLink
               :to="{
                 name: 'UserProfile',
-                params: { userId: hot_live.user.userId },
+                params: { userId: hot_live.live.user.userId },
               }"
             >
-              <h4 class="m-0">{{ hot_live.user.userName | truncate(4, "..") }}</h4>
+              <h4 class="m-0">{{ hot_live.live.user.userName | truncate(4, "..") }}</h4>
             </RouterLink>
             <div class="ml-6">
               <v-icon class="mr-1" style="color: #dfb772"> mdi-heart </v-icon>

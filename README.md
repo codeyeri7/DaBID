@@ -15,7 +15,7 @@ WebRTC 기술을 활용한 화상라이브로 사용자가 직접 경매를 진�
   - [팀원](#팀원)
   - [문서](#문서)
   - [개발환경](#개발환경)
-- [⭐ 다비드 둘러보기 ⭐](#DaBID.md)
+- [⭐ 다비드 둘러보기 ⭐](https://lab.ssafy.com/s05-webmobile1-sub3/S05P13A506/-/blob/develop/DaBID.md)
 
 <br>
 <br>

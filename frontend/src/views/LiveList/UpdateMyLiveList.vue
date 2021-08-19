@@ -251,9 +251,9 @@ export default {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        alert('사진 업로드에 성공했습니다');
+        // alert('사진 업로드에 성공했습니다');
         this.prdPhoto = data.Location
-        console.log(this.prdPhoto)
+        // console.log(this.prdPhoto)
       });
     },
   },

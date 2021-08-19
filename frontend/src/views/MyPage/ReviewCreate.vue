@@ -1,6 +1,6 @@
 <template>
   <div class="container" id="kor-font">
-    <v-card color="secondary" tile elevation="1">
+    <v-card style="padding:10px" tile elevation="1">
       <h4 class="gold-color">거래 정보</h4>
       <v-text>라이브 제목: {{ live.Title }}</v-text><br>
       <v-text>낙찰가</v-text><br>

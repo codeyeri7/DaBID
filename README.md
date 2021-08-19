@@ -14,8 +14,9 @@ WebRTC 기술을 활용한 화상라이브로 사용자가 직접 경매를 진�
 - [소개](#소개)
   - [팀원](#팀원)
   - [문서](#문서)
-  - [개발환경](#개발환경)
-- [⭐ 다비드 둘러보기 ⭐](https://lab.ssafy.com/s05-webmobile1-sub3/S05P13A506/-/blob/develop/DaBID.md)
+- [개발환경](#개발환경)
+- [배포 및 빌드](#배포및빌드)
+- [⭐ 다비드 둘러보기 ⭐](#다비드둘러보기)
 
 <br>
 <br>
@@ -25,65 +26,40 @@ WebRTC 기술을 활용한 화상라이브로 사용자가 직접 경매를 진�
 1. 팀원
   - **frontend** : 김윤서(팀장), 서예리
   - **backend**  : 심재원, 안영진, 이지수
-
-2. 프로젝트 기간: 210705(부트캠프) ~ 210820    
+2. 프로젝트 기간: 2021.07.05(부트캠프) ~ 2021.08.20    
 
 <br>
 
 ## 문서
  - [Notion](https://www.notion.so/PJT-14bf2a880caa4b2f8cb5f220ce270bf3)
  - [기능 명세서 excel](https://docs.google.com/spreadsheets/d/1pazhJn9QQCp9-F--eiMslCsy95N4F8GIuffqEuyxysQ/edit#gid=1438666494)
- - [JIRA](https://jira.ssafy.com/projects/S05P12A506/issues/S05P12A506-3?filter=allopenissues)
- - [Gitlab](https://lab.ssafy.com/s05-webmobile1-sub2/S05P12A506)
+ - [JIRA](https://jira.ssafy.com/secure/RapidBoard.jspa?rapidView=9739&projectKey=S05P13A506&view=planning.nodetail&issueLimit=100)
  - [Figma](https://www.figma.com/team_invite/redeem/PxGzuHG5EE5SJrjPOExpwX)
  - [StoryBoard](https://docs.google.com/presentation/d/1eBP6ZpRhm4AEdg9Pu2nexNRW_feO2aKZFI18TOPKFzE/edit#slide=id.p)
  - [ERD](https://www.erdcloud.com/d/wbwiRBoxZA4vkFdkf)
- - [Architecture](https://drive.google.com/file/d/1QH-hY0vVtCKsxEMw_OxLQO5paEOxW7UN/view?usp=sharing)
+ - [Architecture](https://app.cloudcraft.co/view/ee48ee97-e3bb-40bb-8ca4-88cafacb0ebd?key=C5PweKhv2OiF43s6gYaN8g)
 
 <br>
 
 ## 개발환경
-- __Framework__ : Vue.js / Spring
-- __IDE__ : Visual Studio Code / IntelliJ
-- __지원 환경__ : chorme
-- __빌드 도구__ : gradle
-- __DB__ : MariaDB
+- __Frontend__
+  - Visual Studio Code
 
+- __Backend__
+  - IntelliJ IDEA 2021.1.3 x64
+  - Project SDK: java version “1.8.0_192”
+  - Build Tool: Gradle
+  - WAS: Apache Tomcat/9.0.45
+
+- __DB__
+  - MySQL
 
 <br>
-<br>
+
+## 배포및빌드
+- 참고: https://www.notion.so/15ad7589f61a4b8f82c0597c265af2dd
 
 
-# 다비드둘러보기
-> Dabid는 **모바일에 최적화** 되어있습니다.
-<br> 기기를 **Galaxy S5 (360x640)** 로 설정해주세요.
-<br><br> **[설정 방법]**
-<br> 1. 개발자 모드(F12)를 열어 device mode on (Ctrl + Shift + m)
-<br>![image](/uploads/a8af3f2d286b20227ff3cf1016fa6ab9/image.png)
-<br> 2. Galaxy S5 기기 선택
-<br>![image](/uploads/e229472ea6c4fd980944b09cd8a82ad2/image.png)
-<br><br> **처음 화면은 로그인 화면입니다.**
 
-### 1. 로그인
-1. 화면 하단에 있는 ![image](/uploads/035fdfc4c1143f607ee4bd6e120e5c07/image.png) 클릭
-2. 구글 계정 로그인<br>
-  Email: dabid7423@gmail.com<br>
-  Password: dabiddabid7423**
-3. 로그인 후 메인화면으로 입장
-> **[로그인 오류 시]**
-<br> 1. 쿠키 모두 삭제
-<br> 2. ctrl + f5 
-<br> 3. 로그인 재시도
 
-### 2. 라이브 등록
-1. 우측 하단의 ![image](/uploads/b4409d2f374f3dfa970b3b8cc0a63245/image.png) 버튼을 클릭하여 라이브 등록 페이지로 이동
-2. 판매할 상품, 라이브 관련 정보 입력 후 ![image](/uploads/28fd0c9d04168e57fae2eef18f9b97b4/image.png) 버튼을 눌러 등록 완료!
-3. 등록 후 마이 라이브 리스트 화면으로 이동
 
-### 3. 마이 라이브 리스트
-1. 내가 등록한 라이브 전체 확인 가능
-2. 하단의 네비게이션 메뉴바의 ![image](/uploads/11331572e8aeb6c6468524e2f00d8c98/image.png) 버튼을 클릭하여 이동 가능
-
-### 4. 로그아웃
-1. 하단의 네비게이션 메뉴바에서 마이페이지![image](/uploads/21f09db07808a5bb00fdf5004fd33e80/image.png) 이동 가능
-2. 마이페이지에서 로그아웃 가능

@@ -2,63 +2,54 @@
   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
       <v-col :cols="6">
-        <v-card class="section1">
+        <v-card height="280" tile :elevation="0" v-bind="attrs" v-on="on">
           <!-- Image -->
           <v-img
             :src="live.prdPhoto"
             class="white--text align-center"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="200px"
-            width="200px"
+            height="180px"
             style="padding: 40px"
-            v-bind="attrs"
-            v-on="on"
             @click="checkPrdId()"
           >
-            <!-- <v-card-title class="subtitle-style" style="margin-left:15px;">
-              <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
-            </v-card-title> -->
           </v-img>
           <!-- 카드 하단-->
-          <div>
-            <v-card-subtitle class="text-subtitle-4 pt-2">{{
-              live.prdName | truncate(7, '...')
-            }}</v-card-subtitle>
-            <v-card-subtitle class="text-subtitle-4 pt-2">
-              시작가 | {{ live.prdPriceStart | comma }}원
-            </v-card-subtitle>
+          <div class="card-content" id="kor-font">
+            <v-card-title id="card-title">{{
+              live.liveTitle | truncate(8, "...")
+            }}</v-card-title
+            ><br />
+            <v-card-subtitle class="py-0"
+              >시작가 | {{ live.prdPriceStart | comma }}원</v-card-subtitle
+            >
+            <v-card-subtitle class="pt-0 pb-1"
+              >방송일 | {{ live.liveDate.slice(0, 10) }}</v-card-subtitle
+            >
           </div>
         </v-card>
       </v-col>
     </template>
+    <!-- dialog -->
     <v-card :id="prdId">
-      <v-card-title class="headline grey lighten-2">
-        <h3 class="text-center">{{ live.liveTitle }}</h3>
-        <!-- <span v-if="this.wishlist.includes(this.prdId)"> -->
+      <v-card-title class="headline secondary">
+        <h4>{{ live.liveTitle }}</h4>
         <span v-if="clicked === false">
           <v-col class="text-right">
-            <v-btn
-              icon
-              v-bind:class="{ red: clicked }"
-              v-on:click="clicked = !clicked"
-              @click="wish()"
-            >
-              <v-icon>mdi-heart</v-icon>
+            <v-btn icon v-on:click="clicked = !clicked" @click="wish()">
+              <v-icon style="color: #cdcdcd">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
         <span v-else>
           <v-col class="text-right">
-            <v-btn
-              icon
-              v-bind:class="{ red: clicked }"
-              v-on:click="clicked = !clicked"
-              @click="unwish()"
-            >
-              <v-icon>mdi-heart</v-icon>
+            <v-btn icon v-on:click="clicked = !clicked" @click="unwish()">
+              <v-icon style="color: #dfb772">mdi-heart</v-icon>
             </v-btn>
           </v-col>
         </span>
+        <div class="close">
+          <img src="@/assets/close.png" @click="dialog = false" />
+        </div>
       </v-card-title>
       <v-card-text>
         <img :src="live.prdPhoto" width="200px" class="mt-5" />
@@ -70,21 +61,41 @@
           상품 일련번호 : {{ live.prdNo }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          경매 시작가 : {{ live.prdPriceStart }}
+          경매 시작가 : {{ live.prdPriceStart | comma }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
-          라이브 일시 : {{ live.liveDate }}
+          라이브 일시 : {{ live.liveDate.slice(0, 10) }}
+          {{ live.liveDate.slice(11, 16) }}
         </h5>
         <h5 style="margin-bottom: 10px" class="content-font">
           설명 : {{ live.liveDesc }}
         </h5>
       </v-card-text>
-      <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue" text @click="edit()"> edit </v-btn>
-        <v-btn color="red" text @click="remove()"> delete </v-btn>
-        <v-btn color="primary" text @click="dialog = false"> close </v-btn>
+        <div class="d-flex justify-space-between pa-0" v-if="checkUser(live)">
+          <v-btn class="pa-0" color="primary" text @click="goLive(live.prdId)">
+            Start Live
+          </v-btn>
+          <v-btn class="pa-0" color="blue darken-1" text @click="edit()">
+            edit
+          </v-btn>
+          <v-btn class="pa-0" color="red" text @click="remove()">
+            delete
+          </v-btn>
+        </div>
+        <div v-else>
+          <div v-if="live.liveStatus.liveStatus == 1">
+            <v-btn
+              class="pa-0"
+              color="primary"
+              text
+              @click="goLive(live.prdId)"
+            >
+              Go Live
+            </v-btn>
+          </div>
+        </div>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -103,10 +114,9 @@ export default {
       prdId: this.live.prdId,
       lives: [],
       wishlist: [],
-      show: false,
       dialog: false,
       clicked: false,
-      me: null
+      me: null,
     };
   },
   filters: {
@@ -123,40 +133,50 @@ export default {
       return config;
     },
     remove: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
-        rest
-          .axios({
-            method: "delete",
-            url: `/dabid/live/${this.prdId}`,
-            headers: this.setToken()
-          })
-          .then((res) => {
-            this.refreshAll();
-            console.log(res)
-            console.log('삭제 성공')
-          })
-          .catch((err) => {
-          console.log(err)
+      rest
+        .axios({
+          method: "delete",
+          url: `/dabid/live/${this.prdId}`,
+          headers: this.setToken(),
         })
-      } else {
-        alert('본인이 작성한 글만 삭제 가능합니다!')
-      }
+        .then(() => {
+          this.refreshAll();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     refreshAll: function () {
       // 새로고침
       this.$router.go();
     },
     edit: function () {
-      const userId = localStorage.getItem('userId')
-      if (this.live.user.userId === userId) {
-        this.$router.push({
-          name: "UpdateMyLiveList",
-          params: { prdId: `${this.prdId}` },
+      this.$router.push({
+        name: "UpdateMyLiveList",
+        params: { prdId: `${this.prdId}` },
+      });
+    },
+    checkUser(live) {
+      const userId = localStorage.getItem("userId");
+      return live.user.userId == userId;
+    },
+    goLive(prdId) {
+      rest
+        .axios({
+          method: "put",
+          url: `/dabid/live/start/${this.prdId}`,
+        })
+        .then(() => {
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      } else {
-        alert("본인이 작성한 글만 수정 가능합니다!")
-      }
+      this.$router.push({
+        name: "session",
+        params: {
+          prdId: prdId,
+        },
+      });
     },
     wish: function () {
       rest
@@ -165,10 +185,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
-          console.log("wish!!");
-          console.log(this.wishlist.includes(this.prdId));
-          console.log(res);
+        .then(() => {
         })
         .catch((err) => {
           console.log(err);
@@ -181,9 +198,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
-          console.log("unwish!");
-          console.log(res);
+        .then(() => {
         })
         .catch((err) => {
           console.log(err);
@@ -198,7 +213,6 @@ export default {
         })
         .then((res) => {
           this.clicked = res.data;
-          console.log("OK!");
         })
         .catch((err) => {
           console.log(err);
@@ -209,4 +223,25 @@ export default {
 </script>
 
 <style scoped>
+#card-content {
+  background-color: #3c3f44;
+  color: #dfb772;
+}
+#card-title {
+  font-size: 1rem;
+  padding-bottom: 0;
+  padding-top: 0;
+  color: #dfb772;
+}
+.headline {
+  color: #dfb772;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: inherit;
+}
 </style>
+
+

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <!-- social login-->
     <meta name="google-signin-client_id" content="771637237260-gsvimko90s79m4u8co55gaqaqnplj9ne.apps.googleusercontent.com" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link href="dabidlogo.ico" rel='icon' type="image/x-icon"/>
+    <link href="dabidlogo.ico" rel='shortcut icon' type="image/x-icon"/>
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
@@ -22,9 +23,6 @@
     <link rel="styleSheet" href="style.css" type="text/css" media="screen"></link>
 
     <script src="openvidu-browser-2.19.0.js"></script>
-    <!-- favicon -->
-    <!-- <link href='/static/favicon.ico' rel="shortcut icon" type="image/x-icon"/>
-    <link href='/static/favicon.ico' rel="icon" type="image/x-icon"/> -->
   </head>
   <body>
     <noscript>
@@ -34,18 +32,11 @@
     <!-- built files will be auto injected -->
 
     <!--sockjs-->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script> -->
-    <!-- <script src="/socket.io/socket.io.js"></script> -->
-    <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> -->
-    <!-- <script src="js/main.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js"></script>
     <!--stomp-->
-    <!-- <script src="/webjars/jquery/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/webjars/vue/2.5.16/dist/vue.min.js"></script>
-    <script src="/webjars/axios/0.17.1/dist/axios.min.js"></script>
-    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script> -->
 
     <!-- social login-->
     <script src="https://apis.google.com/js/platform.js" async defer></script>

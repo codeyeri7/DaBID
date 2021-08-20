@@ -1,118 +1,127 @@
 <template>
-  <div class="container">
+  <div class="main-back">
     <!-- top2 carousel -->
-    <v-row style="width: 90%; margin: auto; margin-bottom: 7%">
-      <v-card
-        class="mx-auto"
-        color="#455A64"
-        dark
-        width="50%"
-        v-for="(hot_live, idx) in hot_lives"
-        :key="idx"
-        :hot_live="hot_live"
-      >
-        <v-card-title>
-          <v-list-item-avatar color="white">
-            <v-img
-              class="elevation-6"
-              alt="profile image"
-              src="https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Kurt&hairColor=Red&facialHairType=Blank&clotheType=ShirtVNeck&clotheColor=Blue03&eyeType=Hearts&eyebrowType=RaisedExcitedNatural&mouthType=Default&skinColor=Light"
-            ></v-img>
-          </v-list-item-avatar>
-          <div>
-            <v-icon class="mr-1"> mdi-heart </v-icon>
-            <span class="subheading mr-2">28</span>
-          </div>
-          <h5>{{ hot_live.user.userName }}</h5>
-        </v-card-title>
-
-        <v-card-text id="kor-font">
-          {{ hot_live.liveTitle | truncate(9, "...") }} <br />
-          <span> <b>시작가</b> </span> | {{ hot_live.prdPriceStart }}
-        </v-card-text>
-      </v-card>
-    </v-row>
-
-    <!-- 검색 카테고리 창 -->
-    <v-expansion-panels id="panel">
-      <v-expansion-panel>
-        <v-expansion-panel-header> Search </v-expansion-panel-header>
-
-      <v-expansion-panel-content>
-        <v-col>
-          <v-autocomplete
-            v-model="values1"
-            :items="items1"
-            dense
-            chips
-            small-chips
-            label="카테고리"
-            multiple
-          ></v-autocomplete>
-          <v-autocomplete
-            v-model="values2"
-            :items="items2"
-            dense
-            chips
-            small-chips
-            label="방송 상태"
-            multiple
-          ></v-autocomplete>
-         <v-text-field
-          label="검색어"
-          v-model="keyword"
-        ></v-text-field>
-        <v-btn @click="search()">검색</v-btn>
-        </v-col>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
-
-    <!-- 하단 all live 카드 -->
-    <div style="font-family: 'InfinitySans-RegularA1'">
+    <div id="kor-font">
       <div class="main-card">
-        <v-card class="mx-auto" width="500">
+        <div class="mx-auto">
           <v-container fluid>
             <div>
-              <span
-                style="
-                  font-family: 'PT Serif', serif;
-                  font-size: 20px;
-                  margin-bottom: 20px;
-                "
-                ><b>All Live</b></span
-              >
+              <span class="gold-color" id="eng-font" style="font-size: 20px; margin-bottom: 20px">
+                <b id="T2">Best</b>
+              </span>
             </div>
             <v-row dense>
-              <MyLiveListCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
+              <Top2
+                v-for="(hot_live, idx) in hot_lives"
+                :key="idx"
+                :hot_live="hot_live"
+              />
+            </v-row>
+          </v-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- 검색 카테고리 창 -->
+    <v-expansion-panels v-model="openedPanel" id="panel">
+      <v-expansion-panel>
+        <v-expansion-panel-header id="eng-font" @click="openPanel()">
+          Search
+        </v-expansion-panel-header>
+
+        <v-expansion-panel-content>
+          <v-col>
+            <v-autocomplete
+              v-model="values1"
+              :items="items1"
+              dense
+              chips
+              small-chips
+              label="카테고리"
+              multiple
+            ></v-autocomplete>
+            <v-autocomplete
+              v-model="values2"
+              :items="items2"
+              dense
+              chips
+              small-chips
+              label="방송 상태"
+              multiple
+            ></v-autocomplete>
+            <v-text-field label="검색어" v-model="keyword"></v-text-field>
+            <div class="search-button" id="kor-font">
+              <v-btn light color="beige" @click="reset" style="color: black"
+                >초기화</v-btn
+              >
+              <v-btn dark color="primary" @click="search(), closeAllPanels()">검색</v-btn>
+            </div>
+          </v-col>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <!-- 하단 all live 카드 -->
+    <div id="kor-font">
+      <div class="main-card">
+        <div class="mx-auto">
+          <v-container fluid>
+            <div>
+              <span class="gold-color" id="eng-font" style="font-size: 20px; margin-bottom: 20px">
+                <b>All Live</b>
+              </span>
+            </div>
+            <v-row dense>
+              <MyLiveListCard
+                v-for="(live, idx) in lives"
+                :key="idx"
+                :live="live"
+              />
               <div v-if="this.lives.length == 0">검색 결과가 없습니다.</div>
             </v-row>
           </v-container>
-        </v-card>
+        </div>
       </div>
     </div>
+    <v-fab-transition>
+      <v-btn color="#dfb772" class="scroll-btn" bottom right fixed fab dark small v-show="btnShow" @click="$vuetify.goTo('#T2')">
+        <v-icon color="white">fas fa-angle-double-up</v-icon>
+      </v-btn>
+    </v-fab-transition>
   </div>
 </template>
 
 <script>
 import MyLiveListCard from "../../components/MyLiveListCard.vue";
+import Top2 from "../../components/Top2.vue"
 import rest from "../../js/httpCommon.js";
 
 export default {
   name: "MyLiveList",
-  components: { MyLiveListCard },
+  components: { 
+    MyLiveListCard,
+    Top2,
+    },
   data: function () {
     return {
-      hot_lives: [],
       lives: [],
-
+      hot_lives: [],
+    
       //검색 관련
-      keyword: '',
-      values1: '',
-      values2: '',
-      items1: ['의류', '가방', '신발', '악세사리'],
-      items2: ['방송종료', '방송중', '방송예정']
-    }
+      keyword: "",
+      values1: "",
+      values2: "",
+      items1: ["의류", "가방", "신발", "악세사리"],
+      items2: ["방송종료", "방송중", "방송예정"],
+      page: 0,
+      scrollNo: false,
+      openedPanel: null
+    };
+  },
+  filters: {
+    comma: function (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
   methods: {
     setToken: function () {
@@ -122,28 +131,38 @@ export default {
       };
       return config;
     },
+    closeAllPanels () {
+      this.openedPanel = null
+    },
+    openPanel (index) {
+      this.openedPanel = index
+    },
     getAllLiveList: function () {
-      rest.axios({
-        method: 'get',
-        url: '/dabid/live',
-        headers: this.setToken()
-      })
+      rest
+        .axios({
+          method: "get",
+          url: "/dabid/live/all",
+          headers: this.setToken(),
+          params: {
+            page: this.page,
+          }
+        })
         .then((res) => {
-          this.lives = res.data;
-          console.log("전체 라이브", this.lives);
+          for (let live of res.data.content) {
+            this.lives.push(live);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
     getHotLives: function () {
-     rest
+      rest
         .axios({
           method: "get",
           url: "/dabid/wish/best",
         })
         .then((res) => {
-          console.log("받아온 인기 방송", res.data);
           this.hot_lives = res.data;
         })
         .catch((err) => {
@@ -151,38 +170,97 @@ export default {
         });
     },
     search() {
-      console.log(this.values1)
-      rest.axios({
-        method: 'get',
-        url: '/dabid/live',
-        params: {
-          categories: this.values1 + '',
-          liveStatuses: this.values2 + '',
-          keyword: this.keyword,
-        },
-      })
-      .then((res) => {
-        this.lives = res.data
-        console.log('검색결과', this.lives)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      rest
+        .axios({
+          method: "get",
+          url: "/dabid/live",
+          params: {
+            categories: this.values1 + "",
+            liveStatuses: this.values2 + "",
+            keyword: this.keyword,
+          },
+        })
+        .then((res) => {
+          this.lives = res.data;
+          this.scrollNo = true
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
+    reset() {
+      (this.values1 = ""), (this.values2 = ""), (this.keyword = "");
+    },
+    handleScroll() {
+      this.btnShow = window.scrollY > 400;
+    },
+    infiniteScroll(e) {
+      let scrollTop = e.target.scrollingElement.scrollTop
+      let scrollHeight = e.target.scrollingElement.scrollHeight
+      
+      if(scrollTop >= scrollHeight - 650) {
+        if (!this.scrollNo) {
+          this.page++;
+          this.getAllLiveList();
+        }
+      }
+    }
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
-      this.getAllLiveList();
       this.getHotLives();
+      if (this.$route.params.liveStatus) {
+        this.values2 = this.$route.params.liveStatus
+        this.scrollNo = true
+        this.search()
+        }
+        else {
+          this.getAllLiveList();
+        }
     } else {
       this.$router.push({ name: "Login" });
     }
+    window.addEventListener('scroll', this.infiniteScroll);
   },
+  destroyed () {
+    window.removeEventListener('scroll', this.infiniteScroll);
+  },
+  beforeMount() {
+    window.addEventListener("scroll", this.handleScroll)
+  },
+  beforeDestory() {
+    window.removeEventListener("scroll", this.handleScroll)
+  }
 };
+
 </script>
 
 <style scoped>
-.mx-auto {
-  border-radius: 30px;
+.body {
+  background-color: #151618;
+  margin-bottom: 50px;
+}
+.gold-color {
+  color: #dfb772;
+}
+#panel {
+  width: 95%;
+  margin: auto;
+}
+.scroll-btn {
+  margin-bottom: 3rem;
+}
+.search-button {
+  display: flex;
+  justify-content: space-around;
+}
+p {
+  margin: 0;
+}
+h5 {
+  margin: 0;
+}
+h3 {
+  margin-bottom: 2px;
 }
 </style>

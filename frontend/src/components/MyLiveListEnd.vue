@@ -1,36 +1,28 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    width="250px">
+   <v-dialog v-model="dialog" width="250px">
     <template v-slot:activator="{ on, attrs }">
-      <v-card 
-        height="300px"
-        width="150px"
-        class="section1"
-      >
+      <v-col :cols="6">
+        <v-card height="280" tile :elevation="0" v-bind="attrs"
+          v-on="on">
         <!-- Image -->
         <v-img
           :src= live.prdPhoto
           class="white--text align-center"
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-          height="200px"
-          width="200px"
+          height="180px"
           style="padding: 40px"
-          v-bind="attrs"
-          v-on="on"
         >
-          <!-- <v-card-title class="subtitle-style" style="margin-left:15px;">
-            <img @click="remove()" src="@/assets/remove.png" alt="remove live" style="width:20px;height:20px">
-          </v-card-title> -->
-          
         </v-img>
         <!-- 카드 하단-->
-        <v-card-subtitle class="text-subtitle-4">{{ live.prdName }}</v-card-subtitle>
-        <v-card-subtitle class="text-subtitle-4">
-          시작가 | {{ live.prdPriceStart | comma }}원
-        </v-card-subtitle>
-      </v-card>
+        <div class="card-content" id="kor-font">
+              <v-card-title id="card-title">{{ live.prdName  | truncate(8, '...') }}</v-card-title><br>
+              <v-card-subtitle class="py-0">시작가 | {{ live.prdPriceStart | comma }}원</v-card-subtitle>
+              <v-card-subtitle class="pt-0 pb-1">방송일 | {{ live.liveDate.slice(0,10) }}</v-card-subtitle>
+            </div>
+        </v-card>
+      </v-col>
     </template>
+    <!-- dialog -->
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
@@ -40,11 +32,10 @@
         <hr>
         <h5 style="margin-bottom:10px" class="title-font">상품명 : {{ live.prdName }}</h5>
         <h5 style="margin-bottom:10px" class="content-font">상품 일련번호 : {{ live.prdNo }}</h5>
-        <h5 style="margin-bottom:10px" class="content-font">경매 시작가 : {{ live.prdPriceStart }}</h5>
-        <h5 style="margin-bottom:10px" class="content-font">라이브 일시 : {{ live.liveDate }}</h5>
+        <h5 style="margin-bottom:10px" class="content-font">경매 시작가 : {{ live.prdPriceStart | comma }}</h5>
+        <h5 style="margin-bottom:10px" class="content-font">라이브 일시 : {{ live.liveDate.slice(0,10) }} {{ live.liveDate.slice(11, 16)}}</h5>
         <h5 style="margin-bottom:10px" class="content-font">설명 : {{ live.liveDesc }}</h5>
       </v-card-text>
-      <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -92,8 +83,7 @@ export default {
         method: 'delete',
         url: '',
       })
-        .then((res) => {
-          console.log(res)
+        .then(() => {
           this.$router.go();
         })
     }

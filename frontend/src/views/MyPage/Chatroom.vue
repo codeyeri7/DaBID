@@ -1,80 +1,271 @@
 <template>
-  <div class="container" id="app" v-cloak>
-    <div>
-      <h2>{{room.name}}</h2>
-    </div>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text">내용</label>
+  <div class="chat-back">
+    <v-card color="secondary" tile elevation="1">
+      <div class="d-flex justify-content mx-3">
+        <div>
+          <v-img
+            :src="room.live.prdPhoto"
+            class="white--text align-center mx-2 mt-4"
+            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+            height="50px"
+            width="60px"
+            @click="checkPrdId()"
+          >
+          </v-img>
+        </div>
+
+        <div class="d-flex flex-column mx-2 gold-color pt-2" id="kor-font">
+          <p>상품명 : {{ room.live.prdName }}</p>
+          <p>최종낙찰가 : {{ endlive.resPriceEnd | comma }}원</p>
+        </div>
+
+        <div v-if="endlive.seller.userName != sender">
+          <v-btn
+            tile
+            x-small
+            color="primary"
+            class="black--text mt-5 ml-3"
+            width="80px"
+            id="kor-font"
+            @click="goReview(room.live.prdId)"
+          >
+            <v-icon left color="black">
+              mdi-pencil
+            </v-icon>
+            리뷰작성
+          </v-btn>
+          <v-dialog
+            v-model="dialog"
+            width="500"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-bind="attrs"
+                v-on="on"
+                tile
+                x-small
+                color="primary"
+                class="black--text mt-5 ml-3"
+                width="80px"
+                id="kor-font">
+                더치트 확인
+              </v-btn>
+            </template>
+              <!-- modal --> 
+            <div class=" d-flex align-center text-center">
+              <v-card tile class="ap-card" style="color:#dfb772; background-color: #151618" >
+                <v-card-title  tile class="text-h5">
+                  Accident Policy
+                </v-card-title>
+
+                <v-card-text style="padding-top: 2.5rem;color:#dfb772" id="kor-font">
+                  다비드는 원활한 거래 연결을 위해<br>
+                  더치트 계좌 조회 서비스를 지원합니다.
+                  <v-btn 
+                    color="#3c3f44" 
+                    tile 
+                    class="mt-4 link-button" 
+                    onclick="window.open('https://thecheat.co.kr/rb/?r=home&mod=_thecheat_validity_account') "
+                  >
+                    위험 계좌조회 더치트 바로가기
+                  </v-btn>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                  >
+                    확인
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </div>
+          </v-dialog>
+        </div>
       </div>
-      <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage">
-      <div class="input-group-append">
-          <button class="btn btn-primary" type="button" @click="sendMessage">보내기</button>
-      </div>
+    </v-card>
+
+    <v-container style="background-color:#3c3f44">
+      <v-row align="end">
+        <v-col>
+          <div class="comments_wrap" id="chatList" @scroll="chatOnScroll()">
+            <div v-for="(message, index) in messages" :key="index" id="kor-font"
+              :class="['d-flex flex-row align-center my-2', message.sender == sender ? 'justify-end': null]">
+              <span v-if="message.sender == sender" class="white--text mr-3 chat">{{ message.message }}</span>
+
+                <v-avatar v-if="message.sender != sender" color="primary" size="36">
+                  <span class="white--text">{{ message.sender[0] }}</span>
+                </v-avatar>
+              <span v-if="message.sender != sender" class="white--text ml-3 chat">{{ message.message }}</span>
+              
+            </div>
+          </div>      
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="fixedchat">
+      <v-container style="padding-top:0">
+        <v-row no-gutters>
+          <v-col>
+            <div class="d-flex flex-row align-center">
+              <v-text-field class="gold-color" v-model="message" size="33" placeholder="내용을 입력해주세요" @keypress.enter="sendMessage"></v-text-field>
+              <v-btn icon class="ml-4" @click="sendMessage"><v-icon color="primary">mdi-send</v-icon></v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
-    <ul class="list-group">
-      <li class="list-group-item" v-for="(message, idx) in messages" :key="idx" :message="message">
-        <a>{{message.sender}} - {{message.message}}</a>
-      </li>
-    </ul>
-    <div></div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client' 
-
-var sock = new SockJS("/ws-stomp");
-var ws = Stomp.over(sock);
-var reconnect = 0;
+import Stomp from 'webstomp-client'
+import rest from "../../js/httpCommon.js"
 
 export default {
   data() {
     return {
       roomId: '',
       room: {},
+      endlive: {},
       sender: '',
       message: '',
-      messages: []
+      messages: [],
+      stompClient: undefined,
+      pre_diffHeight: 0,
+      bottom_flag: true,
+
+      dialog: false,
     }
   },
   created() {
-    this.roomId = localStorage.getItem('wschat.roomId');
-    this.sender = localStorage.getItem('wschat.sender');
+    this.roomId = this.$route.params.prdId;
+    this.sender = localStorage.getItem("userName");
     this.findRoom();
+    this.getEndLive();
+    this.connect();
+  },
+  filters: {
+    comma: function (value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   },
   methods: {
     findRoom: function() {
-        axios.get('/chat/room/'+this.roomId).then(response => { this.room = response.data; });
+      rest.axios({
+        url: "dabid/chat/room/"+this.roomId,
+      })
+      .then(res => {
+        this.room = res.data;
+        for (let message of res.data.chatlist) {
+          this.messages.push({"type":"TALK","sender":message.chatFrom,"message":message.chatContent})
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    },
+    getEndLive: function() {
+      rest.axios({
+        url: "dabid/chat/room/"+this.roomId,
+      })
+      .then(res => {
+        this.endlive = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
     },
     sendMessage: function() {
-        ws.send("/pub/chat/message", {}, JSON.stringify({type:'TALK', roomId:this.roomId, sender:this.sender, message:this.message}));
-        this.message = '';
+      let chat =  {
+        "type": 'TALK',
+        "roomId": this.roomId,
+        "sender": this.sender,
+        "message": this.message
+      };
+      this.stompClient.send("/pub/chat/message/", JSON.stringify(chat), {});
+      this.message = '';
     },
-    recvMessage: function(recv) {
-        this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
+    chatOnScroll: function () {
+      const objDiv = document.getElementById("chatList");
+      if((objDiv.scrollTop + objDiv.clientHeight) == objDiv.scrollHeight) {
+        this.bottom_flag = true;
+      }
+      if(this.pre_diffHeight > objDiv.scrollTop + objDiv.clientHeight) {
+        this.bottom_flag = false;
+      }
+      this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight
+    },
+    connect() {
+      const endPoint = "https://i5a506.p.ssafy.io/api/ws-stomp";
+      let sock = new SockJS(endPoint);
+      let stompClient = Stomp.over(sock);
+      stompClient.connect({}, function(frame) {
+        stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
+          var recv = JSON.parse(res.body);
+          this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
+          
+        });
+      }.bind(this), function(error) {
+      });
+      this.stompClient = stompClient;
+    },
+    goReview : function (Id) {
+      this.$router.push({
+        name: "ReviewCreate",
+        params: {
+          seller : this.endlive.seller,
+          prdId : Id
+        }
+      })
     }
   },
-  connect() {
-    // pub/sub event
-    ws.connect({}, function(frame) {
-      ws.subscribe("/sub/chat/room/"+ vm.$data.roomId, function(message) {
-          var recv = JSON.parse(message.body);
-          vm.recvMessage(recv);
-      });
-      ws.send("/pub/chat/message", {}, JSON.stringify({type:'ENTER', roomId:vm.$data.roomId, sender:vm.$data.sender}));
-    }, function(error) {
-      if(reconnect++ <= 5) {
-        setTimeout(function() {
-          console.log("connection reconnect");
-          sock = new SockJS("/ws-stomp");
-          ws = Stomp.over(sock);
-          this.connect();
-        },10*1000);
-      }
-    });
+  updated: function () {
+    const objDiv = document.getElementById("chatList");
+    if(this.bottom_flag){
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
   }
 }
 </script>
+
+<style scoped>
+.fixedchat {
+  position: fixed;
+  bottom: 30px;
+  background-color: white;
+  height: 90px;
+}
+.chat {
+  background-color: #151618;
+  padding: 10px;
+  border-radius: 10px;
+}
+.chat-back {
+  background-color: #3c3f44;
+  min-height: 100%;
+  margin-bottom: 50px;
+}
+.comments_wrap {
+  margin-bottom: 1.5rem;
+  background-color: #3c3f44;
+  z-index: 2;
+  overflow-y: scroll;
+  max-height: 350px;
+  line-height: 1.3;
+  font-size: 14px;
+  color: white;
+  overscroll-behavior: none;
+  will-change: bottom;
+}
+.link-button {
+  color: #dfb772;
+}
+.v-application--wrap {
+  min-height: 0vh !important;
+}
+</style>

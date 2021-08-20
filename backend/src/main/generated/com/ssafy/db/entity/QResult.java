@@ -22,17 +22,17 @@ public class QResult extends EntityPathBase<Result> {
 
     public static final QResult result = new QResult("result");
 
-    public final QChatRoom chatRoom;
+    public final QUser buyer;
+
+    public final ListPath<Chat, QChat> chatlist = this.<Chat, QChat>createList("chatlist", Chat.class, QChat.class, PathInits.DIRECT2);
 
     public final QLive live;
 
     public final NumberPath<Integer> prdId = createNumber("prdId", Integer.class);
 
-    public final StringPath resBuyerId = createString("resBuyerId");
-
     public final NumberPath<Integer> resPriceEnd = createNumber("resPriceEnd", Integer.class);
 
-    public final QUser user;
+    public final QUser seller;
 
     public QResult(String variable) {
         this(Result.class, forVariable(variable), INITS);
@@ -52,9 +52,9 @@ public class QResult extends EntityPathBase<Result> {
 
     public QResult(Class<? extends Result> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.chatRoom = inits.isInitialized("chatRoom") ? new QChatRoom(forProperty("chatRoom"), inits.get("chatRoom")) : null;
+        this.buyer = inits.isInitialized("buyer") ? new QUser(forProperty("buyer"), inits.get("buyer")) : null;
         this.live = inits.isInitialized("live") ? new QLive(forProperty("live"), inits.get("live")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
+        this.seller = inits.isInitialized("seller") ? new QUser(forProperty("seller"), inits.get("seller")) : null;
     }
 
 }

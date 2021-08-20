@@ -1,9 +1,11 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.response.LiveRes;
 import com.ssafy.db.entity.Live;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishList;
 import com.ssafy.db.repository.LiveRepository;
+import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -17,9 +19,13 @@ public class WishServiceImpl implements WishService{
 
     @Autowired
     LiveService liveService;
+    @Autowired
+    WishService wishService;
 
     @Autowired
     WishListRepository wishListRepository;
+    @Autowired
+    UserRepository userRepository;
 
 
     @Override
@@ -39,23 +45,43 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public List<Live> getBestLives() {
-       List<WishList> wishList = wishListRepository.findAll(Sort.by(Sort.Direction.DESC, "Live_PrdId"));
-       List<Live> wishTop2List = new ArrayList<>();
+    public List<LiveRes> getBestLives() {
+        long size = wishListRepository.count();
+       List<LiveRes> wishTop2List = new ArrayList<>();
 
-       if(wishList.size()<2){ //하트수로 판별할 수 없는 경우 그냥 라이브 방송예정 중 방송에서 최신순 2개
-           wishTop2List = liveService.getRecentLives(0);
-       }else { //하트 수 가장많은 방송
-           wishTop2List.add(wishList.get(0).getLive());
-           wishTop2List.add(wishList.get(1).getLive());
+       if(size<2){ //하트수로 판별할 수 없는 경우 그냥 라이브 방송예정 중 방송에서 최신순 2개
+           List<Live> liveList = liveService.getRecentLives(0);
+           for (int i=0; i<2; i++){
+               Live live = liveList.get(i);
+               User user = userRepository.findByUserId(live.getUser().getUserId()).get();
+               int cnt = wishService.getLiveHearts(live);
+               LiveRes liveRes = new LiveRes(user,live,cnt);
+               wishTop2List.add(liveRes);
+           }
+       }else { //하트 수 가장많은 방송 2개
+           List<WishList> wishListList = wishListRepository.findAllGroupByPrdId();
+           for (int i=0; i<2; i++){
+               WishList wishList = wishListList.get(i);
+               User user = wishList.getUser();
+               Live live = wishList.getLive();
+               int cnt = wishService.getLiveHearts(live);
+
+               LiveRes liveRes = new LiveRes(user,live,cnt);
+               wishTop2List.add(liveRes);
+           }
        }
 
        return wishTop2List;
     }
 
     @Override
+    public int getLiveHearts(Live live) {
+       int cnt = wishListRepository.countByLive(live);
+        return cnt;
+    }
+
+    @Override
     public void putWishLive(User user, int prdId) {
-        System.out.println("여기들어와2");
         WishList wishList = new WishList();
         Live live = liveService.getLiveByPrdId(prdId);
         wishList.setLive(live);
@@ -70,7 +96,6 @@ public class WishServiceImpl implements WishService{
     public void deleteWishLive(User user, int prdId) {
         Live live = liveService.getLiveByPrdId(prdId);
         WishList wishList = wishListRepository.findByUserAndLive(user,live).orElse(null);
-        System.out.println("삭제할wish"+wishList.getWishId());
         wishListRepository.delete(wishList);
     }
 }

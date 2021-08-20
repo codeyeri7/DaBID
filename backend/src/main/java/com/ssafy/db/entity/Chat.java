@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,17 +18,16 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatId;
 
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp chatDate;
 
     @Column(length = 200)
     private String chatContent;
 
     private String chatFrom;
-//
-//    @Column(name = "chat_room_id",insertable=false, updatable=false)
-//    private int chatRoomId;
 
-    @ManyToOne // 다대일 관계의 연관 관계
-    @JoinColumn(name = "chat_room_id") // ChatRoom entity의 PK인 chatroom_id과 참조관계 mapping
-    private ChatRoom chatRoom;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name="prd_id")
+    private Result result;
 }

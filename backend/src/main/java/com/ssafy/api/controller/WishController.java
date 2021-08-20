@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.response.LiveRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.WishService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,7 +41,6 @@ public class WishController {
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
 
-		System.out.println("USER아이디"+userId);
 		List<WishList> wishLiveList = wishService.getWishLives(user);
 		return ResponseEntity.status(200).body(wishLiveList);
 	}
@@ -47,11 +48,9 @@ public class WishController {
 	@GetMapping("/check/{prdId}")
 	@ApiOperation(value = "내가 찜한 라이브인지 판별", notes = "로그인한 유저가 찜한 라이브인지 아닌지 판별")
 	public ResponseEntity<?> checkWishLive(@PathVariable int prdId,@ApiIgnore Authentication authentication) {
-		System.out.println("여기들어와");
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
-
 		Boolean flg = false;
 		flg = wishService.checkWishLive(user,prdId);
 		return ResponseEntity.status(200).body(flg);
@@ -93,7 +92,7 @@ public class WishController {
 	@GetMapping("/best")
 	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
 	public ResponseEntity<?> bestLives() {
-		List<Live> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
+		List<LiveRes> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
 		return ResponseEntity.status(200).body(liveList);
 	}
 

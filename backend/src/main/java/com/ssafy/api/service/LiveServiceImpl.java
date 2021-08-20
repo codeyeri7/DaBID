@@ -1,19 +1,20 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
-import com.ssafy.db.entity.Live;
-import com.ssafy.db.entity.LiveStatus;
-import com.ssafy.db.entity.ProductCategory;
-import com.ssafy.db.entity.User;
+import com.ssafy.api.request.LogPostReq;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.LiveLogRepository;
 import com.ssafy.db.repository.LiveRepository;
 import com.ssafy.db.repository.LiveStatusRepository;
 import com.ssafy.db.repository.ProductCategoryRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +29,12 @@ public class LiveServiceImpl implements LiveService {
 	ProductCategoryRepository productCategoryRepository;
 	@Autowired
 	LiveStatusRepository liveStatusRepository;
+	@Autowired
+	LiveLogRepository liveLogRepository;
 
 	@Override
 	public void createLive(User user, LiveRegisterPostReq liveInfo) {
 		Live live = new Live();
-//		live.setPrdSellerId(user.getUserId());			// 판매자 고유 아이디
 		live.setUser(user);
 		live.setLiveTitle(liveInfo.getLiveTitle());        // 라이브 제목
 		live.setLiveDesc(liveInfo.getLiveDesc());        // 라이브 상세 정보
@@ -45,8 +47,6 @@ public class LiveServiceImpl implements LiveService {
 		Timestamp timestamp = Timestamp.valueOf(liveDate);
 		live.setLiveDate(timestamp);                    // 라이브 시작 날짜
 		live.setPrdName(liveInfo.getPrdName());            // 상품명
-
-//		live.setPrdCategory(liveInfo.getPrdCategory()); // 카테고리 번호
 
 		Optional<ProductCategory> productcategory = productCategoryRepository.findByPrdCategory(liveInfo.getPrdCategory());
 		live.setProductCategory(productcategory.orElseGet(null));
@@ -83,7 +83,6 @@ public class LiveServiceImpl implements LiveService {
 		Optional<LiveStatus> livestatus = liveStatusRepository.findByLiveStatus(0);
 		live.setLiveStatus(livestatus.orElseGet(null));
 
-		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
 		live.setPrdPhoto(liveInfo.getPrdPhoto());
@@ -110,9 +109,8 @@ public class LiveServiceImpl implements LiveService {
 	}
 
 	@Override
-	public List<Live> getAllLives() {
-		List<Live> list = liveRepository.findAll();
-		return list;
+	public Page<Live> getAllLives(int page) {
+		return liveRepository.findAll(PageRequest.of(page, 6));
 	}
 
 	@Override
@@ -166,5 +164,26 @@ public class LiveServiceImpl implements LiveService {
 		// Front에서 받아온 keyword로
 		// 라이브 제목, 상품명 like %keyword% 검색
 		return liveRepository.findByLiveTitleContainingOrPrdNameContaining(keyword, keyword).orElseGet(null);
+	}
+
+	public void createLog(LogPostReq logInfo) {
+		LiveLog log = new LiveLog();
+		log.setBidder(logInfo.getBidder());
+		log.setBidPrice(logInfo.getBidPrice());
+		log.setLive(liveRepository.findByPrdId(logInfo.getPrdId()).get());
+
+		liveLogRepository.save(log);
+	}
+
+	public void updateStatus(int prdId){
+		Live live = liveRepository.findByPrdId(prdId).get();
+		live.setLiveStatus(liveStatusRepository.getOne(1));
+		liveRepository.save(live);
+	}
+
+	public void endLive(int prdId){
+		Live live = liveRepository.findByPrdId(prdId).get();
+		live.setLiveStatus(liveStatusRepository.getOne(2));
+		liveRepository.save(live);
 	}
 }

@@ -1,54 +1,46 @@
 <template>
-  <div>
+  <div class="main-back">
     <v-app>
       <v-app-bar
         app
         flat
-        color="white"  
         light
+        id="app-bar"
         v-if="isLogin"
       >
         <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/LOGO.png" width="40" class="pt-2">
+          <img src="@/assets/logoa.png" width="42" class="pt-2">
         </RouterLink>
-
-        <v-spacer></v-spacer>
-        <!-- 우상단 더치트 링크 --> 
         
-      
-        <!-- 지운 검색창 --> 
-        <!-- <v-text-field
-          hide-details
-          prepend-icon="mdi-magnify"
-          single-line
-          placeholder="Search"
-        ></v-text-field> -->
+        <v-spacer></v-spacer>
       </v-app-bar>
+
       <!-- 메인페이지가 routerview default -->
       <v-content>
         <RouterView></RouterView>
       </v-content>
+
+        <div v-if="isLogin">
+          <footer
+            app
+            flat  
+            light 
+          >
+            <RouterLink :to="{ name: 'Main' }">
+              <img src="@/assets/Home.png" width="35" style="margin-left:1.2rem;">
+            </RouterLink>
+            <RouterLink :to="{ name: 'AllLiveList' }">
+              <img src="@/assets/myLive.png" width="35">
+            </RouterLink>
+            <RouterLink :to="{ name: 'Chatlist' }">
+              <img src="@/assets/chat.png" width="30">
+            </RouterLink>
+            <RouterLink :to="{ name: 'MyPage' }">
+              <img src="@/assets/profile.png" width="30"  style="margin-right:1.2rem">
+            </RouterLink>
+          </footer>
+         </div>
     </v-app>
-    <div v-if="isLogin" class="row" style="margin-top:60px">
-      <footer
-        app
-        flat  
-        light
-      >
-        <RouterLink :to="{ name: 'Main' }">
-          <img src="@/assets/Home.png" width="40" style="margin-left:50px; margin-top:7px">
-        </RouterLink>
-        <RouterLink :to="{ name: 'Chatlist' }">
-          <img src="@/assets/Chat.png" width="30" style="margin-left:35px;margin-top:7px">
-        </RouterLink>
-        <RouterLink :to="{ name: 'AllLiveList' }">
-          <img src="@/assets/live.png" width="40" style="margin-left:35px;margin-top:7px">
-        </RouterLink>
-        <RouterLink :to="{ name: 'MyPage' }">
-          <img src="@/assets/profile.png" width="30"  style="margin-left:35px;margin-top:7px">
-        </RouterLink>
-      </footer>
-    </div>
   </div>
 </template>
 
@@ -60,6 +52,8 @@ export default {
     return {
       isLogin: false,
       userName: null,
+      drawer: false,
+      group: null,
     }
   },
    methods: {
@@ -89,22 +83,43 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
 
 footer{ 
+  /* border-top: 1px solid #292938; */
   position:fixed; 
   left:0px; 
   bottom:0px; 
   height:50px; 
   width:100%; 
-  background:rgb(100, 100, 100); 
-  color: rgb(255, 255, 255);
-  border-radius: 30% 30% 0% 0%;
-  }
-
+  background:#3c3f44; 
+  display:flex; 
+  justify-content:space-between;
+  align-items: center;
+}
+.v-toolbar__content, .v-toolbar__extension {
+}
 #eng-font {
   font-family: 'Lora', serif;
 }
 #kor-font {
-  font-family: 'IBMPlexSansKR-Regular';
+  font-family: 'InfinitySans-RegularA1';
 }
+
+@font-face {
+  font-family: "InfinitySans-RegularA1";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/InfinitySans-RegularA1.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+#app-bar {
+  background-color: #3c3f44;
+}
+.gold-color {
+  color: #dfb772;
+}
+
+
 </style>

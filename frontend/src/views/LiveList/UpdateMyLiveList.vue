@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
       <hr id="top-hr">
       <v-row>
         <v-col>
@@ -10,10 +9,8 @@
             <v-text-field v-model.trim="editlive.prdName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="editlive.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
-              <v-btn @click="upload" color=primary flat>업로드</v-btn>
             </div>
           </div>
           
@@ -90,7 +87,7 @@
             </v-time-picker>
           </v-dialog>
           </div>
-            <v-btn @click="updateLive(editlive)" x-small color="white" :disabled="!valid"
+            <v-btn class="white--text" elevation="0" @click="updateLive(editlive)" x-small color="primary" :disabled="!valid"
           style="margin-left:120px;margin-top:20px;margin-bottom: 10px;padding:17px; font-size:17px; color:black;font-family: 'IBMPlexSansKR-Regular';">등록</v-btn>
         </v-col>
       </v-row>
@@ -182,7 +179,6 @@ export default {
         })
     },
     updateLive: function (editlive) {
-      // console.log(this.)
       const config = this.setToken()
       const prdId = this.$route.params.prdId
       const editlivedata = {
@@ -196,9 +192,6 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      console.log(editlivedata)
-      console.log(editlive)
-      console.log(editlive.prdPhoto)
       rest.
         axios({
           method: 'put',
@@ -206,13 +199,11 @@ export default {
           data: editlivedata,
           headers: config,
         })
-        .then((res) => {
-          console.log(res)
+        .then(() => {
           this.$router.push({ name: 'MyLiveList', params: { prdId: `${prdId}` }})
         })
         .catch((err) => {
-          console.log('안됨..')
-          console.log('수정실패',err)
+          console.log(err)
         })
     },
     setDate() {
@@ -222,7 +213,7 @@ export default {
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
-      console.log(this.file, '파일이 잘 업로드 되었습니다.')
+      this.upload()
     },
     calcDate() {
       this.sevenday = dayjs(this.today).add(7, 'day').format('YYYY-MM-DD')
@@ -251,9 +242,7 @@ export default {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        alert('사진 업로드에 성공했습니다');
         this.prdPhoto = data.Location
-        console.log(this.prdPhoto)
       });
     },
   },

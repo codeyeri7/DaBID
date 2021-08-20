@@ -12,8 +12,6 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserUpdatePatchRequest")
 public class UserUpdatePatchReq {
-//	@ApiModelProperty(name="유저 ID", example="your_id")
-//	String id;
 	@ApiModelProperty(name="유저 department", example="your_department")
 	String department;
 	@ApiModelProperty(name="유저 name", example="심재원")

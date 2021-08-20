@@ -1,14 +1,19 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.LiveRegisterPostReq;
+import com.ssafy.api.request.LogPostReq;
+import com.ssafy.api.request.ResultPostReq;
 import com.ssafy.api.service.LiveService;
+import com.ssafy.api.service.ResultService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Live;
+import com.ssafy.db.entity.Result;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +22,8 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 /**
  * 라이브 관련 요청 처리를 위한 컨트롤러 정의.
  */
@@ -28,6 +35,9 @@ public class LiveController {
 	UserService userService;
 	@Autowired
 	LiveService liveService;
+	@Autowired
+	ResultService resultService;
+
 	/**
 	 * 라이브 CRUD 관련 Controller
 	 */
@@ -61,8 +71,6 @@ public class LiveController {
 			notes = "상품고유아이디(prdId)를 파라미터로 받아 통해 라이브 테이블 수정한다.")
 	public ResponseEntity<?> updateLive(@PathVariable @ApiParam(name="prdId") int prdId,
 		@RequestBody @ApiParam(value="라이브 생성을 위한 정보", required = true) LiveRegisterPostReq registerInfo) {
-		System.out.println(registerInfo.getPrdCategory());
-		System.out.println(registerInfo.getPrdPhoto());
 		// 파라미터로 넘어온 prdId(상품 고유 아이디)로 해당되는 Live 객체 찾기
 		Live live = liveService.getLiveByPrdId(prdId);
 		try {
@@ -92,8 +100,8 @@ public class LiveController {
 
 	@GetMapping("/all")
 	@ApiOperation(value = "라이브 조회", notes = "라이브 전체 조회")
-	public ResponseEntity<?> selectAllLives() {
-		List<Live> liveList = liveService.getAllLives();
+	public ResponseEntity<?> selectAllLives(@RequestParam(name="page") int page) {
+		Page<Live> liveList = liveService.getAllLives(page);
 		return ResponseEntity.status(200).body(liveList);
 	}
 
@@ -106,7 +114,6 @@ public class LiveController {
 		return ResponseEntity.status(200).body(liveList);
 	}
 
-
 	@GetMapping()
 	@ApiOperation(value="라이브 검색", notes="라이브 검색")
 	public ResponseEntity<?> searchLive(@RequestParam(name="categories", required = false) List<String> categories,
@@ -117,4 +124,48 @@ public class LiveController {
 		return ResponseEntity.status(200).body(liveList);
 	}
 
+
+	// 방송 시작시에 방송 예정에서 "방송중"으로 업데이트
+	@PutMapping("/start/{prdId}")
+	@ApiOperation(value="방송 시작", notes="방송 시작시 방송 예정에서 방송중으로 업데이트")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 400, message = "에러 발생"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<?> startLive(@PathVariable int prdId) {
+
+		try{
+			liveService.updateStatus(prdId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}catch (Exception e){
+			return ResponseEntity.status(200).body(BaseResponseBody.of(400, "Success"));
+		}
+
+	}
+
+	// 방송 중에서 "방송종료"로 업데이트
+	@PutMapping("/end/{prdId}")
+	@ApiOperation(value="방송 종료", notes="방송 중에서 방송 종료로 업데이트")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 400, message = "에러 발생"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<?> endLive(@PathVariable int prdId) {
+
+		try{
+			liveService.endLive(prdId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}catch (Exception e){
+			return ResponseEntity.status(200).body(BaseResponseBody.of(400, "Success"));
+		}
+
+	}
+
+	// 라이브 진행 중 로그
+	@PostMapping("/log")
+	public void createLog(@RequestBody LogPostReq logInfo) {
+		liveService.createLog(logInfo);
+	}
 }

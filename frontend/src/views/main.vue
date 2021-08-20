@@ -1,5 +1,5 @@
 <template>
-  <div style="font-family: 'InfinitySans-RegularA1';">
+  <div class="main-back">
     <!-- carousel-->
     <v-carousel
       :continuous="false"
@@ -9,114 +9,85 @@
       height="230"
     >
       <v-carousel-item>
-        <img src="@/assets/Banner3.png" width="370">
+        <img src="@/assets/Banner3.png" width="100%" height="100%">
       </v-carousel-item>
       <v-carousel-item>
-        <img src="@/assets/Banner2.png" width="370">
+        <img src="@/assets/Banner2.png" width="100%" height="100%">
       </v-carousel-item>
       <v-carousel-item>
-        <img src="@/assets/Banner1.png" width="370">
+        <img src="@/assets/Banner1.png" width="100%" height="100%">
       </v-carousel-item>
     </v-carousel>
 
     <!-- card -->
     <div class="main-card">
-      <v-card class="mx-auto" width="500">
+      <div class="mx-auto">
         <v-container fluid>
-          <div>
+          <div class="classify">
             <span><b>방송중인 상품</b></span>
-            <span align="right" style="padding-left: 200px">더보기</span>
+            <span @click="goSearchLive('방송중')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in now_live" :key="card.title" :cols="6">
-              <v-card class="section1" @click="goLive(card.prdId)">
+            <v-col v-for="card in now_lives" :key="card.title" :cols="6">
+              <v-card height="280" class="section1" @click="goLive(card.prdId)" tile :elevation="0">
                 <!-- Image -->
                 <v-img
-                  src= "card.prdPhoto"
+                  :src= "card.prdPhoto"
                   class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="200px"
+                  height="180px"
                   style="padding: 40px"
                 >
-                  <!-- image 안 title -->
-                  <v-card-title class="subtitle-style" style="font-size:18px">방송중</v-card-title>
+                
                 </v-img>
                 <!-- 카드 하단-->
-                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
-                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
+                <div class="card-content" id="kor-font">
+                  <v-card-title id="card-title">{{ card.liveTitle  | truncate(8, '...') }}</v-card-title><br>
+                  <v-card-subtitle class="py-0">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
+                  <v-card-subtitle class="pt-0 pb-1">방송일 | {{ card.liveDate.slice(0,10) }}</v-card-subtitle>
+                </div>
               </v-card>
             </v-col>
           </v-row>
         </v-container>
         <div>
         </div>
-        <hr />
         <v-container fluid>
-          <div>
+          <div class="classify">
             <span><b>방송 예정</b></span>
-            <span align="right" style="padding-left: 230px">더보기</span>
+            <span @click="goSearchLive('방송예정')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in will_live" :key="card.title" :cols="6">
-              <v-card class="section2">
-                <!-- Image -->
-                <v-img
-                  src= "card.prdPhoto"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="200px"
-                  style="padding-left: 20px"
-                >
-                   <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">방송 예정</v-card-title>
-                </v-img>
-                <!-- 카드 하단-->
-                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
-                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-              </v-card>
-            </v-col>
+            <MainCard
+              v-for="(live, idx) in will_lives"
+              :key="idx"
+              :live="live"
+            />
           </v-row>
         </v-container>
-        <hr />
 
         <v-container fluid>
-          <div>
+          <div class="classify">
             <span><b>방송 종료</b></span>
-            <span align="right" style="padding-left: 230px">더보기</span>
+            <span @click="goSearchLive('방송종료')">더보기</span>
           </div>
           <v-row dense>
-            <v-col v-for="card in end_live" :key="card.title" :cols="6">
-              <v-card class="section3">
-                <!-- Image -->
-                <v-img
-                  src= "card.prdPhoto"
-                  class="white--text align-center"
-                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                  height="200px"
-                  style="padding-left: 25px"
-                >
-                   <!-- image 안 title -->
-                  <v-card-title class="subtitle-style">방송 종료</v-card-title>
-                </v-img>
-                <!-- 카드 하단-->
-                <v-card-title>{{ card.liveTitle  | truncate(7, '...') }}</v-card-title>
-                <v-card-title class="text-subtitle-1">{{ card.prdName | truncate(5, '...') }}</v-card-title>
-                <v-card-subtitle class="text-subtitle-4">시작가 | {{ card.prdPriceStart | comma }}원</v-card-subtitle>
-              </v-card>
-            </v-col>
+            <MainCard
+              v-for="(live, idx) in end_lives"
+              :key="idx"
+              :live="live"
+            />
           </v-row>
         </v-container>
-      </v-card>
+      </div>
     </div>
     <!-- 상품 등록 버튼 -->
     <div class="fixedbutton" style="float: right">
       <RouterLink :to="{ name: 'LiveInfo' }">
         <v-btn 
-          x-small 
-          class="mr-2" 
-          fab dark color="gray"
+          small
+          class="mr-3" 
+          fab dark
+          color="#dfb772"
         >
           <v-icon dark>mdi-plus</v-icon>
         </v-btn>
@@ -127,23 +98,23 @@
 
 <script>
 import rest from "../js/httpCommon.js"
+import MainCard from "../components/MainCard.vue"
 
 export default {
   name: "Main",
-  
+  components: {
+    MainCard,
+  },
   data() {
     return {
+      lives: [],
       cards: null,
-      now_live: null,
-      will_live: null,
-      end_live: null,
-      // sessionData: {
-      //   liveTitle: "",
-      //   token: "",
-      //   userName: "",
-      //   userId: "",
-      //   role: "",
-      // },
+      now_lives: [],
+      will_lives: [],
+      end_lives: [],
+      wishlist: [],
+      dialog: false,
+      clicked: false,
     };
   },
   filters: {
@@ -165,11 +136,15 @@ export default {
         name: "session", 
         params: {
           prdId : prdId
-          // liveTitle: this.sessionData.liveTitle,
-          // token: this.sessionData.token,
-          // userName: this.sessionData.userName,
-          // userId: this.sessionData.userId,
-          // role: this.sessionData.role,
+        }
+      });
+    },
+    // 더보기로 이동
+    goSearchLive(liveStatus) {
+      this.$router.push({
+        name: "AllLiveList", 
+        params: {
+          liveStatus : liveStatus
         }
       });
     },
@@ -179,12 +154,21 @@ export default {
         .axios({
           method: "get",
           url: "/dabid/live/top2",
+          headers: this.setToken(),
         })
         .then((res) => {
           this.cards = res.data;
-          this.now_live = this.cards.slice(0, 2)
-          this.will_live = this.cards.slice(2, 4)
-          this.end_live = this.cards.slice(4, 6)
+          for (let one_live of this.cards) {
+            if (one_live.liveStatus.liveStatus == 0) {
+              this.will_lives.push(one_live)
+            }
+            else if (one_live.liveStatus.liveStatus == 2) {
+              this.end_lives.push(one_live)
+            } else {
+              this.now_lives.push(one_live)
+            }
+        }
+
         })
         .catch((err) => {
           console.log(err);
@@ -199,29 +183,53 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: "InfinitySans-RegularA1";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/InfinitySans-RegularA1.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
-}
 /* 상품 등록 버튼 고정 */
 .fixedbutton {
   position: sticky;
-  bottom: 60px;
+  bottom: 70px;
   padding-left: 250px;
 }
 .title-style label[for]{
   height: 20px;
   font-size: 4pt;
 }
-.subtitle-style {
-  height: 20px;
-  font-size: 3pt;
-  font-family: 'IBMPlexSansKR-Regular';
-}
 .custom-selector {
   font-size: 3em;
+}
+/* 카드 밑 바닥  */
+.card-content {
+  background-color: #3c3f44;
+  color: #dfb772
+}
+.classify {
+  display:flex; 
+  justify-content:space-between;
+  margin-bottom: 0.6rem;
+  color: #dfb772;
+}
+#card-title {
+  font-size: 1rem;
+  padding-bottom: 0;
+  padding-top: 0;
+  color:#dfb772;
+}
+.main-back {
+  background-color: #151618;
+  height: 100%;
+  margin-bottom: 50px;
+}
+.live-time {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 160px;
+  height: 100%;
+  z-index: 1;
+}
+.font {
+  font-size: 1.25rem;
 }
 </style>

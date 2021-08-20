@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.request.UserUpdatePatchReq;
+import com.ssafy.api.response.ReviewRes;
 import com.ssafy.db.entity.*;
 
 import java.util.List;
@@ -11,12 +12,10 @@ import java.util.List;
  */
 public interface UserService {
 	User createUser(String userName);
-	User updateUser(String userId, UserUpdatePatchReq updateInfo);
+	User updateUser(String userId, String userName);
 	User getUserByUserId(String userId);
-	void deleteUser(String userId);
-	boolean checkUser(String userId);
 
-	List<Review> checkReview(String userId);
+	List<ReviewRes> checkReview(String userId);
 	void writeReview(int prdId, String reviewWriter, int addScore, String content);
 
 	List<Live> getMyLives(String userId);

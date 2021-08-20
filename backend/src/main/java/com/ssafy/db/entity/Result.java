@@ -2,10 +2,10 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,18 +17,19 @@ public class Result {
     private int prdId;
     private int resPriceEnd;    // 경매 마감 가격
 
-//    @Column(name="res_buyer_id", insertable=false, updatable=false)
-//    private String resBuyerId;
-
     @MapsId //식별관계 + 키 설정
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "prd_id")
     private Live live;
 
     @OneToOne
     @JoinColumn(name="res_buyer_id")
-    private User user;
-    
-    @OneToOne(mappedBy = "result")
-    private ChatRoom chatRoom;
+    private User buyer;
+
+    @OneToOne
+    @JoinColumn(name="res_seller_id")
+    private User seller;
+
+    @OneToMany(mappedBy = "result", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Chat> chatlist = new ArrayList<>();
 }

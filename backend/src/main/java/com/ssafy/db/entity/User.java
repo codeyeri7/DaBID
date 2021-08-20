@@ -33,8 +33,12 @@ public class User {
     Auth auth;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "user")
-    Result result;
+    @OneToOne(mappedBy = "buyer")
+    Result result1;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "seller")
+    Result result2;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
@@ -47,5 +51,4 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<WishList> WishList = new ArrayList<>();
-
 }

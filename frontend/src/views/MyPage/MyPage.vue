@@ -1,68 +1,35 @@
 <template>
-  <div>
-    <h2 style="margin-left: 40px; font-family: 'Lora', serif">
-      {{ person.userName }}'s Profile
-    </h2>
+  <div class="body main-back">
+    <MyProfile :Person ="person"/>
 
-    <MyProfile />
-    <v-card class="mx-auto" max-width="300">
-      <v-list>
-        <v-list-item-group v-model="model">
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            @click="menuActionClick(item.action)"
-          >
-            <v-list-item-icon>
-              <v-icon v-text="item.icon" style="color: #ff7043"></v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title
-                v-text="item.text"
-                id="item-text"
-              ></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card>
-    <div class="fixedbutton" style="float: right">
-      <div class="text-center mr-5">
-        <v-dialog v-model="dialog" width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <img
-              src="@/assets/warning.png"
-              alt="warning"
-              style="width: 35px"
-              v-bind="attrs"
-              v-on="on"
-            />
+      <v-card class="mx-auto" max-width="290">
+          <v-simple-table>
+          <template v-slot:default>
+            <tbody style="background-color:#3c3f44;">
+              <tr
+                v-for="item in items"
+                :key="item.name"
+                @click="menuActionClick(item.action)"
+              >
+                <td id="eng-font" class="gold-color">{{ item.text }}</td>
+              </tr>
+            </tbody>
           </template>
+        </v-simple-table>
+    </v-card>
 
-          <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
-              Accident Policy
-            </v-card-title>
+    <v-card color="secondary" class="mx-auto mt-5" max-width="290">
+          <v-simple-table>
+          <template v-slot:default>
+            <tbody style="background-color:#3c3f44;">
+              <tr @click="logout()">
+                <td class="logout" id="eng-font"><b>Log out</b></td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+    </v-card>
 
-            <v-card-text style="margin-top: 2.5rem">
-              다비드는 원활한 거래 연결을 위해 더치트 계좌 조회 서비스를
-              지원합니다.
-              <hr />
-              <v-btn @click="onClick()">위험 계좌조회 더치트 바로가기</v-btn>
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="brown darken-2" text @click="dialog = false">
-                확인
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -78,28 +45,25 @@ export default {
   data: function () {
     return {
       dialog: false,
-
+      fontSize: 8,
       person: null,
+      userId: null,
       items: [
         {
-          icon: "mdi-monitor",
-          text: "My B-live",
+          text: "My B-Live",
           action: "goMyLive",
         },
         {
-          icon: "mdi-star",
           text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          icon: "mdi-send",
-          text: "Chat List",
-          action: "goChat",
+          text: "My Review",
+          action: "goReview",
         },
         {
-          icon: "mdi-logout",
-          text: "Logout",
-          action: "logout",
+          text: "Notice",
+          action: "goNotice",
         },
       ],
     };
@@ -121,8 +85,6 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          console.log(res);
-          // this.$router.push({ name: "ReviewList" });
         })
         .catch((err) => {
           console.log(err);
@@ -131,8 +93,6 @@ export default {
     async logout() {
       // google 로그아웃
       const result = await this.$gAuth.signOut();
-      console.log("result", result);
-      console.log("logout성공이닷");
       // localstorage 처리
       this.isLogin = false;
       localStorage.removeItem("jwt");
@@ -148,12 +108,21 @@ export default {
       } else if (action === "goWishLive") {
         this.$router.push({ name: "MyWishList" });
       } else if (action === "goMyLive") {
-        this.$router.push({ name: "MyLiveList" });
+        this.$router.push({ name: "MyLiveList", params: { 'userId' : this.userId} });
+      } else if (action === "goReview") {
+        this.$router.push({ name: "ReviewList", params: { userId: `${this.person.userId}`} });
+      } else if (action === "goNotice") {
+        this.$router.push({ name: "NoticeList" });
+      } else if (action === "goHelp") {
+        this.$router.push({ name: "Help" });
+      } else if (action === "goTheCheat") {
+        this.$router.push({ name: "TheCheat" });
       }
     },
   },
   created: function () {
     if (localStorage.getItem("jwt")) {
+      this.userId = localStorage.getItem('userId')
       this.getProfile();
     } else {
       this.$router.push({ name: "Login" });
@@ -163,10 +132,12 @@ export default {
 </script>
 
 <style scoped>
-.btn {
-  font-family: "PT Serif";
+.body {
+  background-color: #151618;
 }
-#item-text {
-  font-family: "PT Serif", serif;
+.logout {
+  color:red;
+  text-align: center;
 }
+
 </style>

@@ -1,30 +1,29 @@
 <template>
-  <div>
-    <h1>Notices</h1>
-    <div class="text-center d-flex pb-4">
-      <v-btn @click="all">
-        All Notices
-      </v-btn>
-      <v-btn @click="none">
-        All close
-      </v-btn>
-    </div>
-
+  <div class="container main-back">
+    <div class="notice-head pb-4">
+      <h1 class="ms-2" id="eng-font">Notices</h1>
+        <v-btn color="primary" dark tile @click="none" id="kor-font"
+        style="padding-bottom:0">
+          모두 닫기
+        </v-btn>
+      </div>
     <v-expansion-panels
       v-model="panel"
-      multiple
+      multiple 
+     
     >
       <v-expansion-panel
         v-for="(notice,i) in notices"
         :key="i"
+        id="kor-font"
+        style="background-color:#3c3f44"
       >
-        <v-expansion-panel-header>
-          #{{ i }} {{ notice.title }}
-          <!-- 조회수가 DB에 저장 되나요? 스토리보드에 있길래용 --> 
-
+      <v-expansion-panel-header>
+          <div class="gold-color"><img v-if="notice.noticeType == true" src="@/assets/exclamation-mark.png" alt="alert-img" width="20"> {{ notice.noticeTitle }} </div>
         </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          {{ notice.content }}
+
+        <v-expansion-panel-content class="pt-4" color="#4e5258">
+          <p v-html="notice.noticeContent"></p>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -42,29 +41,30 @@ export default {
       }
     },
     methods: {
-      // Create an array the length of our items
-      // with all values as true
-      all () {
-        this.panel = [...Array(this.items).keys()].map((k, i) => i)
-      },
       // Reset the panel
       none () {
         this.panel = []
       },
-    },
-    // 공지사항 가져오기 
-    getNotices: function () {
-      rest
-        .axios({
-          method: "get",
-          url: "",
-        })
-        .then((res) => {
-          this.notices = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // 공지사항 가져오기 
+      getNotices: function () {
+        rest
+          .axios({
+            method: "get",
+            url: "/dabid/notice",
+            params: {
+              page: 0
+            }
+          })
+          .then((res) => {
+            this.notices = res.data.content
+            for (let i = 0; i < this.notices.length; i++) {
+              this.notices[i].noticeContent = this.notices[i].noticeContent.split('\n').join('<br />');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
     },
     created: function () {
       this.getNotices();
@@ -73,8 +73,21 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-family: 'PT Serif', serif;
+.notice-head {
+  display:flex; 
+  justify-content:space-between;
+  align-items: center;
+
+}
+.container{
+  background-color: #151618;
+  margin-bottom: 60px;
 }
 
+.ms-2{
+  color: #dfb772;
+}
+p {
+  color: #dfb772;
+}
 </style>

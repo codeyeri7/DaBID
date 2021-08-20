@@ -1,16 +1,14 @@
 <template>
-  <div style="font-family: 'InfinitySans-RegularA1'">
-    <div class="main-card">
-      <v-card class="mx-auto">
-        <v-container fluid>
-          <div>
-            <span style="font-family: 'PT Serif', serif;font-size:20px; padding-bottom:40px"><b>My Wish List</b></span>
-          </div>
-          <v-row dense>
-            <MyWishLiveCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
-          </v-row>
-        </v-container>
-      </v-card>
+  <div id="kor-font" class="main-card main-back" style="background-color:#151618">
+    <div class="mx-auto">
+      <v-container fluid style="background-color:#151618">
+        <div>
+          <span class="gold-color" id="eng-font" style="font-size:20px; padding-bottom:40px"><b>My Wish List</b></span>
+        </div>
+        <v-row dense class="mt-2">
+          <MyWishLiveCard v-for="(live, idx) in lives" :key="idx" :live="live"/>
+        </v-row>
+      </v-container>
     </div>
   </div>
 </template>
@@ -45,7 +43,6 @@ export default {
       })
         .then((res) => {
           this.lives = res.data;
-          console.log(this.lives)
         })
         .catch((err) => {
           console.log(err);
@@ -62,5 +59,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.main-card {
+  background-color: "#151618";
+}
 </style>

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib/framework';
 
-// import colors from 'vuetify/lib/util/colors'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
 Vue.use(Vuetify);
@@ -10,8 +9,10 @@ export default new Vuetify({
     theme: {
         themes: {
             light: {
-                primary: '#BC4434',
-                secondary: '#E6B2A6',
+                primary: '#dfb772',
+                secondary: '#151618',
+                cardcolor: '#FDF4F4',
+                gray: '#3c3f44'
             }
         }
     },

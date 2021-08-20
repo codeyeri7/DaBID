@@ -158,9 +158,6 @@ export default {
         })
         .then((res) => {
           this.cards = res.data;
-          // this.will_lives = this.cards.slice(0, 2)
-          // this.now_live = this.cards.slice(2, 4)
-          // this.end_lives = this.cards.slice(4, 6)
           for (var i=0; i < this.cards.length; i++) {
             const one_live = this.cards[i]
             if (one_live.liveStatus.liveStatus == 0) {
@@ -173,15 +170,6 @@ export default {
             }
         }
 
-
-          // for (var i=0; i < this.will_live.length; i++) {
-          //   const live = this.will_live[i]
-          //   this.will_lives.push(live)
-          // }
-          // for (var j=0; j < this.end_live.length; j++) {
-          //   const live = this.end_live[j]
-          //   this.end_lives.push(live)
-          // }
         })
         .catch((err) => {
           console.log(err);
@@ -211,8 +199,6 @@ export default {
 }
 /* 카드 밑 바닥  */
 .card-content {
-  /* background-color: #ffffff; */
-  /* opacity: 0.8; */
   background-color: #3c3f44;
   color: #dfb772
 }
@@ -229,12 +215,9 @@ export default {
   color:#dfb772;
 }
 .main-back {
-  /* background-color:#3f404d;
-   */
   background-color: #151618;
   height: 100%;
   margin-bottom: 50px;
-  /* background-color: rgba(46,48,53,0.7) */
 }
 .live-time {
   position: absolute;

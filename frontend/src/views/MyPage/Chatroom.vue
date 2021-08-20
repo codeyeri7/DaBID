@@ -19,7 +19,6 @@
           <p>최종낙찰가 : {{ endlive.resPriceEnd | comma }}원</p>
         </div>
 
-        <!-- 확인 때문에 임시로 같다로 조건 바꿔뒀어요 --> 
         <div v-if="endlive.seller.userName != sender">
           <v-btn
             tile
@@ -40,7 +39,6 @@
             width="500"
           >
             <template v-slot:activator="{ on, attrs }">
-              <!-- <RouterLink :to="{ name: 'TheCheat' }"> -->
               <v-btn
                 v-bind="attrs"
                 v-on="on"
@@ -147,7 +145,6 @@ export default {
   },
   created() {
     this.roomId = this.$route.params.prdId;
-    // this.sender = this.$route.params.sender;
     this.sender = localStorage.getItem("userName");
     this.findRoom();
     this.getEndLive();
@@ -160,7 +157,6 @@ export default {
   },
   methods: {
     findRoom: function() {
-      // axios.get('https://localhost:8080/dabid/chat/room/'+this.roomId).then(response => { this.room = response.data; });
       rest.axios({
         url: "dabid/chat/room/"+this.roomId,
       })
@@ -207,11 +203,6 @@ export default {
       }
       this.pre_diffHeight = objDiv.scrollTop + objDiv.clientHeight
     },
-    // recvMessage: function(recv) {
-      // unshift: 배열 앞에 새로운 값 추가
-      // this.messages.unshift({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
-      // this.messages.push({"type":recv.type,"sender":recv.type=='ENTER'?'[알림]':recv.sender,"message":recv.message})
-    // },
     connect() {
       const endPoint = "https://i5a506.p.ssafy.io/api/ws-stomp";
       let sock = new SockJS(endPoint);
@@ -224,19 +215,10 @@ export default {
         stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
           var recv = JSON.parse(res.body);
           this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
-          // this.recvMessage(recv);
+          
         });
-        // stompClient.send("/pub/chat/message/", JSON.stringify({'type':'ENTER', 'roomId':this.roomId, 'sender':this.sender}), {});
       }.bind(this), function(error) {
         console.log("소켓 연결 실패", error)
-        // if(reconnect++ <= 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     sock = new SockJS("/ws-stomp");
-        //     ws = Stomp.over(sock);
-        //     this.connect();
-        //   },10*1000);
-        // }
       });
       this.stompClient = stompClient;
     },

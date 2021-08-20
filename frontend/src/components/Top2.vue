@@ -76,7 +76,6 @@
           설명 : {{ hot_live.live.liveDesc }}
         </h5>
       </v-card-text>
-      <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" text @click="edit"> edit </v-btn>
@@ -154,26 +153,7 @@ export default {
         alert("본인이 작성한 글만 수정 가능합니다!");
       }
     },
-    // remove: function () {
-    //   const userId = localStorage.getItem("userId");
-    //   if (this.hot_live.user.userId === userId) {
-    //     rest
-    //       .axios({
-    //         method: "delete",
-    //         url: `/dabid/live/${this.prdId}`,
-    //         headers: this.setToken(),
-    //       })
-    //       .then((res) => {
-    //         this.refreshAll();
-    //         console.log("삭제 성공");
-    //       })
-    //       .catch((err) => {
-    //         console.log(err);
-    //       });
-    //   } else {
-    //     alert("본인이 작성한 글만 삭제 가능합니다!");
-    //   }
-    // },
+    
     wish: function () {
       rest
         .axios({

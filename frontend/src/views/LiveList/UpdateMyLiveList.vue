@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <v-container>
-      <h2 style="margin-left:40px;font-family: 'Lora', serif;">Make new LIVE</h2>
       <hr id="top-hr">
       <v-row>
         <v-col>
@@ -200,11 +199,11 @@ export default {
           data: editlivedata,
           headers: config,
         })
-        .then((res) => {
-          console.log(res)
+        .then(() => {
           this.$router.push({ name: 'MyLiveList', params: { prdId: `${prdId}` }})
         })
         .catch((err) => {
+          console.log(err)
         })
     },
     setDate() {

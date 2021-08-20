@@ -334,7 +334,6 @@ export default {
     bidding: function () {
       if (this.currentUser == localStorage.getItem("userId")) {
         this.doublebetting = true;
-        console.log("연속 베팅은 불가능합니다.");
       } else {
         this.session
           .signal({
@@ -377,7 +376,7 @@ export default {
             resPriceEnd: this.currentPrice,
           },
         })
-        .then((res) => {
+        .then(() => {
           this.leaveSession();
           this.$router.push({
             name: "Chatroom",
@@ -481,8 +480,6 @@ export default {
               this.publisher = publisher;
 
               this.session.publish(this.publisher);
-            } else {
-              
             }
           });
       });

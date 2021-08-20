@@ -50,22 +50,18 @@ export default {
       userId: null,
       items: [
         {
-          // src: require("@/assets/myLive.png"),
           text: "My B-Live",
           action: "goMyLive",
         },
         {
-          // src: require("@/assets/mywish.png"),
           text: "My Wish Live",
           action: "goWishLive",
         },
         {
-          // src: require("@/assets/mynotice.png"),
           text: "My Review",
           action: "goReview",
         },
         {
-          // src: require("@/assets/mynotice.png"),
           text: "Notice",
           action: "goNotice",
         },
@@ -89,8 +85,6 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          console.log(this.person)
-          // console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -99,8 +93,6 @@ export default {
     async logout() {
       // google 로그아웃
       const result = await this.$gAuth.signOut();
-      console.log("result", result);
-      console.log("logout성공이닷");
       // localstorage 처리
       this.isLogin = false;
       localStorage.removeItem("jwt");

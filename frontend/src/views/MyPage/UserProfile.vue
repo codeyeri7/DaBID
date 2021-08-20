@@ -67,7 +67,6 @@ export default {
         })
         .then((res) => {
           this.person = res.data;
-          console.log('받아온 정보', this.person);
         })
         .catch((err) => {
           console.log(err);

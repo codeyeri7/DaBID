@@ -56,18 +56,15 @@ export default {
       })
       .then(res => {
         this.chatrooms = res.data;
-        console.log(res.data);
       })
     },
     enterRoom: function(prdId) {
         this.$router.push({
           name: "Chatroom",
           params: {
-            // sender: sender,
             prdId: prdId,
           }
         })
-      // }
     }
   }
 }

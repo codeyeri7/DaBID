@@ -180,7 +180,6 @@ export default {
         })
     },
     updateLive: function (editlive) {
-      // console.log(this.)
       const config = this.setToken()
       const prdId = this.$route.params.prdId
       const editlivedata = {
@@ -194,9 +193,6 @@ export default {
         liveDate: this.date,
         liveTime: this.time
       }
-      console.log(editlivedata)
-      console.log(editlive)
-      console.log(editlive.prdPhoto)
       rest.
         axios({
           method: 'put',
@@ -209,8 +205,6 @@ export default {
           this.$router.push({ name: 'MyLiveList', params: { prdId: `${prdId}` }})
         })
         .catch((err) => {
-          console.log('안됨..')
-          console.log('수정실패',err)
         })
     },
     setDate() {

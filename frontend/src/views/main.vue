@@ -109,7 +109,7 @@ export default {
     return {
       lives: [],
       cards: null,
-      now_lives: null,
+      now_lives: [],
       will_lives: [],
       end_lives: [],
       wishlist: [],
@@ -158,8 +158,7 @@ export default {
         })
         .then((res) => {
           this.cards = res.data;
-          for (var i=0; i < this.cards.length; i++) {
-            const one_live = this.cards[i]
+          for (let one_live of this.cards) {
             if (one_live.liveStatus.liveStatus == 0) {
               this.will_lives.push(one_live)
             }

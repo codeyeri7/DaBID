@@ -73,7 +73,6 @@ public class AuthController {
 
 			// Print user identifier
 			String userId = payload.getSubject();
-			System.out.println("User ID: " + userId);
 
 			// 유저 프로필 정보
 			String email = payload.getEmail();
@@ -89,14 +88,6 @@ public class AuthController {
 
 
 			}
-			// Session 테이블에 insert -> 지금은 패스
-
-
-//			boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-//			String pictureUrl = (String) payload.get("picture");
-//			String locale = (String) payload.get("locale");
-//			String familyName = (String) payload.get("family_name");
-//			String givenName = (String) payload.get("given_name");
 
 			// 유저 fullname과 JwtToken 반환
 			return ResponseEntity.ok(UserLoginPostRes.of(authUserId, name, JwtTokenUtil.getToken(authUserId)));
@@ -104,7 +95,6 @@ public class AuthController {
 		} else {
 			// Invalid ID token
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid ID token"));
-//			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid ID token"));
 		}
 	}
 

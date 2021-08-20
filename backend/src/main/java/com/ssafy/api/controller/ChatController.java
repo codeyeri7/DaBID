@@ -23,7 +23,6 @@ public class ChatController {
     ChatRepository chatRepository;
     @Autowired
     ResultRepository resultRepository;
-
     @Autowired
     LiveService liveService;
 

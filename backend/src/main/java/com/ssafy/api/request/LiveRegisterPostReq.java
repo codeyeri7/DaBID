@@ -17,14 +17,10 @@ import java.sql.Timestamp;
 @Setter
 @ApiModel("LiveRegisterPostReq")
 public class LiveRegisterPostReq {
-//	@ApiModelProperty(name="상품 고유 아이디")
-//	int prdId;
 	@ApiModelProperty(name="라이브 제목")
 	String liveTitle;
 	@ApiModelProperty(name="라이브 상세정보")
 	String liveDesc;
-//	@ApiModelProperty(name="라이브 상태", example = "1")
-//	int liveStatus;
 	@ApiModelProperty(name="라이브 시작 날짜")
 	String liveDate;
 	@ApiModelProperty(name="라이브 시작 시간")

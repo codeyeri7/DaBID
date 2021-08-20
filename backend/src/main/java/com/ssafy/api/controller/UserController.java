@@ -56,6 +56,7 @@ public class UserController {
 		List<Live> liveList = userService.getMyLives(userId);
 		return ResponseEntity.status(200).body(liveList);
 	}
+
 	@PatchMapping()
 	@ApiOperation(value = "회원 수정", notes = "사용자의 <strong>이름</strong>을 수정한다.")
 	@ApiResponses({
@@ -75,33 +76,9 @@ public class UserController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-	@DeleteMapping("/{userId}")
-	@ApiOperation(value = "회원 삭제", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
-	@ApiResponses({
-			@ApiResponse(code = 204, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<? extends BaseResponseBody> delete(
-			@PathVariable("userId") String userId) {
-
-		userService.deleteUser(userId);
-
-		return ResponseEntity.status(204).body(BaseResponseBody.of(204, "Success"));
-	}
-
 	@GetMapping("/me")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
 	public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication) {
-		/**
-		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-		 */
-		System.out.println(authentication);
-		System.out.println(authentication.getDetails());
-		System.out.println(authentication.isAuthenticated());
-
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
@@ -139,7 +116,6 @@ public class UserController {
 		String reviewWriter = reviewPostReq.getUserId(); //작성자
 		int addScore = reviewPostReq.getAddScore(); //리뷰 평점
 		String content = reviewPostReq.getContent(); //리뷰 내용
-		System.out.println("ddd"+prdId+" "+reviewWriter+" "+addScore+" "+content);
 
 		try {
 			userService.writeReview(prdId, reviewWriter, addScore, content);

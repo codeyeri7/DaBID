@@ -25,14 +25,12 @@ public class ResultController {
     @Autowired
     ResultService resultService;
 
-    //=========================================================================
     // Result + ChatRoom
     @PostMapping("/end/{prdId}")
     public ResponseEntity<?> endLive(@PathVariable int prdId,
                                      @RequestBody ResultPostReq resultInfo) {
-
         // Result Create
-        Result result = resultService.createResult(prdId, resultInfo);
+        resultService.createResult(prdId, resultInfo);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -57,13 +55,4 @@ public class ResultController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(400,"채팅방이 존재하지 않습니다."));
         return ResponseEntity.status(200).body(result);
     }
-
-
-    // 특정 채팅방 삭제
-//    @DeleteMapping("/room/{roomId}")
-//    @ApiOperation(value = "특정 채팅방 삭제", notes = "특정 채팅방 삭제.")
-//    public ResponseEntity<?> deleteRoom(@PathVariable String roomId) {
-//        chatRoomService.deleteChatRoom(roomId);
-//        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "채팅방이 삭제되었습니다."));
-//    }
 }

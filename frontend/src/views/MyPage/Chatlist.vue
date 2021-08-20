@@ -24,7 +24,6 @@
   </div>
 </template>
 <script>
-// import axios from 'axios'
 import rest from "../../js/httpCommon.js"
 
 export default {
@@ -59,14 +58,8 @@ export default {
         this.chatrooms = res.data;
         console.log(res.data);
       })
-      // axios.get('https://localhost:8080/dabid/chat/rooms').then(response => { this.chatrooms = response.data; });
     },
     enterRoom: function(prdId) {
-      // var sender = prompt('대화명을 입력해 주세요.');
-      // if(sender != "") {
-        // localStorage.setItem('wschat.sender',sender);
-        // localStorage.setItem('wschat.roomId',roomId);
-        // location.href="/chat/room/enter/"+roomId;
         this.$router.push({
           name: "Chatroom",
           params: {

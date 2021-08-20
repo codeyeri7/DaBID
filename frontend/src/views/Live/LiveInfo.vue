@@ -174,8 +174,6 @@ export default {
       DateRules: [
         v => !!v || '방송 예정일은 필수 항목 입니다.',
       ],
-      // date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-      // date: dayjs().format('YYYY-MM-DD HH:mm'),
       date: '',
       today: dayjs().format('YYYY-MM-DD'),
       sevenday: '',
@@ -245,7 +243,6 @@ export default {
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
-      // console.log(this.file, '파일이 잘 업로드 되었습니다.')
       this.upload()
     },
     calcDate() {
@@ -275,9 +272,7 @@ export default {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        // alert('사진 업로드에 성공했습니다');
         this.prdPhoto = data.Location
-        // console.log(this.prdPhoto)
       });
     }
   },

@@ -10,7 +10,6 @@
             <v-text-field v-model.trim="editlive.prdName" label="상품명" :counter="20" :rules="nameRules" rows="5" placeholder="정확한 상품명을 입력해주세요" required="required"></v-text-field>
             <v-text-field v-model.trim="editlive.prdNo" label="일련 번호" rows="5" :rules="productNumberRules" placeholder="xxxx-xxxx 형식으로 입력해주세요" required="required"></v-text-field>
             <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Category" required></v-select>
-            <!-- <v-file-input id="file-selector" v-model="productPhoto" @change="handleFileUpload()"  label="상품 사진" filled prepend-icon="mdi-camera" style="margin-top:17px;"></v-file-input> -->
             <div>
               <input id="file-selector" ref="file" type="file" @change="handleFileUpload()">
             </div>
@@ -221,7 +220,6 @@ export default {
     },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
-      // console.log(this.file, '파일이 잘 업로드 되었습니다.')
       this.upload()
     },
     calcDate() {
@@ -251,9 +249,7 @@ export default {
           console.log(err)
           return alert('There was an error uploading your photo: ', err.message);
         }
-        // alert('사진 업로드에 성공했습니다');
         this.prdPhoto = data.Location
-        // console.log(this.prdPhoto)
       });
     },
   },

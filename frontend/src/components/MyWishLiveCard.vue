@@ -116,8 +116,6 @@ export default {
         })
         .then((res) => {
           console.log("wish!!");
-          console.log(this.wishlist.includes(this.prdId));
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -132,7 +130,6 @@ export default {
         })
         .then((res) => {
           console.log("unwish!");
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);

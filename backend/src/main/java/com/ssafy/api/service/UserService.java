@@ -14,8 +14,6 @@ public interface UserService {
 	User createUser(String userName);
 	User updateUser(String userId, String userName);
 	User getUserByUserId(String userId);
-	void deleteUser(String userId);
-	boolean checkUser(String userId);
 
 	List<ReviewRes> checkReview(String userId);
 	void writeReview(int prdId, String reviewWriter, int addScore, String content);

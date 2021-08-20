@@ -24,7 +24,7 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer { //WebSo
     //엔드 포인트 구성에 withSockJS ()를 사용한다
     //SockJS는 웹 소켓을 지원하지 않는 브라우저에 폴백 옵션을 활성화하는 데 사용된다
     public void registerStompEndpoints(StompEndpointRegistry registry) { // 이 링크로 동작하는 socket js를 만들어 등록하겠다.
-//        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*").withSockJS(); // "/ws" 는 WebSocket 클라이언트가 Handshake를 위해 연결해야하는 end-point의 url
+        //  WebSocket 클라이언트가 Handshake를 위해 연결해야하는 end-point의 url
         registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS();
 
     }

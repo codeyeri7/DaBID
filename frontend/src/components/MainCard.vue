@@ -33,6 +33,7 @@
         </v-card>
       </v-col>
     </template>
+    <!-- dialog -->
     <v-card>
       <v-card-title class="headline secondary">
         <h4>{{ live.liveTitle }}</h4>
@@ -91,7 +92,6 @@ export default {
   data: function () {
     return {
       liveprdId: this.live.prdId,
-      // lives: [],
       wishlist: [],
       dialog: false,
       clicked: false,
@@ -118,7 +118,6 @@ export default {
           headers: this.setToken(),
         })
         .then(() => {
-          console.log("wish!!");
         })
         .catch((err) => {
           console.log(err);
@@ -132,15 +131,12 @@ export default {
           headers: this.setToken(),
         })
         .then(() => {
-          console.log("unwish!");
         })
         .catch((err) => {
           console.log(err);
         });
     },
     checkPrdId: function () {
-      console.log(this.live)
-      console.log(this.liveprdId)
       rest
         .axios({
           method: "get",
@@ -148,17 +144,12 @@ export default {
           headers: this.setToken()
         })
         .then((res) => {
-          this.clicked = res.data;
-          console.log(this.clicked)
-        })
+          this.clicked = res.data;        })
         .catch((err) => {
           console.log(err);
         });
       },
   },
-  // created: function () {
-  //   this.checkPrdId()
-  // }
 };
 </script>
 

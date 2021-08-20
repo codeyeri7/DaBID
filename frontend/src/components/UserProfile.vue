@@ -71,7 +71,6 @@ export default {
         .then((res) => {
           this.reviews = res.data;
           this.reviews_num = this.reviews.length
-          console.log('리뷰갯수에요',this.reviews_num);
         })
         .catch((err) => {
           console.log(err);

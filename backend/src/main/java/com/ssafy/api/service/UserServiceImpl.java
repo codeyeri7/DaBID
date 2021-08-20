@@ -44,20 +44,6 @@ public class UserServiceImpl implements UserService {
 		user.setUserName(userName);
 		return userRepository.save(user);
 	}
-	@Override
-	public void deleteUser(String userId) {
-//		Long id = getUserByUserId(userId).getId();
-//		userRepository.deleteById(id);
-	}
-
-	@Override
-	public boolean checkUser(String userId){
-//		Long id = getUserByUserId(userId).getId();
-//		if(userRepository.findById(id).equals(null)){
-//			return false;
-//		}
-		return true;
-	}
 
 	@Override
 	public List<ReviewRes> checkReview(String userId) {
@@ -96,8 +82,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserByUserId(String userId) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-		//User user = userRepositorySupport.findUserByUserId(userId).get();
-//		User user = userRepository.findByUserId(userId).get();
 		User user = userRepository.findByUserId(userId).orElse(null);
 		return user;
 	}

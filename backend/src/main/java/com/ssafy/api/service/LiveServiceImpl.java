@@ -35,7 +35,6 @@ public class LiveServiceImpl implements LiveService {
 	@Override
 	public void createLive(User user, LiveRegisterPostReq liveInfo) {
 		Live live = new Live();
-//		live.setPrdSellerId(user.getUserId());			// 판매자 고유 아이디
 		live.setUser(user);
 		live.setLiveTitle(liveInfo.getLiveTitle());        // 라이브 제목
 		live.setLiveDesc(liveInfo.getLiveDesc());        // 라이브 상세 정보
@@ -48,8 +47,6 @@ public class LiveServiceImpl implements LiveService {
 		Timestamp timestamp = Timestamp.valueOf(liveDate);
 		live.setLiveDate(timestamp);                    // 라이브 시작 날짜
 		live.setPrdName(liveInfo.getPrdName());            // 상품명
-
-//		live.setPrdCategory(liveInfo.getPrdCategory()); // 카테고리 번호
 
 		Optional<ProductCategory> productcategory = productCategoryRepository.findByPrdCategory(liveInfo.getPrdCategory());
 		live.setProductCategory(productcategory.orElseGet(null));
@@ -86,7 +83,6 @@ public class LiveServiceImpl implements LiveService {
 		Optional<LiveStatus> livestatus = liveStatusRepository.findByLiveStatus(0);
 		live.setLiveStatus(livestatus.orElseGet(null));
 
-		//live.setPrdCategory(liveInfo.getPrdCategory());
 		live.setPrdNo(liveInfo.getPrdNo());
 		live.setPrdPriceStart(liveInfo.getPrdPriceStart());
 		live.setPrdPhoto(liveInfo.getPrdPhoto());
@@ -114,9 +110,6 @@ public class LiveServiceImpl implements LiveService {
 
 	@Override
 	public Page<Live> getAllLives(int page) {
-//	public List<Live> getAllLives() {
-//		List<Live> list = liveRepository.findAll();
-//		return list;
 		return liveRepository.findAll(PageRequest.of(page, 6));
 	}
 

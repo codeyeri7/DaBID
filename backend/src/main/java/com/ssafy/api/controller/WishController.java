@@ -41,7 +41,6 @@ public class WishController {
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
 
-		System.out.println("USER아이디"+userId);
 		List<WishList> wishLiveList = wishService.getWishLives(user);
 		return ResponseEntity.status(200).body(wishLiveList);
 	}
@@ -52,7 +51,6 @@ public class WishController {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
-		System.out.println("여기!"+prdId+" "+userId);
 		Boolean flg = false;
 		flg = wishService.checkWishLive(user,prdId);
 		return ResponseEntity.status(200).body(flg);
@@ -95,7 +93,6 @@ public class WishController {
 	@ApiOperation(value = "찜한 하트 수 가장 많은 라이브 top2 조회", notes = "찜한 하트 수 가장 많은 라이브 top2 조회")
 	public ResponseEntity<?> bestLives() {
 		List<LiveRes> liveList = wishService.getBestLives(); //방송예정 중 인기방송 2개만
-		System.out.println(liveList.size());
 		return ResponseEntity.status(200).body(liveList);
 	}
 

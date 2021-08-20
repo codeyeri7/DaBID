@@ -122,7 +122,6 @@
 </template>
 
 <script>
-// import axios from 'axios'
 import SockJS from 'sockjs-client'
 import Stomp from 'webstomp-client'
 import rest from "../../js/httpCommon.js"

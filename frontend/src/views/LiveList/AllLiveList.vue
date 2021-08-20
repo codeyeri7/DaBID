@@ -25,7 +25,7 @@
     <!-- 검색 카테고리 창 -->
     <v-expansion-panels v-model="openedPanel" id="panel">
       <v-expansion-panel>
-        <v-expansion-panel-header id="eng-font" @click="openPanel(), closeAllPanels()">
+        <v-expansion-panel-header id="eng-font" @click="openPanel()">
           Search
         </v-expansion-panel-header>
 
@@ -132,16 +132,10 @@ export default {
       return config;
     },
     closeAllPanels () {
-      #//console.log(this.openedPanel)2dd
-      if (this.openedPanel !== null) {
-        this.openedPanel = null
-      }
+      this.openedPanel = null
     },
     openPanel (index) {
-      console.log(this.openedPanel)
-      if (this.openedPanel === null) {
-        this.openedPanel = index
-      }
+      this.openedPanel = index
     },
     getAllLiveList: function () {
       rest
@@ -157,9 +151,6 @@ export default {
           for (let live of res.data.content) {
             this.lives.push(live);
           }
-          console.log(res.data)
-          console.log(res.data.content)
-          console.log("전체 라이브", this.lives);
         })
         .catch((err) => {
           console.log(err);
@@ -172,7 +163,6 @@ export default {
           url: "/dabid/wish/best",
         })
         .then((res) => {
-          console.log("받아온 인기 방송", res.data);
           this.hot_lives = res.data;
         })
         .catch((err) => {
@@ -193,7 +183,6 @@ export default {
         .then((res) => {
           this.lives = res.data;
           this.scrollNo = true
-          console.log("검색결과", this.lives);
         })
         .catch((err) => {
           console.log(err);

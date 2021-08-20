@@ -114,7 +114,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
+        .then(() => {
           console.log("wish!!");
         })
         .catch((err) => {
@@ -128,7 +128,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
+        .then(() => {
           console.log("unwish!");
         })
         .catch((err) => {
@@ -144,7 +144,6 @@ export default {
         })
         .then((res) => {
           this.clicked = res.data;
-          console.log("OK!");
         })
         .catch((err) => {
           console.log(err);

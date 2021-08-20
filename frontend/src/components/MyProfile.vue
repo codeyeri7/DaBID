@@ -74,13 +74,6 @@
             <p>:D</p>
           </div>
         </div>
-
-        <!-- <div id="review" @click="checkReviews"> 
-           <RouterLink :to="{ name: 'ReviewList', params: { userId: userId }}">
-            <h5 class="pb-3" id="eng-font">{{ reviews_num }} Reviews</h5>
-          </RouterLink>
-        </div> -->
-
       </v-card>
     </div>
 </template>
@@ -136,11 +129,8 @@ export default {
           },
           headers: config
         })
-        .then((res) => {
+        .then(() => {
           localStorage.setItem('userName', this.userName)
-          // this.nameChange = res.data
-          // console.log('OK',this.nameChange)
-          // console.log(res)
           this.dialog = false
           this.$router.go()
         })

@@ -29,6 +29,7 @@
         </v-card>
       </v-col>
     </template>
+    <!-- dialog -->
     <v-card :id="prdId">
       <v-card-title class="headline secondary">
         <h4>{{ live.liveTitle }}</h4>
@@ -42,7 +43,6 @@
         <span v-else>
           <v-col class="text-right">
             <v-btn icon v-on:click="clicked = !clicked" @click="unwish()">
-              <!-- v-bind:class="{ red: clicked }" -->
               <v-icon style="color: #dfb772">mdi-heart</v-icon>
             </v-btn>
           </v-col>
@@ -71,7 +71,6 @@
           설명 : {{ live.liveDesc }}
         </h5>
       </v-card-text>
-      <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
         <div class="d-flex justify-space-between pa-0" v-if="checkUser(live)">
@@ -140,10 +139,8 @@ export default {
           url: `/dabid/live/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
+        .then(() => {
           this.refreshAll();
-          console.log(res);
-          console.log("삭제 성공");
         })
         .catch((err) => {
           console.log(err);
@@ -169,8 +166,7 @@ export default {
           method: "put",
           url: `/dabid/live/start/${this.prdId}`,
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
         })
         .catch((err) => {
           console.log(err);
@@ -189,10 +185,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
-          console.log("wish!!");
-          console.log(this.wishlist.includes(this.prdId));
-          console.log(res);
+        .then(() => {
         })
         .catch((err) => {
           console.log(err);
@@ -205,9 +198,7 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
-          console.log("unwish!");
-          console.log(res);
+        .then(() => {
         })
         .catch((err) => {
           console.log(err);
@@ -222,7 +213,6 @@ export default {
         })
         .then((res) => {
           this.clicked = res.data;
-          console.log("OK!");
         })
         .catch((err) => {
           console.log(err);

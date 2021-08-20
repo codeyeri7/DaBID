@@ -22,6 +22,7 @@
         </v-card>
       </v-col>
     </template>
+    <!-- dialog -->
     <v-card :id="prdId">
       <v-card-title class="headline grey lighten-2">
         <h3 class="text-center">{{ live.liveTitle }}</h3>
@@ -35,7 +36,6 @@
         <h5 style="margin-bottom:10px" class="content-font">라이브 일시 : {{ live.liveDate.slice(0,10) }} {{ live.liveDate.slice(11, 16)}}</h5>
         <h5 style="margin-bottom:10px" class="content-font">설명 : {{ live.liveDesc }}</h5>
       </v-card-text>
-      <!-- <v-divider></v-divider> -->
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -83,8 +83,7 @@ export default {
         method: 'delete',
         url: '',
       })
-        .then((res) => {
-          console.log(res)
+        .then(() => {
           this.$router.go();
         })
     }

@@ -42,7 +42,6 @@ export default {
       return config;
     },
     getReviews: function () {
-      console.log(this.userId);
       rest
         .axios({
           method: "get",

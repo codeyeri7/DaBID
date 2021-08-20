@@ -132,7 +132,7 @@ export default {
       return config;
     },
     closeAllPanels () {
-      console.log(this.openedPanel)
+      #//console.log(this.openedPanel)2dd
       if (this.openedPanel !== null) {
         this.openedPanel = null
       }
@@ -220,7 +220,6 @@ export default {
   created: function () {
     if (localStorage.getItem("jwt")) {
       this.getHotLives();
-      console.log('hotlive 받아옴')
       if (this.$route.params.liveStatus) {
         this.values2 = this.$route.params.liveStatus
         this.scrollNo = true

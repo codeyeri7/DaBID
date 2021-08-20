@@ -76,7 +76,7 @@ export default {
           this.$router.go();
         })
         .catch((err) => {
-          console.log("오류발견", err);
+          console.log(err);
         });
     },
   },

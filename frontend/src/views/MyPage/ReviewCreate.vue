@@ -121,7 +121,6 @@ export default {
       return config;
     },
     getLive: function () {
-      console.log(this.prdId, '!!!!!!!!!!!!!')
       rest.axios({
         method: 'get',
         url: `/dabid/live/${this.prdId}`,
@@ -130,7 +129,6 @@ export default {
         .then((res) => {
           // 거래한 라이브 정보 
           this.live = res.data
-          console.log('가져온 라이브 데이터', this.live)
         })
         .catch((err) => {
           console.log(err)
@@ -155,7 +153,6 @@ export default {
       if (this.clicked6 == true) {
         this.userscore -= 5;
       }
-      console.log(this.userscore)
     },
     createReview: function () {
       this.getScore()
@@ -187,10 +184,8 @@ export default {
         // 바로 정보 가져오기
         this.prdId = this.$route.params.prdId
         this.seller = this.$route.params.seller
-        console.log(this.prdId, '받아온 라이브 번호', this.seller)
         this.getLive();
       } else {
-        console.log('오류')
       }
     }
 };

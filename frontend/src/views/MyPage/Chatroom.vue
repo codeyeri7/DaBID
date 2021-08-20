@@ -161,7 +161,6 @@ export default {
         url: "dabid/chat/room/"+this.roomId,
       })
       .then(res => {
-        console.log(res.data);
         this.room = res.data;
         for (let message of res.data.chatlist) {
           this.messages.push({"type":"TALK","sender":message.chatFrom,"message":message.chatContent})
@@ -176,7 +175,6 @@ export default {
         url: "dabid/chat/room/"+this.roomId,
       })
       .then(res => {
-        console.log('거래완료한 방송 정보', res.data);
         this.endlive = res.data
       })
       .catch(err => {
@@ -207,23 +205,17 @@ export default {
       const endPoint = "https://i5a506.p.ssafy.io/api/ws-stomp";
       let sock = new SockJS(endPoint);
       let stompClient = Stomp.over(sock);
-      console.log(stompClient);
-      // let reconnect = 0; 
-      // pub/sub event
       stompClient.connect({}, function(frame) {
-        console.log('Connected: ', frame);
         stompClient.subscribe("/sub/chat/room/" + this.roomId, (res) => {
           var recv = JSON.parse(res.body);
           this.messages.push({"type":recv.type,"sender":recv.sender,"message":recv.message})
           
         });
       }.bind(this), function(error) {
-        console.log("소켓 연결 실패", error)
       });
       this.stompClient = stompClient;
     },
     goReview : function (Id) {
-      console.log('이 정보 넘길거다', this.endlive.seller, Id)
       this.$router.push({
         name: "ReviewCreate",
         params: {

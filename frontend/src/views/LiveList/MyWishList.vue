@@ -43,7 +43,6 @@ export default {
       })
         .then((res) => {
           this.lives = res.data;
-          console.log(this.lives)
         })
         .catch((err) => {
           console.log(err);

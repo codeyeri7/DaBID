@@ -99,7 +99,6 @@ footer{
   align-items: center;
 }
 .v-toolbar__content, .v-toolbar__extension {
-  /* border-bottom: 1px solid #292938; */
 }
 #eng-font {
   font-family: 'Lora', serif;

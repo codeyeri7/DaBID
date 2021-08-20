@@ -126,10 +126,8 @@ export default {
             url: `/dabid/live/${this.prdId}`,
             headers: this.setToken(),
           })
-          .then((res) => {
+          .then(() => {
             this.refreshAll();
-            console.log(res);
-            console.log("삭제 성공");
           })
           .catch((err) => {
             console.log(err);
@@ -161,10 +159,8 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
+        .then(() => {
           console.log("wish!!");
-          console.log(this.wishlist.includes(this.prdId));
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -177,9 +173,8 @@ export default {
           url: `/dabid/wish/${this.prdId}`,
           headers: this.setToken(),
         })
-        .then((res) => {
+        .then(() => {
           console.log("unwish!");
-          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -194,7 +189,6 @@ export default {
         })
         .then((res) => {
           this.clicked = res.data;
-          console.log("OK!");
         })
         .catch((err) => {
           console.log(err);
